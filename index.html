@@ -46,6 +46,7 @@ canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-acti
 #spd{background:var(--p2);border:1px solid var(--bd);border-radius:8px;padding:6px 4px}.spg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.spg button{padding:6px 0;font-size:12px}
 #L,#L *{user-select:none;-webkit-user-select:none}#L textarea,#L input{user-select:text;-webkit-user-select:text}.mbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.mbar button{flex:1;padding:6px 4px;font-size:12px;white-space:nowrap}.mi.ms{outline:3px solid var(--ac);outline-offset:-3px}.mi .ck{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
 .blk.ovb{background:#2c7be5}.row.o{height:40px}.lb .lo{height:40px}.mi .ly{position:absolute;top:4px;right:28px;width:20px;height:20px;border-radius:50%;background:#000c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;z-index:2;cursor:pointer}.mi .ly:hover{background:var(--ac)}
+.row.dz{background:#6d4aff40!important}.row.dz:after{content:'';position:absolute;inset:0;border:2px dashed var(--ac);pointer-events:none}
 .tc{display:flex;gap:4px}.tc b{cursor:pointer;font-weight:400;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px}.tc b:hover{background:var(--p2)}.tc b.off{background:#e5384f40}
 .lb div{flex-direction:column;gap:2px;line-height:1.1}
 .blk{min-width:4px}
@@ -226,7 +227,7 @@ if(k=='clip'){const m=M(o.mid),s0=o.start,in0=o.in,out0=o.out,d0=o.dur;
 if(edge=='r')drag(e,dx=>{const ne=snapV(s0+d0+dx/z,o,1),nd=Math.max(.2,ne-s0);let out=in0+nd*o.sp;if(m.type=='video')out=Math.min(out,m.dur);o.out=out;layout();renderTL()},fin);
 else if(edge=='l')drag(e,dx=>{const ns=snapV(s0+dx/z,o,1);let ni=Math.min(out0-.2*o.sp,in0+(ns-s0)*o.sp);if(m.type=='video')ni=Math.max(0,ni);o.in=ni;layout();renderTL()},fin);
 else{const orig=[...S.clips],mids=new Map(orig.map(c=>[c,c.start+c.dur/2])),grpC=grp?orig.filter(c=>isM('clip',c.id)):[o],c0=grp?(grpC[0].start+grpC[grpC.length-1].start+grpC[grpC.length-1].dur)/2:s0+d0/2;
-bdrag(e,dx=>{const ct=c0+dx/z,others=orig.filter(c=>!grpC.includes(c)),i=others.filter(c=>mids.get(c)<ct).length;S.clips=[...others.slice(0,i),...grpC,...others.slice(i)];layout();renderTL();const el=grp?null:$(`#rV [data-id="${id}"]`);if(el){el.style.left=(ct-o.dur/2)*z+'px';el.style.opacity=.85;el.style.zIndex=9}},fin)}return}
+bdrag(e,(dx,ev)=>{S.lev=ev;const ct=c0+dx/z,others=orig.filter(c=>!grpC.includes(c)),i=others.filter(c=>mids.get(c)<ct).length;S.clips=[...others.slice(0,i),...grpC,...others.slice(i)];layout();renderTL();const el=grp?null:$(`#rV [data-id="${id}"]`);if(el){el.style.left=(ct-o.dur/2)*z+'px';el.style.opacity=.85;el.style.zIndex=9}},()=>{if(!grp&&toLayer(o,S.lev))return;fin()})}return}
 if(k=='text'){const s0=o.start,d0=o.dur,e0=s0+d0;
 if(edge=='r')drag(e,dx=>{o.dur=Math.max(.2,snapV(e0+dx/z,o)-s0);renderTL()},fin);
 else if(edge=='l')drag(e,dx=>{const ns=Math.min(e0-.2,Math.max(0,snapV(s0+dx/z,o)));o.start=ns;o.dur=e0-ns;renderTL()},fin);
@@ -265,8 +266,8 @@ function redo(){if(S.exporting||REC)return;if(!HS.r.length)return toast('Nothing
 /* ---------- overlay layers ---------- */
 S.ovs=[];S.nl=0;S.lh={};S.lm={};const OE={};
 function odur(o){const m=M(o.mid);if(!m)return .05;const out=m.type=='video'?Math.min(o.out,m.dur):o.out;return Math.max(.05,(out-o.in)/o.sp)}
-function addOverlay(m,q){if(!m||m.type=='audio')return;const d=m.type=='image'?5:m.dur,o={id:S.id++,mid:m.id,start:S.t,in:0,out:d,sp:1,vol:1,mute:0,x:50,y:50,sc:50,rot:0,op:100,flip:0,fade:0,hide:0,rd:0,bw:0,bc:'#ffffff',ly:1,...DEF};
-let ly=1;for(;ly<=S.nl;ly++){if(!S.ovs.some(x=>x.ly==ly&&x.start<o.start+d&&x.start+odur(x)>o.start))break}
+function addOverlay(m,q,at,ly0){if(!m||m.type=='audio')return;const d=m.type=='image'?5:m.dur,o={id:S.id++,mid:m.id,start:at==null?S.t:at,in:0,out:d,sp:1,vol:1,mute:0,x:50,y:50,sc:50,rot:0,op:100,flip:0,fade:0,hide:0,rd:0,bw:0,bc:'#ffffff',ly:1,...DEF};
+let ly=ly0||1;if(!ly0)for(;ly<=S.nl;ly++){if(!S.ovs.some(x=>x.ly==ly&&x.start<o.start+d&&x.start+odur(x)>o.start))break}
 o.ly=ly;S.nl=Math.max(S.nl,ly);S.ovs.push(o);pick('ov',o.id);if(!q)toast('Added on layer '+ly+' · drag it on the preview to move, drag its corner to resize')}
 function ovIns(o,f){const m=M(o.mid),v=m.type=='video';
 return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')
@@ -280,7 +281,7 @@ if(edge=='l'){drag(e,dx=>{const ns=Math.max(0,snapV(s0+dx/z,o));let ni=Math.min(
 const items=grp?selObjs('ov'):[o],S0=items.map(x=>x.start),L0=items.map(x=>x.ly),mn=Math.min(...S0),ly0=o.ly;
 bdrag(e,(dx,ev)=>{let ns;if(items.length==1)ns=Math.max(0,snapMove(s0+dx/z,d0,o));else ns=s0+Math.max(-mn,dx/z);const d=ns-s0;items.forEach((x,i)=>{x.start=S0[i]+d});
 const rr=[...document.querySelectorAll('#rO .row')];let tl=ly0;if(rr.length&&ev){const y=ev.clientY,f=rr[0].getBoundingClientRect(),l=rr[rr.length-1].getBoundingClientRect();if(y<f.top)tl=S.nl+1;else if(y>=l.bottom)tl=1;else{const q=rr.find(r=>{const b=r.getBoundingClientRect();return y>=b.top&&y<b.bottom});if(q)tl=+q.dataset.ly}}
-const dl=tl-ly0;items.forEach((x,i)=>{x.ly=Math.max(1,L0[i]+dl)});S.nl=Math.max(S.nl,...S.ovs.map(x=>x.ly));renderTL()},fin)}
+const dl=tl-ly0;S.lev=ev;items.forEach((x,i)=>{x.ly=Math.max(1,L0[i]+dl)});S.nl=Math.max(S.nl,...S.ovs.map(x=>x.ly));renderTL()},()=>{if(items.length==1&&toMain(o,S.lev))return;fin()})}
 function ovRows(){const z=S.zoom;let h='';S.nl=Math.max(S.nl,...S.ovs.map(o=>o.ly));
 for(let l=S.nl;l>=1;l--){h+=`<div class="row o" data-ly="${l}" style="${S.lh[l]?'opacity:.4':''}">`+S.ovs.filter(o=>o.ly==l).map(o=>{const m=M(o.mid);if(!m)return'';const d=odur(o);return`<div class="blk ovb${isM('ov',o.id)?' sel':''}" data-k="ov" data-id="${o.id}" style="left:${o.start*z}px;width:${d*z}px${th(m)}"><i class="h l"></i>${m.type=='video'?wf(m,Math.max(0,o.in)/m.dur,Math.min(o.out,m.dur)/m.dur,'v',(o.mute||S.lm[l])?.12:Math.max(.15,o.vol)):''}<span class="lbl">${esc(m.name)}${o.sp!=1?' ×'+o.sp:''}${o.mute?' 🔇':''}${o.hide?' 🙈':''}</span><i class="h"></i></div>`}).join('')+'</div>'}
 $('#rO').innerHTML=h;
@@ -317,6 +318,39 @@ else if(b.dataset.lm){const l=+b.dataset.lm;S.lm[l]=S.lm[l]?0:1}
 else{const l=+b.dataset.lx;S.ovs=S.ovs.filter(o=>o.ly!=l);S.ovs.forEach(o=>{if(o.ly>l)o.ly--});['lh','lm'].forEach(k=>{const n={};Object.keys(S[k]).forEach(i=>{i=+i;if(i<l)n[i]=S[k][i];else if(i>l)n[i-1]=S[k][i]});S[k]=n});S.nl=Math.max(0,S.nl-1);pick(null);toast('Layer removed (Undo to restore)');return}
 renderTL();save()});
 $('#ins').addEventListener('click',e=>{const id=e.target.id;if(id!='ov-ct'&&id!='ov-fu')return;(S.multi.length>1?selObjs('ov'):[INS.o]).forEach(o=>{const m=M(o.mid);o.x=50;o.y=50;if(id=='ov-fu')o.sc=Math.min(400,Math.round(Math.max(W/m.w,H/m.h)/Math.min(W/m.w,H/m.h)*100))});renderIns();renderTL();hist()});
+/* ---------- drag media onto the timeline, and move clips between tracks ---------- */
+function toLayer(c,ev){if(!ev)return false;const v=$('#rV').getBoundingClientRect();if(ev.clientY>=v.top-4)return false;
+const box=$('#in').getBoundingClientRect(),rr=[...document.querySelectorAll('#rO .row')];let ly=S.nl+1;
+const q=rr.find(r=>{const b=r.getBoundingClientRect();return ev.clientY>=b.top&&ev.clientY<b.bottom});if(q)ly=+q.dataset.ly;
+const st=Math.max(0,(ev.clientX-box.left)/S.zoom-c.dur/2);S.clips=S.clips.filter(x=>x!==c);layout();
+const o={id:S.id++,mid:c.mid,start:st,in:c.in,out:c.out,sp:c.sp,vol:c.vol,mute:c.mute||0,x:50,y:50,sc:50,rot:c.rot||0,op:100,flip:c.flip||0,fade:c.fade||0,hide:0,rd:0,bw:0,bc:'#ffffff',ly,b:c.b,c:c.c,s:c.s,bl:c.bl,g:c.g,se:c.se,h:c.h};
+S.ovs.push(o);S.nl=Math.max(S.nl,ly);pick('ov',o.id);toast('Moved to layer '+ly);return true}
+function toMain(o,ev){const v=$('#rV').getBoundingClientRect();if(!ev||ev.clientY<v.top)return false;
+const t=o.start+odur(o)/2,idx=S.clips.filter(c=>c.start+c.dur/2<t).length;
+const c={id:S.id++,mid:o.mid,in:o.in,out:o.out,sp:o.sp,vol:o.vol,mute:o.mute||0,fit:'cover',zoom:1,rot:o.rot||0,flip:o.flip||0,fade:o.fade||0,za:'None',zs:30,b:o.b,c:o.c,s:o.s,bl:o.bl,g:o.g,se:o.se,h:o.h};
+S.ovs=S.ovs.filter(x=>x!==o);S.clips.splice(idx,0,c);layout();pick('clip',c.id);toast('Moved to the main video track');return true}
+function dropMedia(ids,t){const ms=ids.map(M).filter(Boolean);
+if(t.k=='aud'){const A=ms.filter(m=>m.type=='audio');if(!A.length)return toast('Drop audio files on the Voice or Music track');let at=t.t,last;
+A.forEach(m=>{const a={id:S.id++,mid:m.id,start:at,in:0,out:m.dur,vol:t.tr=='m'?.8:1,sp:1,fi:0,fo:0,mute:0,tr:t.tr};S.voices.push(a);at+=adur(a);last=a});pick('voice',last.id);return}
+const V=ms.filter(m=>m.type!='audio');if(!V.length)return toast('Audio files go on the Voice or Music track');
+if(t.k=='main'){let idx=S.clips.filter(c=>c.start+c.dur/2<t.t).length,last;
+V.forEach(m=>{const c={id:S.id++,mid:m.id,in:0,out:m.dur,sp:1,vol:1,fit:'cover',zoom:1,rot:0,flip:0,fade:0,za:'None',zs:30,...DEF};S.clips.splice(idx++,0,c);last=c});layout();pick('clip',last.id);return}
+let at=t.t,ly=t.ly;V.forEach(m=>{addOverlay(m,1,at,ly);const o=S.ovs[S.ovs.length-1];ly=o.ly;at+=odur(o)});toast(V.length+' clip'+(V.length>1?'s':'')+' added on layer '+ly)}
+function mediaDrag(e,mi){const id0=+mi.dataset.m,x0=e.clientX,y0=e.clientY,sc=$('#sc'),ids=(S.msel.includes(id0)&&S.msel.length)?S.msel.filter(i=>M(i)):[id0];let g=null,tgt=null;
+const clean=()=>{document.querySelectorAll('.dz').forEach(x=>x.classList.remove('dz'));showSn(null)};
+const where=ev=>{const r=sc.getBoundingClientRect();if(ev.clientX<r.left||ev.clientX>r.right||ev.clientY<r.top||ev.clientY>r.bottom)return null;
+const t=Math.max(0,(ev.clientX-$('#in').getBoundingClientRect().left)/S.zoom),y=ev.clientY,hit=el=>{const b=el.getBoundingClientRect();return y>=b.top&&y<b.bottom};
+const ro=[...document.querySelectorAll('#rO .row')].find(hit);if(ro)return{t,k:'ov',ly:+ro.dataset.ly,el:ro};
+if(hit($('#rT')))return{t,k:'ov',ly:S.nl+1,el:$('#rT')};
+if(hit($('#rV')))return{t,k:'main',el:$('#rV')};
+if(hit($('#rA')))return{t,k:'aud',tr:'v',el:$('#rA')};
+if(hit($('#rM')))return{t,k:'aud',tr:'m',el:$('#rM')};return null};
+const mv=ev=>{if(!g){if(Math.hypot(ev.clientX-x0,ev.clientY-y0)<6)return;g=document.createElement('div');g.style.cssText='position:fixed;z-index:70;pointer-events:none;padding:6px 10px;border-radius:8px;background:var(--ac);color:#fff;font-weight:600;font-size:12px;box-shadow:0 6px 20px #0006;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';g.textContent=ids.length>1?ids.length+' items':M(ids[0]).name;document.body.append(g)}
+g.style.left=ev.clientX+12+'px';g.style.top=ev.clientY+12+'px';const r=sc.getBoundingClientRect();if(ev.clientY>r.top&&ev.clientY<r.bottom){if(ev.clientX<r.left+40&&ev.clientX>r.left-10)sc.scrollLeft-=14;else if(ev.clientX>r.right-40&&ev.clientX<r.right+10)sc.scrollLeft+=14}
+clean();tgt=where(ev);if(tgt){tgt.el.classList.add('dz');showSn(tgt.t)}};
+const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
+if(!g)return;g.remove();clean();S.nc=1;S.nc2=1;setTimeout(()=>{S.nc=0;S.nc2=0},50);if(tgt){dropMedia(ids,tgt);if(mob())sheet(null)}};
+addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)}
 /* ---------- media library multi-select ---------- */
 S.msel=[];S.msm=0;
 function msBar(){if(!S.media.length)return'';const n=S.msel.length;return`<div class="mbar"><button data-ms="mode" class="${S.msm?'on':''}">☑ Select</button><button data-ms="all">All</button>${n?'<button data-ms="none">None</button>':''}<button data-ms="clr" title="Remove all media from the library">🗑 Clear all</button></div>${n?`<div class="mbar"><button class="pr" data-ms="add">＋ Add ${n} to timeline</button><button data-ms="addov" title="Put each selected item on its own overlay layer">◫ ${n} as layers</button><button data-ms="del">🗑 Remove ${n}</button></div>`:''}`}
@@ -327,7 +361,7 @@ else if(a=='none'){S.msel=[];renderPane()}
 else if(a=='addov'){const L=sel.filter(id=>M(id).type!='audio');if(!L.length)return toast('Audio files cannot be overlay layers');L.forEach(id=>addOverlay(M(id),1));S.msel=[];S.msm=0;renderPane();toast(L.length+' layer clip'+(L.length>1?'s':'')+' added');if(mob())sheet(null)}
 else if(a=='add'){if(!sel.length)return;let at=S.t;sel.forEach(id=>{const m=M(id);if(m.type=='audio'){setMusic(m);const v=S.voices[S.voices.length-1];v.start=at;at+=adur(v)}else addClip(m)});S.msel=[];S.msm=0;renderPane();renderTL();toast(sel.length+' item'+(sel.length>1?'s':'')+' added to timeline');if(mob())sheet(null)}
 else if(a=='del'||a=='clr'){const ids=a=='clr'?S.media.map(m=>m.id):sel;if(!ids.length)return;ids.forEach(id=>rmMedia(id,1));S.msel=[];S.msm=0;renderPane();toast(ids.length+' item'+(ids.length>1?'s':'')+' removed (Undo to restore)')}}
-$('#L').addEventListener('pointerdown',e=>{if(S.tab!='media'||e.button||e.pointerType=='touch'||e.target.closest('button,.rm,.drop,.mbar'))return;
+$('#L').addEventListener('pointerdown',e=>{if(S.tab!='media'||e.button||e.pointerType=='touch'||e.target.closest('button,.rm,.ly,.drop,.mbar'))return;const mi=e.target.closest('.mi');if(mi&&!(S.msm&&!S.msel.includes(+mi.dataset.m))){mediaDrag(e,mi);return}
 const x0=e.clientX,y0=e.clientY,add=e.ctrlKey||e.metaKey||e.shiftKey,base=add?[...S.msel]:[],aside=$('#L');let box=null,hit=[];
 const items=()=>[...document.querySelectorAll('#pane .mi')];
 const mv=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;if(!box){if(Math.hypot(dx,dy)<6)return;box=document.createElement('div');box.style.cssText='position:fixed;z-index:60;border:1px solid var(--ac);background:#6d4aff30;pointer-events:none';document.body.append(box)}
