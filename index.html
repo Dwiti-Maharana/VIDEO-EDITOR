@@ -44,6 +44,7 @@ canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-acti
 .blk.vid{background:#5a47e8}.blk.txt{background:#e0457b}.blk.mus{background:#0b9d88}
 .blk .h{position:absolute;right:0;top:0;bottom:0;width:8px;cursor:ew-resize;background:#fff6}
 #spd{background:var(--p2);border:1px solid var(--bd);border-radius:8px;padding:6px 4px}.spg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.spg button{padding:6px 0;font-size:12px}
+.mbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.mbar button{flex:1;padding:6px 4px;font-size:12px;white-space:nowrap}.mi.ms{outline:3px solid var(--ac);outline-offset:-3px}.mi .ck{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
 .tc{display:flex;gap:4px}.tc b{cursor:pointer;font-weight:400;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px}.tc b:hover{background:var(--p2)}.tc b.off{background:#e5384f40}
 .lb div{flex-direction:column;gap:2px;line-height:1.1}
 .blk{min-width:4px}
@@ -146,7 +147,7 @@ $('#fi').onchange=e=>{addFiles(e.target.files);e.target.value=''};
 addEventListener('dragover',e=>e.preventDefault());addEventListener('drop',e=>{e.preventDefault();addFiles(e.dataTransfer.files)});
 function layout(){let t=0;S.clips.forEach(c=>{c.dur=(c.out-c.in)/c.sp;c.start=t;t+=c.dur})}
 function addClip(m){const c={id:S.id++,mid:m.id,in:0,out:m.dur,sp:1,vol:1,fit:'cover',zoom:1,rot:0,flip:0,fade:0,za:'None',zs:30,...DEF};S.clips.push(c);layout();pick('clip',c.id)}
-function rmMedia(id){const m=M(id);if(!m)return;if(m.type!='image')m.el.pause();S.clips=S.clips.filter(c=>c.mid!=id);S.voices=S.voices.filter(v=>v.mid!=id);if(S.music&&S.music.mid==id)S.music=null;S.media=S.media.filter(x=>x.id!=id);layout();S.t=Math.min(S.t,total());S.curId=null;pick(null);renderPane();toast('Removed '+m.name)}
+function rmMedia(id,q){const m=M(id);if(!m)return;if(m.type!='image')m.el.pause();S.clips=S.clips.filter(c=>c.mid!=id);S.voices=S.voices.filter(v=>v.mid!=id);if(S.music&&S.music.mid==id)S.music=null;S.media=S.media.filter(x=>x.id!=id);layout();S.t=Math.min(S.t,total());S.curId=null;pick(null);renderPane();q||toast('Removed '+m.name)}
 function setMusic(m){const a={id:S.id++,mid:m.id,start:S.t,in:0,out:m.dur,vol:.8,sp:1,fi:0,fo:0,mute:0,tr:'m'};S.voices.push(a);pick('voice',a.id)}
 function _unusedMusic(m){S.music={mid:m.id,vol:.8};pick('music',0)}
 function addText(p={}){const o={id:S.id++,txt:'Your text',font:'Arial',size:64,color:'#ffffff',bold:1,stroke:0,bgOn:0,bgc:'#000000',anim:'none',start:S.t,dur:3,x:50,y:50,...p};S.texts.push(o);pick('text',o.id)}
@@ -158,14 +159,14 @@ $('#mb').onclick=e=>{const b=e.target.closest('[data-sh]');b&&sheet(b.dataset.sh
 $('#stage').addEventListener('pointerdown',e=>{if(e.target===$('#stage'))sheet(null)});
 
 /* ---------- left pane ---------- */
-function renderPane(){const p=$('#pane'),t=S.tab;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
-if(t=='media')p.innerHTML=`<div class="drop" id="dz">＋ Import video, image or audio<br><small>or drop files anywhere</small></div><div class="grid">${S.media.map(m=>`<div class="mi" data-m="${m.id}" title="Click to add">${m.type=='image'?`<img src="${m.url}">`:m.type=='video'?`<video src="${m.url}#t=.5" muted preload="metadata"></video>`:'<span style="font-size:28px">🎵</span>'}<b>${esc(m.name)}</b><span class="rm" data-rm="${m.id}" title="Remove">✕</span></div>`).join('')}</div><p style="color:var(--mu)">Click a media item to add it to the timeline. Audio files become background music.</p>`;
+function renderPane(){const p=$('#pane'),t=S.tab;S.msel=(S.msel||[]).filter(id=>M(id));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+if(t=='media')p.innerHTML=`<div class="drop" id="dz">＋ Import video, image or audio<br><small>or drop files anywhere</small></div>${msBar()}<div class="grid">${S.media.map(m=>`<div class="mi${S.msel.includes(m.id)?' ms':''}" data-m="${m.id}" title="Click to add">${S.msel.includes(m.id)?'<span class="ck">✓</span>':''}${m.type=='image'?`<img src="${m.url}">`:m.type=='video'?`<video src="${m.url}#t=.5" muted preload="metadata"></video>`:'<span style="font-size:28px">🎵</span>'}<b>${esc(m.name)}</b><span class="rm" data-rm="${m.id}" title="Remove">✕</span></div>`).join('')}</div><p style="color:var(--mu)">Click a media item to add it to the timeline. Audio files become background music.</p>`;
 else if(t=='text')p.innerHTML=`<button class="pr" style="width:100%" data-tp="Plain text">＋ Add text</button><h4>Styles</h4><div class="grid">${Object.keys(TP).slice(1).map(k=>`<button data-tp="${k}">${k}</button>`).join('')}</div><h4>Stickers</h4><div class="emo">${EMO.map(e=>`<button data-e="${e}">${e}</button>`).join('')}</div>`;
 else if(t=='fx')p.innerHTML=`<label class="f"><input type="checkbox" id="all"> Apply to all clips</label><div class="grid">${Object.keys(FX).map(k=>`<button data-fx="${k}">${k}</button>`).join('')}</div><h4>Speed</h4><div class="spg">${[.1,.25,.5,.75,1,1.5,2,3,4,6,8].map(v=>`<button data-sp="${v}">${v}×</button>`).join('')}</div><p style="color:var(--mu);margin:6px 0 0">Slow motion below 1×, fast forward above 1×. Applies to the selected clip(s), or to all clips if the box above is ticked.</p><h4>Transitions</h4><button data-tr="1" style="width:100%">Fade in/out on all clips</button><p style="color:var(--mu)">Select a clip to adjust speed, zoom, rotation, flip and colour in the right panel.</p>`;
 else p.innerHTML=`<h4>Voice-over</h4><button class="pr" id="rc" style="width:100%">● Record voice-over</button><p style="color:var(--mu)">Recording starts at the playhead and plays the video so you can narrate along. Use headphones to avoid echo.</p><h4>Background music</h4>${S.media.filter(m=>m.type=='audio').map(m=>`<div style="display:flex;gap:6px;margin-bottom:6px"><button data-au="${m.id}" style="flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🎵 ${esc(m.name)}</button><button data-rm="${m.id}" title="Remove">✕</button></div>`).join('')||'<p style="color:var(--mu)">Import an audio file in the Media tab first.</p>'}<p style="color:var(--mu)">Volume of each clip is set in its inspector. Everything is mixed into the exported file.</p>`}
 document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){S.tab=b.dataset.t;renderPane();save()}};
-$('#pane').onclick=e=>{const g=e.target.closest('[data-m],[data-tp],[data-e],[data-fx],[data-tr],[data-au],[data-rm],[data-sp],#dz,#rc');if(!g)return;
-if(g.dataset.rm)rmMedia(+g.dataset.rm);else if(g.id=='dz')$('#fi').click();else if(g.id=='rc')REC?recStop():recStart();
+$('#pane').onclick=e=>{const g=e.target.closest('[data-m],[data-tp],[data-e],[data-fx],[data-tr],[data-au],[data-rm],[data-sp],[data-ms],#dz,#rc');if(!g)return;const msel=g.dataset.m&&(S.msm||e.ctrlKey||e.metaKey||e.shiftKey);
+if(g.dataset.rm)rmMedia(+g.dataset.rm);else if(g.dataset.ms)mediaAct(g.dataset.ms);else if(msel){const id=+g.dataset.m;S.msel=S.msel.includes(id)?S.msel.filter(x=>x!=id):[...S.msel,id];renderPane()}else if(g.id=='dz')$('#fi').click();else if(g.id=='rc')REC?recStop():recStart();
 else if(g.dataset.m){const m=M(g.dataset.m);m.type=='audio'?setMusic(m):addClip(m)}
 else if(g.dataset.tp)addText(TP[g.dataset.tp]);
 else if(g.dataset.e)addText({txt:g.dataset.e,size:150});
@@ -173,7 +174,7 @@ else if(g.dataset.fx){const all=$('#all').checked,o=getSel(),tg=all?S.clips:(S.s
 else if(g.dataset.sp)setSpeed(+g.dataset.sp);
 else if(g.dataset.tr){S.clips.forEach(c=>c.fade=1);renderIns();hist();toast('Fade added to all clips')}
 else if(g.dataset.au)setMusic(M(g.dataset.au));
-if(mob()&&(g.dataset.m||g.dataset.tp||g.dataset.e||g.dataset.au))sheet(null)};
+if(mob()&&!msel&&(g.dataset.m||g.dataset.tp||g.dataset.e||g.dataset.au))sheet(null)};
 
 /* ---------- inspector ---------- */
 function renderIns(){const el=$('#ins'),o=getSel();if(!o){el.innerHTML='<h4>Inspector</h4><p style="color:var(--mu)">Select a clip, text or music block on the timeline to edit it.</p>';return}
@@ -260,6 +261,15 @@ function mv(d){if(S.multi.length>1)return mvMulti(d);const s=S.sel;if(s&&s.k=='v
 function restore(s){const o=JSON.parse(s);S.clips=o.c;S.texts=o.t;S.voices=o.v;S.music=o.mu;S.media=o.md.map(id=>ALL[id]);S.media.forEach(m=>m.type!='image'&&m.el.pause());layout();S.t=Math.min(S.t,total());S.curId=null;S.multi=S.multi.filter(x=>{const p=x.split(':');return(p[0]=='clip'?S.clips:p[0]=='text'?S.texts:S.voices).some(o=>o.id==p[1])});if(!getSel()){if(S.multi.length){const l=S.multi[S.multi.length-1].split(':');S.sel={k:l[0],id:+l[1]}}else S.sel=null}renderIns();renderTL();renderPane();updMM();save()}
 function undo(){if(S.exporting||REC)return;clearTimeout(HT);hist();if(!HS.u.length)return toast('Nothing to undo');HS.r.push(HS.cur);HS.cur=HS.u.pop();restore(HS.cur)}
 function redo(){if(S.exporting||REC)return;if(!HS.r.length)return toast('Nothing to redo');HS.u.push(HS.cur);HS.cur=HS.r.pop();restore(HS.cur)}
+/* ---------- media library multi-select ---------- */
+S.msel=[];S.msm=0;
+function msBar(){if(!S.media.length)return'';const n=S.msel.length;return`<div class="mbar"><button data-ms="mode" class="${S.msm?'on':''}">☑ Select</button><button data-ms="all">All</button>${n?'<button data-ms="none">None</button>':''}<button data-ms="clr" title="Remove all media from the library">🗑 Clear all</button></div>${n?`<div class="mbar"><button class="pr" data-ms="add">＋ Add ${n} to timeline</button><button data-ms="del">🗑 Remove ${n}</button></div>`:''}`}
+function mediaAct(a){const sel=S.msel.filter(id=>M(id));
+if(a=='mode'){S.msm=!S.msm;if(!S.msm)S.msel=[];renderPane();if(S.msm)toast('Tap media to select several')}
+else if(a=='all'){S.msm=1;S.msel=S.media.map(m=>m.id);renderPane()}
+else if(a=='none'){S.msel=[];renderPane()}
+else if(a=='add'){if(!sel.length)return;let at=S.t;sel.forEach(id=>{const m=M(id);if(m.type=='audio'){setMusic(m);const v=S.voices[S.voices.length-1];v.start=at;at+=adur(v)}else addClip(m)});S.msel=[];S.msm=0;renderPane();renderTL();toast(sel.length+' item'+(sel.length>1?'s':'')+' added to timeline');if(mob())sheet(null)}
+else if(a=='del'||a=='clr'){const ids=a=='clr'?S.media.map(m=>m.id):sel;if(!ids.length)return;ids.forEach(id=>rmMedia(id,1));S.msel=[];S.msm=0;renderPane();toast(ids.length+' item'+(ids.length>1?'s':'')+' removed (Undo to restore)')}}
 /* ---------- speed tool (slow motion / fast forward) ---------- */
 function setSpeed(v){const all=$('#all')&&$('#all').checked&&S.tab=='fx';let t=all?S.clips.slice():[...selObjs('clip'),...selObjs('voice')];t=t.filter(x=>x.mid&&M(x.mid)&&M(x.mid).type!='image');
 if(!t.length){syncSpd();return toast('Select a video or audio clip on the timeline first')}
