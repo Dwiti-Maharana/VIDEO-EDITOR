@@ -394,6 +394,13 @@ for(let l=S.nt;l>=1;l--){h+=`<div class="row" data-tl="${l}" style="${S.th[l]?'o
 $('#rTx').innerHTML=h;const lb=document.querySelector('.lb'),tl=lb.querySelector('.ltx');lb.querySelectorAll('.lt').forEach(x=>x.remove());
 for(let l=S.nt;l>=1;l--){const d=document.createElement('div');d.className='lt';d.innerHTML=`Text ${l+1}<span class="tc"><b data-th="${l}" class="${S.th[l]?'off':''}" title="Hide / show this text layer">${S.th[l]?'🙈':'👁'}</b><b data-tx="${l}" title="Remove this text layer and its texts">✕</b></span>`;lb.insertBefore(d,tl)}}
 {const _r4=renderTL;renderTL=function(){_r4();tRows()}}
+/* keep the label column exactly aligned with the track rows */
+function syncLb(){const lb=document.querySelector('.lb'),sc=$('#sc');if(!lb||!sc)return;
+const rows=[$('#rul'),...document.querySelectorAll('#rTx .row'),$('#rT'),...document.querySelectorAll('#rO .row'),$('#rV'),$('#rA'),$('#rM'),...document.querySelectorAll('#rX .row')],labs=[...lb.children];
+if(rows.length==labs.length)labs.forEach((d,i)=>{const h=rows[i]&&rows[i].offsetHeight;if(h)d.style.height=h+'px'});
+lb.style.paddingBottom=Math.max(0,sc.offsetHeight-sc.clientHeight)+'px';lb.scrollTop=sc.scrollTop}
+{const _r5=renderTL;renderTL=function(){_r5();syncLb()}}
+new ResizeObserver(()=>syncLb()).observe($('#sc'));
 function tDel(l){S.texts=S.texts.filter(x=>(x.tl||0)!=l);S.texts.forEach(x=>{if((x.tl||0)>l)x.tl--});const m={};Object.keys(S.th).forEach(k=>{const i=+k;if(i<l)m[i]=S.th[k];else if(i>l)m[i-1]=S.th[k]});S.th=m;S.nt=Math.max(0,S.nt-1);pick(null);toast('Text layer removed (Undo to restore)')}
 function txtRowAt(y,l0,items){const rt=[...document.querySelectorAll('#rTx .row')].map(r=>[+r.dataset.tl,r]);rt.push([0,$('#rT')]);
 for(const[l,el]of rt){const b=el.getBoundingClientRect();if(y>=b.top&&y<b.bottom)return l}
