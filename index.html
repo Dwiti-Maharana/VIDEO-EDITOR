@@ -44,7 +44,7 @@ canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-acti
 .blk.vid{background:#5a47e8}.blk.txt{background:#e0457b}.blk.mus{background:#0b9d88}
 .blk .h{position:absolute;right:0;top:0;bottom:0;width:8px;cursor:ew-resize;background:#fff6}
 #spd{background:var(--p2);border:1px solid var(--bd);border-radius:8px;padding:6px 4px}.spg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.spg button{padding:6px 0;font-size:12px}
-#pane,#pane *{user-select:none;-webkit-user-select:none}.mbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.mbar button{flex:1;padding:6px 4px;font-size:12px;white-space:nowrap}.mi.ms{outline:3px solid var(--ac);outline-offset:-3px}.mi .ck{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
+#L,#L *{user-select:none;-webkit-user-select:none}#L textarea,#L input{user-select:text;-webkit-user-select:text}.mbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.mbar button{flex:1;padding:6px 4px;font-size:12px;white-space:nowrap}.mi.ms{outline:3px solid var(--ac);outline-offset:-3px}.mi .ck{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
 .tc{display:flex;gap:4px}.tc b{cursor:pointer;font-weight:400;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px}.tc b:hover{background:var(--p2)}.tc b.off{background:#e5384f40}
 .lb div{flex-direction:column;gap:2px;line-height:1.1}
 .blk{min-width:4px}
@@ -270,7 +270,7 @@ else if(a=='all'){S.msm=1;S.msel=S.media.map(m=>m.id);renderPane()}
 else if(a=='none'){S.msel=[];renderPane()}
 else if(a=='add'){if(!sel.length)return;let at=S.t;sel.forEach(id=>{const m=M(id);if(m.type=='audio'){setMusic(m);const v=S.voices[S.voices.length-1];v.start=at;at+=adur(v)}else addClip(m)});S.msel=[];S.msm=0;renderPane();renderTL();toast(sel.length+' item'+(sel.length>1?'s':'')+' added to timeline');if(mob())sheet(null)}
 else if(a=='del'||a=='clr'){const ids=a=='clr'?S.media.map(m=>m.id):sel;if(!ids.length)return;ids.forEach(id=>rmMedia(id,1));S.msel=[];S.msm=0;renderPane();toast(ids.length+' item'+(ids.length>1?'s':'')+' removed (Undo to restore)')}}
-$('#pane').addEventListener('pointerdown',e=>{if(S.tab!='media'||e.button||e.pointerType=='touch'||e.target.closest('button,.rm,.drop,.mbar'))return;
+$('#L').addEventListener('pointerdown',e=>{if(S.tab!='media'||e.button||e.pointerType=='touch'||e.target.closest('button,.rm,.drop,.mbar'))return;
 const x0=e.clientX,y0=e.clientY,add=e.ctrlKey||e.metaKey||e.shiftKey,base=add?[...S.msel]:[],aside=$('#L');let box=null,hit=[];
 const items=()=>[...document.querySelectorAll('#pane .mi')];
 const mv=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;if(!box){if(Math.hypot(dx,dy)<6)return;box=document.createElement('div');box.style.cssText='position:fixed;z-index:60;border:1px solid var(--ac);background:#6d4aff30;pointer-events:none';document.body.append(box)}
@@ -278,9 +278,10 @@ const ar=aside.getBoundingClientRect();if(ev.clientY<ar.top+24)aside.scrollTop-=
 const l=Math.min(x0,ev.clientX),r=Math.max(x0,ev.clientX),t=Math.min(y0,ev.clientY),b=Math.max(y0,ev.clientY);box.style.cssText+=`;left:${l}px;top:${t}px;width:${r-l}px;height:${b-t}px`;
 hit=[];items().forEach(it=>{const q=it.getBoundingClientRect(),id=+it.dataset.m,on=q.right>=l&&q.left<=r&&q.bottom>=t&&q.top<=b;if(on)hit.push(id);it.classList.toggle('ms',on||base.includes(id))})};
 const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
-if(box){box.remove();S.nc=1;setTimeout(()=>S.nc=0,50);S.msel=[...new Set([...base,...hit])];S.msm=1;renderPane()}};
+if(box){box.remove();S.nc=1;S.nc2=1;setTimeout(()=>{S.nc=0;S.nc2=0},50);S.msel=[...new Set([...base,...hit])];S.msm=1;renderPane()}};
 addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
-$('#pane').addEventListener('selectstart',e=>e.preventDefault());$('#pane').addEventListener('mousedown',e=>{if(!e.target.closest('button,.rm'))e.preventDefault()});
+$('#L').addEventListener('selectstart',e=>{if(!e.target.closest||!e.target.closest('textarea,input'))e.preventDefault()});$('#L').addEventListener('mousedown',e=>{if(!e.target.closest('button,.rm,input,textarea,select'))e.preventDefault()});
+$('#L').addEventListener('click',e=>{if(S.nc2){S.nc2=0;return}if(S.tab!='media'||!S.msel.length||e.target.closest('.mi,button,.drop,.mbar'))return;S.msel=[];renderPane()});
 {const _pc=$('#pane').onclick;$('#pane').onclick=e=>{if(S.nc){S.nc=0;return}_pc(e)}}
 /* ---------- speed tool (slow motion / fast forward) ---------- */
 function setSpeed(v){const all=$('#all')&&$('#all').checked&&S.tab=='fx';let t=all?S.clips.slice():[...selObjs('clip'),...selObjs('voice')];t=t.filter(x=>x.mid&&M(x.mid)&&M(x.mid).type!='image');
