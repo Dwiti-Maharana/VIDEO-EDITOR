@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ClipForge – Social Video Editor</title>
+<style>
+:root{--bg:#eceef5;--p:#fff;--p2:#eef0f7;--bd:#d5d9e6;--tx:#171a26;--mu:#666d86;--ac:#6d4aff;--ac2:#00c2a8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d15;--p:#141723;--p2:#1e2231;--bd:#2c3248;--tx:#e8eaf4;--mu:#8b91ab}}
+:root[data-theme="dark"]{--bg:#0b0d15;--p:#141723;--p2:#1e2231;--bd:#2c3248;--tx:#e8eaf4;--mu:#8b91ab}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+button,select,input,textarea{font:inherit;color:inherit}
+button{background:var(--p2);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--ac)}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+button.pr{background:linear-gradient(135deg,var(--ac),#b04aff);border:0;color:#fff;font-weight:600}
+button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+header{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--p);border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.logo{font-weight:800;font-size:17px;letter-spacing:-.02em;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+#asp{display:flex;gap:6px;flex-wrap:wrap}#asp small{opacity:.75;margin-left:3px}
+main{flex:1;min-height:0;display:grid;grid-template-columns:290px 1fr 270px}
+aside{background:var(--p);overflow:auto;padding:10px}
+#L{border-right:1px solid var(--bd)}#ins{border-left:1px solid var(--bd)}
+#stage{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0}
+canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-action:none}
+.tabs{display:flex;gap:4px;margin-bottom:10px}.tabs button{flex:1;padding:6px 2px;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mi{position:relative;border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--p2);cursor:pointer;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center}
+.mi img,.mi video{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.mi b{position:absolute;left:0;right:0;bottom:0;font-size:10px;font-weight:500;padding:2px 5px;background:#000b;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi .rm{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:#000c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;z-index:2;cursor:pointer}.mi .rm:hover{background:#e5384f}
+.drop{border:2px dashed var(--bd);border-radius:10px;padding:16px;text-align:center;color:var(--mu);margin-bottom:10px;cursor:pointer}
+.drop:hover{border-color:var(--ac);color:var(--tx)}
+#tl{height:280px;background:var(--p);border-top:1px solid var(--bd);display:flex;flex-direction:column}
+.tb{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.tb .sp{flex:1}.tb input[type=range]{width:100px}#tm{font-variant-numeric:tabular-nums;min-width:110px;color:var(--mu)}
+.tw{flex:1;display:grid;grid-template-columns:92px 1fr;min-height:0}
+.lb div{height:34px;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:11px;border-bottom:1px solid var(--bd)}
+.lb div:first-child{height:24px}.lb div:nth-child(3){height:56px}
+#sc{overflow:auto;position:relative}#in{position:relative;min-height:100%}
+#rul{height:24px;position:relative;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--p2)}
+#rul span{position:absolute;top:5px;font-size:10px;color:var(--mu);padding-left:3px;border-left:1px solid var(--bd);height:19px}
+.row{height:34px;position:relative;border-bottom:1px solid var(--bd)}.row.v{height:56px}
+.blk{position:absolute;top:3px;bottom:3px;border-radius:6px;padding:4px 8px;overflow:hidden;white-space:nowrap;font-size:11px;color:#fff;cursor:grab;border:2px solid transparent;user-select:none}
+.blk.sel{border-color:#fff;box-shadow:0 0 0 2px var(--ac)}
+.blk.vid{background:#5a47e8}.blk.txt{background:#e0457b}.blk.mus{background:#0b9d88}
+.blk .h{position:absolute;right:0;top:0;bottom:0;width:8px;cursor:ew-resize;background:#fff6}
+.tc{display:flex;gap:4px}.tc b{cursor:pointer;font-weight:400;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px}.tc b:hover{background:var(--p2)}.tc b.off{background:#e5384f40}
+.lb div{flex-direction:column;gap:2px;line-height:1.1}
+.blk{min-width:4px}
+.blk .h.l{left:0;right:auto}.blk:hover .h{background:#fffb}.blk .lbl{position:relative;text-shadow:0 1px 2px #000c;font-weight:600;pointer-events:none}
+#sn{position:absolute;top:0;bottom:0;width:1px;background:#ffd400;z-index:4;display:none;pointer-events:none}
+#ph{position:absolute;top:0;bottom:0;width:2px;background:#ff3b5c;pointer-events:none;z-index:5}
+#ph:before{content:"";position:absolute;top:0;left:-5px;border:6px solid transparent;border-top-color:#ff3b5c}
+label.f{display:block;margin:8px 0;color:var(--mu);font-size:12px}
+label.f input[type=range]{width:100%;accent-color:var(--ac)}
+label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f textarea{width:100%;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:5px}
+label.f input[type=color]{height:30px;padding:2px}
+label.f em{float:right;font-style:normal;color:var(--tx)}
+h4{margin:14px 0 6px;font-size:12px;font-weight:700;color:var(--mu)}
+.emo{display:flex;flex-wrap:wrap;gap:4px}.emo button{font-size:20px;padding:2px 6px}
+.blk,#rul{touch-action:none;-webkit-touch-callout:none}
+.row.a{height:48px}.lb div:nth-child(4),.lb div:nth-child(5){height:48px}.lb{overflow:hidden}
+.wfa{position:absolute;left:0;top:0;width:100%;height:100%;opacity:.95;pointer-events:none}
+.wfv{position:absolute;left:0;bottom:0;width:100%;height:50%;opacity:.95;pointer-events:none;background:linear-gradient(transparent,#0008)}
+.mq{position:absolute;border:1px solid var(--ac);background:#6d4aff30;z-index:6;pointer-events:none}
+.mbn{background:var(--ac);color:#fff;border-radius:8px;padding:6px 8px;margin-bottom:8px;font-weight:600;font-size:12px}
+#recui{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:12px;background:var(--p);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;box-shadow:0 10px 40px #0007}
+#recui[hidden],#cd[hidden]{display:none}
+.rdot{width:12px;height:12px;border-radius:50%;background:#ff3b5c;animation:pl 1s infinite;flex:none}
+@keyframes pl{50%{opacity:.25;transform:scale(.7)}}
+#rtm{font-size:22px;font-variant-numeric:tabular-nums;min-width:78px}
+#rwv{width:min(300px,42vw);height:48px;background:var(--p2);border-radius:8px}
+#cd{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:30vmin;font-weight:800;color:#fff;text-shadow:0 4px 40px #000;z-index:45;pointer-events:none;background:#0006}
+#rb{position:absolute;background:#d98a00;border:2px solid #ff3b5c;border-radius:6px;z-index:3;overflow:hidden;pointer-events:none}
+#sc{overscroll-behavior:contain}
+#mb{display:none}
+@media(pointer:coarse){button{min-height:36px}.blk .h{width:18px}input[type=range]{height:28px}label.f input[type=checkbox]{width:20px;height:20px;vertical-align:middle}.tc b{padding:6px 8px;font-size:15px}}
+@media(max-width:900px){
+body{overflow:hidden;height:100vh;height:100dvh}
+header{padding:6px 10px;gap:6px;flex-wrap:nowrap}
+#asp{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}#asp button{white-space:nowrap;padding:5px 9px;flex:none}#asp small{display:none}
+header>span[style]{display:none}.logo{font-size:15px;flex:none}#th,#ex{flex:none;white-space:nowrap}
+main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+aside{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#L,#ins{position:fixed;left:0;right:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));max-height:48vh;max-height:48dvh;border:0;border-top:1px solid var(--bd);border-radius:14px 14px 0 0;box-shadow:0 -8px 30px #0006;z-index:20;transform:translateY(120%);visibility:hidden;transition:transform .2s,visibility .2s}
+#L.open,#ins.open{transform:none;visibility:visible}
+#tl{height:250px;flex:none}
+.tb{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px 8px}.tb>*{flex:none}.tb input[type=range]{width:80px}#tm{min-width:92px;font-size:12px}
+.tw{grid-template-columns:64px 1fr}.lb div{font-size:10px}
+label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f textarea{font-size:16px}
+#mb{display:flex;gap:8px;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));height:calc(52px + env(safe-area-inset-bottom,0px));background:var(--p);border-top:1px solid var(--bd);z-index:21;flex:none}
+#mb button{flex:1;font-weight:600}#mb button.has{border-color:var(--ac2)}
+}
+@media(max-width:900px) and (max-height:500px){#tl{height:150px}}
+</style></head><body>
+<header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
+<button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export video</button></header>
+<main>
+<aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button></div><div id="pane"></div></aside>
+<div id="stage"><canvas id="cv"></canvas></div>
+<aside id="ins"></aside>
+</main>
+<section id="tl">
+<div class="tb"><button id="st" title="Go to start">⏮</button><button id="pp" class="pr" title="Play / pause (Space)">▶</button><span id="tm">0:00.0 / 0:00.0</span>
+<button id="sp" title="Split at playhead (S)">✂ Split</button><button id="du" title="Duplicate">⧉</button><button id="ml" title="Move earlier">◀</button><button id="mr" title="Move later">▶</button><button id="de" title="Delete (Del)">🗑 Delete</button><button id="un" title="Undo (Ctrl+Z)">↶ Undo</button><button id="re" title="Redo (Ctrl+Y)">↷</button><button id="snb" class="on" title="Magnetic snapping to playhead and clip edges">🧲 Snap</button><button id="mm" title="Select multiple clips: Ctrl/Shift-click, drag a box, or tap this then tap clips">☑ Multi</button>
+<span class="sp"></span><button id="zo" title="Zoom out">−</button><input type="range" id="zm" min="0" max="1000" value="575" title="Timeline zoom (Ctrl + scroll)"><button id="zi" title="Zoom in">+</button><button id="zf" title="Fit whole timeline">Fit</button></div>
+<div class="tw"><div class="lb"><div></div><div>Text<span class="tc"><b data-tg="Th" title="Hide / show all text"></b></span></div><div>Video<span class="tc"><b data-tg="Vh" title="Hide / show video"></b><b data-tg="Vm" title="Mute / unmute video sound"></b></span></div><div>Voice<span class="tc"><b data-tg="Am" title="Mute / unmute voice track"></b></span></div><div>Music<span class="tc"><b data-tg="Mm" title="Mute / unmute music track"></b></span></div></div>
+<div id="sc"><div id="in"><div id="rul"></div><div class="row" id="rT"></div><div class="row v" id="rV"></div><div class="row a" id="rA"></div><div class="row a" id="rM"></div><div id="sn"></div><div id="ph"></div></div></div></div>
+</section>
+<nav id="mb"><button data-sh="L">＋ Add</button><button data-sh="ins">✎ Edit</button></nav>
+<div id="recui" hidden><span class="rdot"></span><b id="rtm">0:00.0</b><canvas id="rwv" width="300" height="48"></canvas><button class="pr" id="rstop">■ Stop</button></div><div id="cd" hidden></div><input type="file" id="fi" accept="video/*,image/*,audio/*" multiple hidden>
+<script>
+const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d');
+const S={media:[],clips:[],texts:[],voices:[],music:null,t:0,play:false,sel:null,zoom:60,id:1,tab:'media',curId:null,last:0,multi:[],mm:0};
+const ASP={'9:16':[720,1280],'4:5':[720,900],'1:1':[720,720],'16:9':[1280,720]};
+const LBL={'9:16':'TikTok · Reels · Shorts','4:5':'Instagram post','1:1':'Square','16:9':'YouTube'};
+const DEF={b:100,c:100,s:100,bl:0,g:0,se:0,h:0};
+const FX={Original:{},Vivid:{c:115,s:145},'B&W':{g:100,c:110},Vintage:{se:60,c:90,b:105,h:-10},Cool:{h:-20,s:110,b:105},Warm:{h:15,se:25,s:115},Fade:{c:80,b:110,s:80},Dramatic:{c:145,b:90,s:110},Dream:{bl:2,b:112,s:125}};
+const TP={'Plain text':{},Title:{size:96,anim:'pop',y:30},Caption:{size:52,bgOn:1,y:80},Subtitle:{size:44,bold:0,y:88,stroke:1},Neon:{size:80,color:'#00ffd5',stroke:1,anim:'fade'},Impact:{size:110,font:'Impact',stroke:1,color:'#ffe600',y:20}};
+const FONTS=['Arial','Impact','Georgia','Courier New','Comic Sans MS','Trebuchet MS'];
+const EMO='😀 😂 😍 🔥 💯 ❤️ 👍 🎉 ✨ ⭐ 💥 👀 🚀 😎 🙌 🎵'.split(' ');
+let W,H,AC,DEST,REC=null,VN=0;
+const ALL={},HS={u:[],r:[],cur:''};let HT;
+const snap=()=>JSON.stringify({c:S.clips,t:S.texts,v:S.voices,mu:S.music,md:S.media.map(m=>m.id)},(k,v)=>k=='_b'?undefined:v);
+function hist(){const s=snap();if(s!==HS.cur){if(HS.cur)HS.u.push(HS.cur);if(HS.u.length>100)HS.u.shift();HS.r=[];HS.cur=s;save()}}const INS={o:null};
+const M=id=>S.media.find(m=>m.id==id),esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=t=>{t=Math.max(0,t);return Math.floor(t/60)+':'+(t%60).toFixed(1).padStart(4,'0')};
+const total=()=>Math.max(0,S.clips.reduce((a,c)=>a+c.dur,0),...S.voices.map(a=>a.start+adur(a)),...S.texts.map(x=>x.start+x.dur));
+const active=t=>S.clips.find(c=>t>=c.start&&t<c.start+c.dur);
+function toast(m){const d=document.createElement('div');d.textContent=m;d.style.cssText='position:fixed;bottom:270px;left:50%;transform:translateX(-50%);background:#000d;color:#fff;padding:8px 14px;border-radius:8px;z-index:99';document.body.append(d);setTimeout(()=>d.remove(),2400)}
+function setAsp(k){S.asp=k;save();[W,H]=ASP[k];cv.width=W;cv.height=H;fit();$('#asp').innerHTML=Object.keys(ASP).map(a=>`<button class="${a==k?'on':''}" data-a="${a}">${a}<small>${LBL[a]}</small></button>`).join('')}
+function fit(){const r=$('#stage').getBoundingClientRect(),k=Math.min((r.width-24)/W,(r.height-24)/H);if(k>0){cv.style.width=W*k+'px';cv.style.height=H*k+'px'}}
+new ResizeObserver(fit).observe($('#stage'));
+$('#asp').onclick=e=>{const b=e.target.closest('[data-a]');b&&setAsp(b.dataset.a)};
+$('#th').onclick=()=>{const d=document.documentElement,c=d.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');d.dataset.theme=c=='dark'?'light':'dark';try{localStorage.setItem('cf-theme',d.dataset.theme)}catch(x){}};
+try{const t0=localStorage.getItem('cf-theme');if(t0)document.documentElement.dataset.theme=t0}catch(x){}
+
+/* ---------- media ---------- */
+function route(m){if(m.type=='image'||m.node||!m.el)return;AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();m.node=AC.createMediaElementSource(m.el);m.node.connect(DEST);m.node.connect(AC.destination)}
+function addFiles(fs){for(const f of fs){const url=URL.createObjectURL(f),type=f.type.startsWith('video')?'video':f.type.startsWith('image')?'image':f.type.startsWith('audio')?'audio':null;if(!type)continue;
+const m={id:S.id++,name:f.name,url,type,file:f};
+if(type=='image'){const i=new Image();i.onload=()=>{m.el=i;m.w=i.width;m.h=i.height;m.dur=5;ALL[m.id]=m;S.media.push(m);hist();renderPane()};i.src=url}
+else{const e=document.createElement(type);e.preload='auto';e.playsInline=true;e.src=url;e.onloadedmetadata=()=>{m.el=e;m.dur=e.duration;m.w=e.videoWidth;m.h=e.videoHeight;route(m);ALL[m.id]=m;S.media.push(m);hist();renderPane();if(type=='video'){thumb(m);peaks(m)}if(type=='audio')peaks(m)}}}}
+$('#fi').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+addEventListener('dragover',e=>e.preventDefault());addEventListener('drop',e=>{e.preventDefault();addFiles(e.dataTransfer.files)});
+function layout(){let t=0;S.clips.forEach(c=>{c.dur=(c.out-c.in)/c.sp;c.start=t;t+=c.dur})}
+function addClip(m){const c={id:S.id++,mid:m.id,in:0,out:m.dur,sp:1,vol:1,fit:'cover',zoom:1,rot:0,flip:0,fade:0,za:'None',zs:30,...DEF};S.clips.push(c);layout();pick('clip',c.id)}
+function rmMedia(id){const m=M(id);if(!m)return;if(m.type!='image')m.el.pause();S.clips=S.clips.filter(c=>c.mid!=id);S.voices=S.voices.filter(v=>v.mid!=id);if(S.music&&S.music.mid==id)S.music=null;S.media=S.media.filter(x=>x.id!=id);layout();S.t=Math.min(S.t,total());S.curId=null;pick(null);renderPane();toast('Removed '+m.name)}
+function setMusic(m){const a={id:S.id++,mid:m.id,start:S.t,in:0,out:m.dur,vol:.8,sp:1,fi:0,fo:0,mute:0,tr:'m'};S.voices.push(a);pick('voice',a.id)}
+function _unusedMusic(m){S.music={mid:m.id,vol:.8};pick('music',0)}
+function addText(p={}){const o={id:S.id++,txt:'Your text',font:'Arial',size:64,color:'#ffffff',bold:1,stroke:0,bgOn:0,bgc:'#000000',anim:'none',start:S.t,dur:3,x:50,y:50,...p};S.texts.push(o);pick('text',o.id)}
+const getSel=()=>{const s=S.sel;return s&&(s.k=='clip'?S.clips.find(c=>c.id==s.id):s.k=='text'?S.texts.find(c=>c.id==s.id):s.k=='voice'?S.voices.find(c=>c.id==s.id):S.music)};
+function pick(k,id,add){if(!k){S.sel=null;S.multi=[]}else if(add){const key=k+':'+id;if(S.multi.includes(key)&&S.multi.length>1){S.multi=S.multi.filter(x=>x!=key);const l=S.multi[S.multi.length-1].split(':');S.sel={k:l[0],id:+l[1]}}else{if(!S.multi.includes(key))S.multi.push(key);S.sel={k,id}}}else{S.sel={k,id};S.multi=[k+':'+id]}hist();renderIns();renderTL();const eb=document.querySelector('#mb [data-sh=ins]');eb&&eb.classList.toggle('has',!!S.sel);updMM()}
+const mob=()=>matchMedia('(max-width:900px)').matches;
+function sheet(w){const o=!!w&&!$(w=='L'?'#L':'#ins').classList.contains('open');$('#L').classList.toggle('open',o&&w=='L');$('#ins').classList.toggle('open',o&&w=='ins');document.querySelectorAll('#mb button').forEach(b=>b.classList.toggle('on',o&&b.dataset.sh==w))}
+$('#mb').onclick=e=>{const b=e.target.closest('[data-sh]');b&&sheet(b.dataset.sh)};
+$('#stage').addEventListener('pointerdown',e=>{if(e.target===$('#stage'))sheet(null)});
+
+/* ---------- left pane ---------- */
+function renderPane(){const p=$('#pane'),t=S.tab;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+if(t=='media')p.innerHTML=`<div class="drop" id="dz">＋ Import video, image or audio<br><small>or drop files anywhere</small></div><div class="grid">${S.media.map(m=>`<div class="mi" data-m="${m.id}" title="Click to add">${m.type=='image'?`<img src="${m.url}">`:m.type=='video'?`<video src="${m.url}#t=.5" muted preload="metadata"></video>`:'<span style="font-size:28px">🎵</span>'}<b>${esc(m.name)}</b><span class="rm" data-rm="${m.id}" title="Remove">✕</span></div>`).join('')}</div><p style="color:var(--mu)">Click a media item to add it to the timeline. Audio files become background music.</p>`;
+else if(t=='text')p.innerHTML=`<button class="pr" style="width:100%" data-tp="Plain text">＋ Add text</button><h4>Styles</h4><div class="grid">${Object.keys(TP).slice(1).map(k=>`<button data-tp="${k}">${k}</button>`).join('')}</div><h4>Stickers</h4><div class="emo">${EMO.map(e=>`<button data-e="${e}">${e}</button>`).join('')}</div>`;
+else if(t=='fx')p.innerHTML=`<label class="f"><input type="checkbox" id="all"> Apply to all clips</label><div class="grid">${Object.keys(FX).map(k=>`<button data-fx="${k}">${k}</button>`).join('')}</div><h4>Transitions</h4><button data-tr="1" style="width:100%">Fade in/out on all clips</button><p style="color:var(--mu)">Select a clip to adjust speed, zoom, rotation, flip and colour in the right panel.</p>`;
+else p.innerHTML=`<h4>Voice-over</h4><button class="pr" id="rc" style="width:100%">● Record voice-over</button><p style="color:var(--mu)">Recording starts at the playhead and plays the video so you can narrate along. Use headphones to avoid echo.</p><h4>Background music</h4>${S.media.filter(m=>m.type=='audio').map(m=>`<div style="display:flex;gap:6px;margin-bottom:6px"><button data-au="${m.id}" style="flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🎵 ${esc(m.name)}</button><button data-rm="${m.id}" title="Remove">✕</button></div>`).join('')||'<p style="color:var(--mu)">Import an audio file in the Media tab first.</p>'}<p style="color:var(--mu)">Volume of each clip is set in its inspector. Everything is mixed into the exported file.</p>`}
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){S.tab=b.dataset.t;renderPane();save()}};
+$('#pane').onclick=e=>{const g=e.target.closest('[data-m],[data-tp],[data-e],[data-fx],[data-tr],[data-au],[data-rm],#dz,#rc');if(!g)return;
+if(g.dataset.rm)rmMedia(+g.dataset.rm);else if(g.id=='dz')$('#fi').click();else if(g.id=='rc')REC?recStop():recStart();
+else if(g.dataset.m){const m=M(g.dataset.m);m.type=='audio'?setMusic(m):addClip(m)}
+else if(g.dataset.tp)addText(TP[g.dataset.tp]);
+else if(g.dataset.e)addText({txt:g.dataset.e,size:150});
+else if(g.dataset.fx){const all=$('#all').checked,o=getSel(),tg=all?S.clips:(S.sel&&S.sel.k=='clip'?selObjs('clip'):[]);if(!tg.length)return toast('Select a clip on the timeline first');tg.forEach(c=>Object.assign(c,DEF,FX[g.dataset.fx]));renderIns();hist()}
+else if(g.dataset.tr){S.clips.forEach(c=>c.fade=1);renderIns();hist();toast('Fade added to all clips')}
+else if(g.dataset.au)setMusic(M(g.dataset.au));
+if(mob()&&(g.dataset.m||g.dataset.tp||g.dataset.e||g.dataset.au))sheet(null)};
+
+/* ---------- inspector ---------- */
+function renderIns(){const el=$('#ins'),o=getSel();if(!o){el.innerHTML='<h4>Inspector</h4><p style="color:var(--mu)">Select a clip, text or music block on the timeline to edit it.</p>';return}
+INS.o=o;const k=S.sel.k;
+const f=(l,key,t,a='')=>{const v=o[key];if(t=='range')return`<label class="f">${l}<em>${v}</em><input type="range" data-k="${key}" data-n="1" value="${v}" ${a}></label>`;
+if(t=='checkbox')return`<label class="f"><input type="checkbox" data-k="${key}" ${v?'checked':''}> ${l}</label>`;
+if(t=='select')return`<label class="f">${l}<select data-k="${key}">${a.map(x=>`<option ${x==v?'selected':''}>${x}</option>`).join('')}</select></label>`;
+if(t=='textarea')return`<label class="f">${l}<textarea data-k="${key}" rows="2">${esc(v)}</textarea></label>`;
+return`<label class="f">${l}<input type="${t}" data-k="${key}" ${t=='number'?'data-n="1"':''} value="${v}" ${a}></label>`};
+let h='';
+if(k=='clip'){const m=M(o.mid);h=`<h4>Clip</h4>`+f('Fit','fit','select',['cover','contain','blur'])+f('Zoom','zoom','range','min="1" max="3" step=".01"')+f('Rotate','rot','range','min="-180" max="180"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Zoom animation','za','select',['None','Zoom in','Zoom out','Pan left','Pan right','Pulse','Shake'])+f('Animation strength','zs','range','min="5" max="100"')+(m.type=='video'?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".25" max="4" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))+`<h4>Colour</h4>`+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button>'+(m.type=='video'?' <button id="dt">🔊 Detach audio</button>':'')}
+else if(k=='text')h=`<h4>Text</h4>`+f('Content','txt','textarea')+f('Hide text','hide','checkbox')+f('Font','font','select',FONTS)+f('Size','size','range','min="16" max="260"')+f('Colour','color','color')+f('Bold','bold','checkbox')+f('Outline','stroke','checkbox')+f('Background box','bgOn','checkbox')+f('Box colour','bgc','color')+f('Animation','anim','select',['none','fade','pop','zoom','slide'])+f('Start (s)','start','number','min="0" step=".1"')+f('Duration (s)','dur','number','min=".2" step=".1"')+f('Position X','x','range','min="0" max="100"')+f('Position Y','y','range','min="0" max="100"');
+else if(k=='voice'){h=`<h4>${o.tr=='m'?'Music':'Voice-over'}</h4>`+f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute','mute','checkbox')+f('Speed','sp','range','min=".25" max="3" step=".05"')+f('Fade in (s)','fi','range','min="0" max="5" step=".1"')+f('Fade out (s)','fo','range','min="0" max="5" step=".1"')+f('Start on timeline (s)','start','number','min="0" step=".1"')+f('Trim start (s)','in','number','min="0" step=".1"')+f('Trim end (s)','out','number','min=".2" step=".1"')+`<h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-ms">${o.tr=='m'?'→ Voice track':'→ Music track'}</button><button id="a-de">🗑 Delete</button></div>`}else h=`<h4>Music</h4>`+f('Volume','vol','range','min="0" max="1" step=".05"');
+el.innerHTML=(S.multi.length>1?`<div class="mbn">${S.multi.length} items selected · edits apply to all</div>`:'')+h}
+$('#ins').addEventListener('input',e=>{const t=e.target,k=t.dataset.k;if(!k)return;const o=INS.o,val=t.type=='checkbox'?+t.checked:t.dataset.n?+t.value:t.value;(S.multi.length>1&&S.sel?selObjs(S.sel.k):[o]).forEach(x=>{x[k]=val});if(t.type=='range'&&t.previousElementSibling)t.previousElementSibling.textContent=t.value;layout();renderTL();clearTimeout(HT);HT=setTimeout(hist,400)});
+$('#ins').addEventListener('click',e=>{if(e.target.id=='rs'){(S.multi.length>1&&S.sel?selObjs(S.sel.k):[INS.o]).forEach(x=>Object.assign(x,DEF));renderIns();hist()}});
+
+/* ---------- timeline ---------- */
+function renderTL(){const z=S.zoom,T=Math.max(total(),10)+6,sel=(k,id)=>isM(k,id)?' sel':'';
+$('#in').style.width=T*z+'px';const ST=[.01,.02,.05,.1,.2,.5,1,2,5,10,30,60,120,300,600,1800,3600],st=ST.find(s=>s*z>=70)||3600,lab=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(st<1?s.toFixed(st<.1?2:1).padStart(st<.1?5:4,'0'):String(Math.round(s)).padStart(2,'0'))};let r='';for(let k=0;k*st<T;k++)r+=`<span style="left:${k*st*z}px">${lab(k*st)}</span>`;$('#rul').innerHTML=r;
+$('#rT').innerHTML=S.texts.map(x=>`<div class="blk txt${sel('text',x.id)}" data-k="text" data-id="${x.id}" style="left:${x.start*z}px;width:${x.dur*z}px"><i class="h l"></i>${esc(x.txt)}<i class="h"></i></div>`).join('');
+$('#rV').innerHTML=S.clips.map(c=>`<div class="blk vid${sel('clip',c.id)}" data-k="clip" data-id="${c.id}" style="left:${c.start*z}px;width:${c.dur*z}px${th(M(c.mid))}"><i class="h l"></i>${vwf(c)}<span class="lbl">${esc(M(c.mid).name)}${c.sp!=1?' ×'+c.sp:''}${c.mute?' 🔇':''}${c.hide?' 🙈':''}</span><i class="h"></i></div>`).join('');
+$('#rA').innerHTML=S.voices.map(v=>`<div class="blk mus${sel('voice',v.id)}" data-k="voice" data-id="${v.id}" style="left:${v.start*z}px;width:${M(v.mid).dur*z}px;background:#d98a00">${wf(M(v.mid))}<span class="lbl">🎙 ${esc(M(v.mid).name)}</span></div>`).join('');$('#rM').innerHTML=S.music?`<div class="blk mus${sel('music',0)}" data-k="music" data-id="0" style="left:0;width:${Math.min(M(S.music.mid).dur,Math.max(total(),1))*z}px">${wf(M(S.music.mid),Math.min(1,Math.max(total(),1)/M(S.music.mid).dur))}<span class="lbl">🎵 ${esc(M(S.music.mid).name)}</span></div>`:''}
+function drag(e,fn,end){e.preventDefault();const sx=e.clientX,mv=ev=>fn(ev.clientX-sx,ev),up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);end&&end();hist()};addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)}
+$('#in').onpointerdown=e=>{if(S.exporting)return;const b=e.target.closest('.blk'),box=$('#in');
+const seek=ev=>{S.t=Math.min(Math.max(0,(ev.clientX-box.getBoundingClientRect().left)/S.zoom),total());S.curId=null};
+if(!b){seek(e);drag(e,(d,ev)=>seek(ev));return}
+const k=b.dataset.k,id=+b.dataset.id;pick(k,id);const o=getSel();if(k=='music')return;if(k=='voice'){const s0=o.start;drag(e,dx=>{o.start=Math.max(0,s0+dx/S.zoom);renderTL()},renderIns);return}
+if(e.target.classList.contains('h')){const d0=o.dur;drag(e,dx=>{const nd=Math.max(.2,d0+dx/S.zoom);if(k=='clip'){const m=M(o.mid);let out=o.in+nd*o.sp;if(m.type=='video')out=Math.min(out,m.dur);o.out=out;layout()}else o.dur=nd;renderTL()},renderIns)}
+else if(k=='text'){const s0=o.start;drag(e,dx=>{o.start=Math.max(0,s0+dx/S.zoom);renderTL()},renderIns)}};
+/* ---------- Filmora-style timeline: snapping, trimming, reordering, thumbnails, waveforms ---------- */
+S.snap=1;S.trk={Th:0,Vh:0,Vm:0,Am:0,Mm:0};
+const th=m=>{const u=m.type=='image'?m.url:m.th;return u?`;background-image:linear-gradient(#0004,#0004),url('${u}');background-size:auto 100%;background-repeat:repeat-x`:''};
+const wf=(m,a=0,b=1,mode='a',g=1)=>{if(!m.pk)return'';const L=m.pk.length,i0=Math.floor(L*a),i1=Math.min(L,Math.max(i0+2,Math.floor(L*b))),n=i1-i0;let d='';for(let i=0;i<n;i++){const v=Math.min(1,(m.pk[i0+i]||0)*g),hh=Math.max(.35,v*9.5);d+=`M${i} ${10-hh}v${2*hh}`}return`<svg class="${mode=='v'?'wfv':'wfa'}" viewBox="0 0 ${n} 20" preserveAspectRatio="none"><path d="${d}" stroke="#fff" stroke-width=".85" fill="none"/></svg>`};
+const vwf=c=>{const m=M(c.mid);return m.type=='video'?wf(m,c.in/m.dur,Math.min(c.out,m.dur)/m.dur,'v',(c.mute||S.trk.Vm)?.12:Math.max(.15,c.vol)):''};
+async function peaks(m){try{if(m.type=='video'&&(m.file.size>150e6||m.dur>900))return;AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();const b=await AC.decodeAudioData(await m.file.arrayBuffer()),d=b.getChannelData(0),n=Math.min(6000,Math.max(300,Math.ceil(b.duration*50))),sz=Math.max(1,Math.floor(d.length/n)),st=Math.max(1,Math.floor(sz/200)),pk=[];let mx=0;for(let i=0;i<n;i++){let v=0;for(let j=i*sz;j<Math.min(d.length,(i+1)*sz);j+=st)v=Math.max(v,Math.abs(d[j]));pk.push(v);mx=Math.max(mx,v)}m.pk=pk.map(v=>mx?Math.pow(v/mx,.7):0);renderTL()}catch(e){}}
+function thumb(m){const e=document.createElement('video');e.muted=true;e.preload='auto';e.src=m.url;e.onloadeddata=()=>{e.currentTime=Math.min(.5,m.dur/2)};e.onseeked=()=>{e.onseeked=null;try{const c=document.createElement('canvas');c.width=120;c.height=Math.round(120*m.h/m.w)||68;c.getContext('2d').drawImage(e,0,0,c.width,c.height);m.th=c.toDataURL('image/jpeg',.6);renderTL()}catch(x){}e.removeAttribute('src');e.load()}}
+function snapP(t,ex,sc){if(!S.snap)return null;const lim=8/S.zoom,P=[0,S.t];let b=null,bd=lim;if(!sc)S.clips.forEach(c=>P.push(c.start,c.start+c.dur));S.texts.forEach(x=>{if(x!==ex)P.push(x.start,x.start+x.dur)});S.voices.forEach(v=>{if(v!==ex)P.push(v.start,v.start+adur(v))});P.forEach(p=>{const d=Math.abs(p-t);if(d<bd){bd=d;b=p}});return b}
+const showSn=p=>{const s=$('#sn');if(p==null)s.style.display='none';else{s.style.left=p*S.zoom+'px';s.style.display='block'}};
+function snapV(t,ex,sc){const p=snapP(t,ex,sc);showSn(p);return p==null?t:p}
+function snapMove(ns,dur,ex){const pa=snapP(ns,ex),pb=snapP(ns+dur,ex),da=pa==null?1e9:Math.abs(pa-ns),db=pb==null?1e9:Math.abs(pb-ns-dur);if(da>=1e9&&db>=1e9){showSn(null);return ns}if(da<=db){showSn(pa);return pa}showSn(pb);return pb-dur}
+$('#snb').onclick=e=>{S.snap=!S.snap;save();e.currentTarget.classList.toggle('on',S.snap)};
+$('#in').onpointerdown=e=>{if(S.exporting)return;const b=e.target.closest('.blk'),box=$('#in'),tAt=ev=>Math.max(0,(ev.clientX-box.getBoundingClientRect().left)/S.zoom);
+if(!b){if(e.target.closest('#rul')){const sk=ev=>{S.t=Math.min(tAt(ev),total());S.curId=null};sk(e);drag(e,(d,ev)=>sk(ev))}else{if(!(e.ctrlKey||e.metaKey||e.shiftKey||S.mm))pick(null);if(e.pointerType=='mouse')marquee(e)}return}
+const k=b.dataset.k,id=+b.dataset.id;const add=e.ctrlKey||e.metaKey||e.shiftKey||S.mm;if(add){pick(k,id,1);return}if(isM(k,id)&&S.multi.length>1){S.sel={k,id};renderIns();renderTL()}else pick(k,id);const o=getSel();if(!o||k=='music')return;const grp=S.multi.length>1&&isM(k,id);
+const edge=e.target.classList.contains('h')?(e.target.classList.contains('l')?'l':'r'):'',z=S.zoom,fin=()=>{showSn(null);renderTL();renderIns()};if(edge&&S.multi.length>1)pick(k,id);
+if(k=='clip'){const m=M(o.mid),s0=o.start,in0=o.in,out0=o.out,d0=o.dur;
+if(edge=='r')drag(e,dx=>{const ne=snapV(s0+d0+dx/z,o,1),nd=Math.max(.2,ne-s0);let out=in0+nd*o.sp;if(m.type=='video')out=Math.min(out,m.dur);o.out=out;layout();renderTL()},fin);
+else if(edge=='l')drag(e,dx=>{const ns=snapV(s0+dx/z,o,1);let ni=Math.min(out0-.2*o.sp,in0+(ns-s0)*o.sp);if(m.type=='video')ni=Math.max(0,ni);o.in=ni;layout();renderTL()},fin);
+else{const orig=[...S.clips],mids=new Map(orig.map(c=>[c,c.start+c.dur/2])),grpC=grp?orig.filter(c=>isM('clip',c.id)):[o],c0=grp?(grpC[0].start+grpC[grpC.length-1].start+grpC[grpC.length-1].dur)/2:s0+d0/2;
+drag(e,dx=>{const ct=c0+dx/z,others=orig.filter(c=>!grpC.includes(c)),i=others.filter(c=>mids.get(c)<ct).length;S.clips=[...others.slice(0,i),...grpC,...others.slice(i)];layout();renderTL();const el=grp?null:$(`#rV [data-id="${id}"]`);if(el){el.style.left=(ct-o.dur/2)*z+'px';el.style.opacity=.85;el.style.zIndex=9}},fin)}return}
+if(k=='text'){const s0=o.start,d0=o.dur,e0=s0+d0;
+if(edge=='r')drag(e,dx=>{o.dur=Math.max(.2,snapV(e0+dx/z,o)-s0);renderTL()},fin);
+else if(edge=='l')drag(e,dx=>{const ns=Math.min(e0-.2,Math.max(0,snapV(s0+dx/z,o)));o.start=ns;o.dur=e0-ns;renderTL()},fin);
+else if(grp)groupShift(e,o,fin);else drag(e,dx=>{o.start=Math.max(0,snapMove(s0+dx/z,d0,o));renderTL()},fin);return}
+if(k=='voice'){const s0=o.start,in0=o.in,m=M(o.mid),out0=Math.min(o.out,m.dur),d0=adur(o);
+if(edge=='r')drag(e,dx=>{const ne=snapV(s0+d0+dx/z,o),nd=Math.max(.2,ne-s0);o.out=Math.min(m.dur,in0+nd*o.sp);renderTL()},fin);
+else if(edge=='l')drag(e,dx=>{const ns=Math.max(0,snapV(s0+dx/z,o)),ni=Math.min(out0-.2*o.sp,Math.max(0,in0+(ns-s0)*o.sp));o.in=ni;o.start=s0+(ni-in0)/o.sp;renderTL()},fin);
+else if(grp)groupShift(e,o,fin);else drag(e,dx=>{o.start=Math.max(0,snapMove(s0+dx/z,d0,o));renderTL()},fin)}};
+/* ---------- audio clip editing: split, trim, duplicate, fades, speed, detach ---------- */
+const adur=a=>Math.max(.05,(Math.min(a.out,M(a.mid).dur)-a.in)/a.sp);
+function audRows(){const z=S.zoom,sel=id=>isM('voice',id)?' sel':'';
+const row=t=>S.voices.filter(a=>(a.tr||'v')==t).map(a=>{const m=M(a.mid),d=adur(a);return`<div class="blk mus${sel(a.id)}" data-k="voice" data-id="${a.id}" style="left:${a.start*z}px;width:${d*z}px;background:${t=='v'?'#d98a00':'#0b9d88'}"><i class="h l"></i>${wf(m,a.in/m.dur,Math.min(a.out,m.dur)/m.dur,'a',a.mute?.12:Math.max(.15,a.vol))}<span class="lbl">${t=='v'?'🎙':'🎵'} ${esc(m.name)}${a.sp!=1?' ×'+a.sp:''}${a.mute?' 🔇':''}</span><i class="h"></i></div>`}).join('');
+$('#rA').innerHTML=row('v');$('#rM').innerHTML=row('m')}
+const _rt=renderTL;renderTL=function(){_rt();audRows()};
+function splitAud(){const a=getSel();if(!a||S.sel.k!='voice')return;const d=adur(a),r=S.t-a.start;if(r<=.1||r>=d-.1)return toast('Move the playhead inside the selected audio clip to split it');const cut=a.in+r*a.sp,n={...a,id:S.id++,start:S.t,in:cut};a.out=cut;a.fo=0;n.fi=0;S.voices.splice(S.voices.indexOf(a)+1,0,n);pick('voice',n.id)}
+function dupAud(){const a=getSel(),n={...a,id:S.id++,start:a.start+adur(a)};S.voices.splice(S.voices.indexOf(a)+1,0,n);pick('voice',n.id)}
+function splitText(){const x=getSel(),r=S.t-x.start;if(r<=.1||r>=x.dur-.1)return toast('Move the playhead inside the selected text to split it');const n={...x,id:S.id++,start:S.t,dur:x.dur-r,anim:'none'};x.dur=r;S.texts.push(n);pick('text',n.id)}
+function detach(){const c=getSel();if(!c||S.sel.k!='clip')return;const m=M(c.mid);if(m.type!='video')return;const n={id:S.id++,name:m.name+' (audio)',url:m.url,type:'audio',file:m.file,dur:m.dur,ref:m.id},e=new Audio(m.url);e.preload='auto';e.onloadedmetadata=()=>{n.el=e;route(n);ALL[n.id]=n;S.media.push(n);peaks(n);const a={id:S.id++,mid:n.id,start:c.start,in:c.in,out:c.out,vol:c.vol,sp:c.sp,fi:0,fo:0,mute:0,tr:'v'};S.voices.push(a);c.vol=0;pick('voice',a.id);renderPane();toast('Audio detached to the Voice track')}}
+$('#ins').addEventListener('click',e=>{const id=e.target.id;if(id=='dt')return detach();if(!id||id.slice(0,2)!='a-')return;if(id=='a-sp')split();else if(id=='a-du')dup();else if(id=='a-ms'){const nt=INS.o.tr=='m'?'v':'m';(S.multi.length>1?selObjs('voice'):[INS.o]).forEach(x=>{x.tr=nt});hist();renderIns();renderTL()}else if(id=='a-de')del()});
+const TG={Th:['👁','🙈'],Vh:['👁','🙈'],Vm:['🔊','🔇'],Am:['🔊','🔇'],Mm:['🔊','🔇']};
+function trkUI(){document.querySelectorAll('[data-tg]').forEach(b=>{const k=b.dataset.tg;b.textContent=TG[k][S.trk[k]?1:0];b.classList.toggle('off',!!S.trk[k])});$('#rT').style.opacity=S.trk.Th?0.4:1;$('#rV').style.opacity=S.trk.Vh?0.4:1;$('#rA').style.opacity=S.trk.Am?0.5:1;$('#rM').style.opacity=S.trk.Mm?0.5:1}
+document.querySelector('.lb').onclick=e=>{const b=e.target.closest('[data-tg]');if(!b)return;const k=b.dataset.tg;S.trk[k]=S.trk[k]?0:1;trkUI();save()};
+const ZMIN=.3,ZMAX=3000;
+function setZoom(z,ax){const sc=$('#sc');z=Math.min(ZMAX,Math.max(ZMIN,z));if(ax==null)ax=sc.clientWidth/2;const t=(sc.scrollLeft+ax)/S.zoom;S.zoom=z;renderTL();sc.scrollLeft=t*z-ax;if(document.activeElement!==$('#zm'))$('#zm').value=Math.round(250*Math.log10(z/ZMIN));save()}
+$('#zm').oninput=e=>setZoom(ZMIN*Math.pow(10,e.target.value/250));
+$('#zi').onclick=()=>setZoom(S.zoom*1.5);$('#zo').onclick=()=>setZoom(S.zoom/1.5);
+$('#zf').onclick=()=>{setZoom(($('#sc').clientWidth-30)/Math.max(total(),1));$('#sc').scrollLeft=0};
+$('#sc').addEventListener('wheel',e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();setZoom(S.zoom*Math.exp(-e.deltaY*.003),e.clientX-$('#sc').getBoundingClientRect().left)},{passive:false});
+function split(){if(S.multi.length>1)return splitMulti();if(S.sel&&S.sel.k=='voice')return splitAud();if(S.sel&&S.sel.k=='text')return splitText();const c=S.clips.find(c=>S.t>c.start+.1&&S.t<c.start+c.dur-.1);if(!c)return toast('Move the playhead inside a clip to split it');const rel=(S.t-c.start)*c.sp,n={...c,id:S.id++,in:c.in+rel};c.out=c.in+rel;S.clips.splice(S.clips.indexOf(c)+1,0,n);layout();pick('clip',n.id)}
+function dup(){const s=S.sel;if(!s)return;if(S.multi.length>1)return dupMulti();if(s.k=='voice')return dupAud();if(s.k=='clip'){const c=getSel(),n={...c,id:S.id++};S.clips.splice(S.clips.indexOf(c)+1,0,n);layout();pick('clip',n.id)}else if(s.k=='text'){const x=getSel(),n={...x,id:S.id++,start:x.start+.5};S.texts.push(n);pick('text',n.id)}}
+function del(){const s=S.sel;if(!s)return;if(S.multi.length>1){const ids=k=>new Set(selObjs(k).map(x=>x.id)),c=ids('clip'),t=ids('text'),v=ids('voice');S.clips=S.clips.filter(x=>!c.has(x.id));S.texts=S.texts.filter(x=>!t.has(x.id));S.voices=S.voices.filter(x=>!v.has(x.id));layout();S.t=Math.min(S.t,total());return pick(null)}if(s.k=='clip'){S.clips=S.clips.filter(c=>c.id!=s.id);layout()}else if(s.k=='text')S.texts=S.texts.filter(c=>c.id!=s.id);else if(s.k=='voice')S.voices=S.voices.filter(v=>v.id!=s.id);else{const m=M(S.music.mid);m.el.pause();S.music=null}S.t=Math.min(S.t,total());pick(null)}
+function mv(d){if(S.multi.length>1)return mvMulti(d);const s=S.sel;if(s&&s.k=='voice'){const a=getSel();a.start=Math.max(0,+(a.start+d*.1).toFixed(2));renderTL();hist();return}if(!s||s.k!='clip')return;const c=getSel(),i=S.clips.indexOf(c),j=i+d;if(j<0||j>=S.clips.length)return;S.clips.splice(i,1);S.clips.splice(j,0,c);layout();renderTL();hist()}
+function restore(s){const o=JSON.parse(s);S.clips=o.c;S.texts=o.t;S.voices=o.v;S.music=o.mu;S.media=o.md.map(id=>ALL[id]);S.media.forEach(m=>m.type!='image'&&m.el.pause());layout();S.t=Math.min(S.t,total());S.curId=null;S.multi=S.multi.filter(x=>{const p=x.split(':');return(p[0]=='clip'?S.clips:p[0]=='text'?S.texts:S.voices).some(o=>o.id==p[1])});if(!getSel()){if(S.multi.length){const l=S.multi[S.multi.length-1].split(':');S.sel={k:l[0],id:+l[1]}}else S.sel=null}renderIns();renderTL();renderPane();updMM();save()}
+function undo(){if(S.exporting||REC)return;clearTimeout(HT);hist();if(!HS.u.length)return toast('Nothing to undo');HS.r.push(HS.cur);HS.cur=HS.u.pop();restore(HS.cur)}
+function redo(){if(S.exporting||REC)return;if(!HS.r.length)return toast('Nothing to redo');HS.u.push(HS.cur);HS.cur=HS.r.pop();restore(HS.cur)}
+$('#un').onclick=undo;$('#re').onclick=redo;$('#sp').onclick=split;$('#du').onclick=dup;$('#de').onclick=del;$('#ml').onclick=()=>mv(-1);$('#mr').onclick=()=>mv(1);
+$('#st').onclick=()=>{S.t=0;S.curId=null;$('#sc').scrollLeft=0};$('#pp').onclick=()=>S.play?pause():play();
+addEventListener('keydown',e=>{const tg=e.target,typing=tg.tagName=='TEXTAREA'||(tg.tagName=='INPUT'&&!['range','checkbox','color'].includes(tg.type));if((e.ctrlKey||e.metaKey)&&!typing){const q=e.key.toLowerCase();if(q=='z'){e.preventDefault();e.shiftKey?redo():undo();return}if(q=='y'){e.preventDefault();redo();return}if(q=='b'){e.preventDefault();split();return}if(q=='a'){e.preventDefault();selAll();return}}if(/INPUT|TEXTAREA|SELECT/.test(tg.tagName))return;
+if(e.code=='Space'){e.preventDefault();S.play?pause():play()}else if(e.key=='s')split();else if(e.key=='Delete'||e.key=='Backspace')del();else if(e.key=='Escape')pick(null);
+else if(e.key=='ArrowLeft'){S.t=Math.max(0,S.t-1/30);S.curId=null}else if(e.key=='ArrowRight'){S.t=Math.min(total(),S.t+1/30);S.curId=null}});
+
+/* ---------- playback & rendering ---------- */
+function play(){if(total()<=0)return toast('Add something to the timeline first');if(S.t>=total()-.05)S.t=0;AC&&AC.resume();S.play=true;S.last=performance.now();$('#pp').textContent='⏸'}
+function pause(){if(REC)recStop();S.play=false;$('#pp').textContent='▶';S.media.forEach(m=>m.type!='image'&&m.el.pause());if(S.rec){const r=S.rec;S.rec=null;setTimeout(()=>r.stop(),300)}}
+const fl=c=>`brightness(${c.b}%) contrast(${c.c}%) saturate(${c.s}%) blur(${c.bl}px) grayscale(${c.g}%) sepia(${c.se}%) hue-rotate(${c.h}deg)`;
+function blit(e,m,fm,z,rot,flip,ox=0,oy=0){const k=fm(W/m.w,H/m.h)*z,w=m.w*k,h=m.h*k;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.rotate(rot*Math.PI/180);if(flip)ctx.scale(-1,1);ctx.drawImage(e,-w/2,-h/2,w,h);ctx.restore()}
+function anim(c){const p=Math.min(1,Math.max(0,(S.t-c.start)/c.dur)),s=c.zs/100;let z=1,x=0,y=0;
+if(c.za=='Zoom in')z=1+s*p;else if(c.za=='Zoom out')z=1+s*(1-p);else if(c.za=='Pan left'){z=1+s;x=(.5-p)*s*W}else if(c.za=='Pan right'){z=1+s;x=(p-.5)*s*W}else if(c.za=='Pulse')z=1+s*.25*(1+Math.sin(S.t*6));else if(c.za=='Shake'){z=1+s*.15;x=Math.sin(S.t*50)*s*W*.04;y=Math.cos(S.t*43)*s*H*.03}
+return[z,x,y]}
+function draw(){ctx.globalAlpha=1;ctx.filter='none';ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+const c=active(S.t);S.media.forEach(m=>{if(m.type=='video'&&(!c||c.mid!=m.id)&&!m.el.paused)m.el.pause()});
+if(c){const m=M(c.mid),e=m.el;
+if(m.type=='video'){const want=c.in+(S.t-c.start)*c.sp;if(c.id!=S.curId){S.curId=c.id;e.currentTime=want}e.playbackRate=c.sp;e.volume=(S.trk.Vm||c.mute)?0:c.vol;
+if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
+const a=c.fade?Math.max(0,Math.min(1,(S.t-c.start)/.5,(c.start+c.dur-S.t)/.5)):1;ctx.globalAlpha=(S.trk.Vh||c.hide)?0:a;
+if(c.fit=='blur'){ctx.filter='blur(28px) brightness(.7)';blit(e,m,Math.max,1.2,0,0)}
+const[az,ax,ay]=anim(c);ctx.filter=fl(c);blit(e,m,c.fit=='cover'?Math.max:Math.min,c.zoom*az,c.rot,c.flip,ax,ay);ctx.filter='none';ctx.globalAlpha=1}
+else if(total()==0){ctx.fillStyle='#777';ctx.font=`${W/22}px system-ui`;ctx.textAlign='center';ctx.fillText('Import media, then click it to add',W/2,H/2)}
+const mu=null;if(mu){const m=M(mu.mid),e=m.el;e.volume=mu.vol;if(S.play&&S.t<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-S.t)>.3)e.currentTime=S.t}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-Math.min(S.t,m.dur))>.1)e.currentTime=Math.min(S.t,m.dur)}}
+const on=new Set();S.voices.forEach(a=>{const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||S.trk[(a.tr||'v')=='m'?'Mm':'Am'])?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
+S.voices.forEach(a=>{if(!on.has(a.mid)){const e=M(a.mid).el;if(!e.paused)e.pause()}});
+[].forEach(v=>{const m=M(v.mid),e=m.el,r=S.t-v.start,cl=Math.min(Math.max(r,0),m.dur);e.volume=v.vol;if(S.play&&r>=0&&r<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-r)>.3)e.currentTime=r}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-cl)>.1)e.currentTime=cl}});
+S.texts.forEach(x=>{if(S.t<x.start||S.t>=x.start+x.dur||S.trk.Th||x.hide)return;const age=S.t-x.start,ts=Math.min(1,age/.4),a=['fade','zoom','slide'].includes(x.anim)?Math.min(1,age/.5):1,sc=x.anim=='pop'?Math.min(1,.5+age*2.5):x.anim=='zoom'?1+.8*(1-ts):1,px=x.x*W/100,py=x.y*H/100,lh=x.size*1.25,L=x.txt.split('\n');
+ctx.save();ctx.globalAlpha=a;ctx.translate(px,py+(x.anim=='slide'?(1-ts)*80:0));ctx.scale(sc,sc);ctx.font=`${x.bold?800:400} ${x.size}px "${x.font}",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';let mw=0;
+L.forEach((l,i)=>{const y=(i-(L.length-1)/2)*lh,w=ctx.measureText(l).width;mw=Math.max(mw,w);
+if(x.bgOn){ctx.globalAlpha=a*.78;ctx.fillStyle=x.bgc;ctx.fillRect(-w/2-14,y-lh/2,w+28,lh);ctx.globalAlpha=a}
+if(x.stroke){ctx.lineWidth=x.size/7;ctx.strokeStyle='#000';ctx.lineJoin='round';ctx.strokeText(l,0,y)}
+ctx.fillStyle=x.color;ctx.fillText(l,0,y)});ctx.restore();
+x._b=[px-mw/2-14,py-L.length*lh/2,px+mw/2+14,py+L.length*lh/2];
+if(isM('text',x.id)&&!S.exporting){ctx.strokeStyle='#6d4aff';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.strokeRect(x._b[0],x._b[1],x._b[2]-x._b[0],x._b[3]-x._b[1]);ctx.setLineDash([])}})}
+function frame(){requestAnimationFrame(frame);const now=performance.now();
+if(S.play){S.t+=(now-S.last)/1000;if(S.t>=total()){S.t=total();pause()}}S.last=now;recTick();draw();
+$('#tm').textContent=fmt(S.t)+' / '+fmt(total());const ph=$('#ph'),x=S.t*S.zoom;ph.style.left=x+'px';
+const sc=$('#sc');if((S.play||REC)&&x>sc.scrollLeft+sc.clientWidth-30)sc.scrollLeft=x-40;
+if(REC&&REC.t0&&$('#rc'))$('#rc').textContent='■ Stop recording · '+((performance.now()-REC.t0)/1000).toFixed(1)+'s';if(S.exporting)$('#ex').textContent='Exporting '+Math.round(S.t/Math.max(total(),.01)*100)+'%'}
+cv.onpointerdown=e=>{if(S.exporting)return;const r=cv.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width,py=(e.clientY-r.top)*H/r.height;
+const hit=[...S.texts].reverse().find(x=>!S.trk.Th&&!x.hide&&x._b&&S.t>=x.start&&S.t<x.start+x.dur&&px>=x._b[0]&&px<=x._b[2]&&py>=x._b[1]&&py<=x._b[3]);if(!hit)return;
+pick('text',hit.id);const ox=hit.x-(e.clientX-r.left)/r.width*100,oy=hit.y-(e.clientY-r.top)/r.height*100;
+drag(e,(d,ev)=>{hit.x=Math.min(100,Math.max(0,Math.round(ox+(ev.clientX-r.left)/r.width*100)));hit.y=Math.min(100,Math.max(0,Math.round(oy+(ev.clientY-r.top)/r.height*100)))},renderIns)};
+
+/* ---------- export ---------- */
+$('#ex').onclick=()=>{if(S.exporting)return;if(total()<=0)return toast('Add something to the timeline first');
+if(!window.MediaRecorder)return toast('Export needs a browser with MediaRecorder (Chrome, Edge, Firefox)');
+pause();S.t=0;S.curId=null;AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();AC.resume();S.media.forEach(route);
+const cs=cv.captureStream(30);DEST.stream.getAudioTracks().forEach(t=>cs.addTrack(t));
+const mt=['video/mp4;codecs=avc1','video/webm;codecs=vp9,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t)),ch=[];
+const r=new MediaRecorder(cs,{mimeType:mt,videoBitsPerSecond:8e6});r.ondataavailable=e=>e.data.size&&ch.push(e.data);
+r.onstop=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(ch,{type:mt}));a.download='clipforge-'+S.asp.replace(':','x')+(mt.includes('mp4')?'.mp4':'.webm');a.click();S.exporting=0;$('#ex').textContent='⬇ Export video';toast('Export finished')};
+S.rec=r;S.exporting=1;r.start();play()};
+
+async function recStart(){if(!navigator.mediaDevices||!window.MediaRecorder)return toast('Recording is not supported in this browser');
+let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){return toast('Microphone blocked. Allow mic access, or open the editor in its own browser tab.')}
+const me=REC={cd:1,st},cd=$('#cd');
+for(let n=3;n>0;n--){if(REC!==me)return;cd.textContent=n;cd.hidden=false;await new Promise(r=>setTimeout(r,700))}
+cd.hidden=true;if(REC!==me)return;
+const mr=new MediaRecorder(st),ch=[],at=S.t,t0=performance.now();mr.ondataavailable=e=>e.data.size&&ch.push(e.data);
+mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());const bl=new Blob(ch,{type:mr.mimeType}),el=new Audio(URL.createObjectURL(bl)),meas=(performance.now()-t0)/1000,m={id:S.id++,name:'Voice-over '+(++VN),url:el.src,type:'audio',file:bl};
+let done=0;const fin=()=>{if(done)return;done=1;el.currentTime=0;m.el=el;m.dur=isFinite(el.duration)?el.duration:meas;route(m);ALL[m.id]=m;S.media.push(m);peaks(m);const v={id:S.id++,mid:m.id,start:at,in:0,out:m.dur,vol:1,sp:1,fi:0,fo:0,mute:0,tr:'v'};S.voices.push(v);pick('voice',v.id);renderPane();toast('Voice-over added to the timeline')};
+el.onloadedmetadata=()=>{if(isFinite(el.duration))fin();else{el.addEventListener('timeupdate',fin,{once:true});el.currentTime=1e101}}};
+let actx=null,an=null;try{actx=new AudioContext();an=actx.createAnalyser();an.fftSize=512;actx.createMediaStreamSource(st).connect(an)}catch(e){actx=an=null}
+REC={mr,t0,at,an,actx,buf:an?new Uint8Array(an.fftSize):null,pk:[],bars:[],ls:0};$('#recui').hidden=false;mr.start();if(total()>0&&at<total()-.05)play()}
+function recStop(){if(!REC)return;const r=REC;REC=null;$('#recui').hidden=true;$('#cd').hidden=true;const rb=$('#rb');rb&&rb.remove();if($('#rc'))$('#rc').textContent='● Record voice-over';
+if(r.cd){r.st.getTracks().forEach(t=>t.stop());return}
+try{r.actx&&r.actx.close()}catch(e){}r.mr.stop();if(S.play)pause()}
+$('#rstop').onclick=recStop;
+function wfA(pk){const n=Math.max(2,pk.length);let d='';for(let i=0;i<pk.length;i++){const hh=Math.max(.35,pk[i]*9.5);d+=`M${i} ${10-hh}v${2*hh}`}return`<svg class="wfa" viewBox="0 0 ${n} 20" preserveAspectRatio="none"><path d="${d}" stroke="#fff" stroke-width=".85" fill="none"/></svg>`}
+function recTick(){const r=REC;if(!r||!r.mr)return;const el=(performance.now()-r.t0)/1000;if(!S.play)S.t=r.at+el;
+if(r.an){r.an.getByteTimeDomainData(r.buf);let m=0;for(let i=0;i<r.buf.length;i++)m=Math.max(m,Math.abs(r.buf[i]-128));const a=Math.min(1,Math.pow(m/128,.6)*1.4);r.bars.push(a);if(r.bars.length>80)r.bars.shift();if(el-r.ls>=.05){r.ls=el;r.pk.push(a)}}
+$('#rtm').textContent=fmt(el);
+const c2=$('#rwv').getContext('2d'),w=300,hh=48,n=80,bw=w/n;c2.clearRect(0,0,w,hh);c2.fillStyle='#ff3b5c';
+for(let i=0;i<r.bars.length;i++){const bh=Math.max(2,r.bars[i]*hh*.92),x=(n-r.bars.length+i)*bw;c2.globalAlpha=.35+.65*(i/r.bars.length);c2.fillRect(x+1,(hh-bh)/2,Math.max(1,bw-2),bh)}c2.globalAlpha=1;
+let rb=$('#rb');if(!rb){rb=document.createElement('div');rb.id='rb';$('#in').append(rb)}
+const z=S.zoom,need=(r.at+el+6)*z;if(parseFloat($('#in').style.width)<need)$('#in').style.width=need+'px';
+rb.style.cssText=`left:${r.at*z}px;width:${Math.max(3,el*z)}px;top:${$('#rA').offsetTop}px;height:${$('#rA').offsetHeight}px`;
+rb.innerHTML=wfA(r.pk)+'<span style="position:relative;display:block;padding:4px 8px;color:#fff;font-size:11px;font-weight:600;text-shadow:0 1px 2px #000c">🎙 Recording…</span>'}
+/* ---------- multi-select (Filmora-style) ---------- */
+const isM=(k,id)=>S.multi.includes(k+':'+id);
+const selObjs=kind=>S.multi.map(s=>s.split(':')).filter(p=>p[0]==kind).map(p=>(kind=='clip'?S.clips:kind=='text'?S.texts:S.voices).find(x=>x.id==p[1])).filter(Boolean);
+function updMM(){const b=$('#mm');if(b){b.classList.toggle('on',!!S.mm);b.textContent='☑ Multi'+(S.multi.length>1?' ('+S.multi.length+')':'')}}
+function selSet(keys){S.multi=keys;const l=keys[keys.length-1].split(':');S.sel={k:l[0],id:+l[1]};hist();renderIns();renderTL();updMM()}
+function selAll(){const k=[...S.clips.map(c=>'clip:'+c.id),...S.texts.map(c=>'text:'+c.id),...S.voices.map(c=>'voice:'+c.id)];if(k.length)selSet(k)}
+$('#mm').onclick=()=>{S.mm=!S.mm;updMM();if(S.mm)toast('Tap clips to select several')};
+$('#sc').addEventListener('scroll',()=>{$('.lb').scrollTop=$('#sc').scrollTop});
+function groupShift(e,o,fin){const items=[...selObjs('text'),...selObjs('voice')],s0=items.map(x=>x.start),mn=Math.min(...s0),z=S.zoom;drag(e,dx=>{const d=Math.max(-mn,dx/z);items.forEach((x,i)=>{x.start=s0[i]+d});renderTL()},fin)}
+function marquee(e){const box=$('#in'),r0=box.getBoundingClientRect(),base=(e.ctrlKey||e.metaKey||e.shiftKey)?[...S.multi]:[],mq=document.createElement('div'),x0=e.clientX,y0=e.clientY;let hit=[];mq.className='mq';box.append(mq);
+drag(e,(d,ev)=>{const x1=Math.min(x0,ev.clientX),x2=Math.max(x0,ev.clientX),y1=Math.min(y0,ev.clientY),y2=Math.max(y0,ev.clientY);mq.style.cssText=`left:${x1-r0.left}px;top:${y1-r0.top}px;width:${x2-x1}px;height:${y2-y1}px`;hit=[];
+box.querySelectorAll('.blk').forEach(b=>{const q=b.getBoundingClientRect(),on=q.right>=x1&&q.left<=x2&&q.bottom>=y1&&q.top<=y2,key=b.dataset.k+':'+b.dataset.id;if(on&&b.dataset.k!='music')hit.push(key);b.classList.toggle('sel',on||base.includes(key))})},
+()=>{mq.remove();const all=[...new Set([...base,...hit])];if(all.length){const l=all[all.length-1].split(':');S.multi=all;S.sel={k:l[0],id:+l[1]}}renderIns();renderTL();updMM()})}
+function splitMulti(){const keys=[];
+selObjs('clip').forEach(c=>{if(S.t>c.start+.1&&S.t<c.start+c.dur-.1){const rel=(S.t-c.start)*c.sp,n={...c,id:S.id++,in:c.in+rel};c.out=c.in+rel;S.clips.splice(S.clips.indexOf(c)+1,0,n);layout();keys.push('clip:'+n.id)}});
+selObjs('voice').forEach(a=>{const d=adur(a),r=S.t-a.start;if(r>.1&&r<d-.1){const cut=a.in+r*a.sp,n={...a,id:S.id++,start:S.t,in:cut};a.out=cut;a.fo=0;n.fi=0;S.voices.splice(S.voices.indexOf(a)+1,0,n);keys.push('voice:'+n.id)}});
+selObjs('text').forEach(x=>{const r=S.t-x.start;if(r>.1&&r<x.dur-.1){const n={...x,id:S.id++,start:S.t,dur:x.dur-r,anim:'none'};x.dur=r;S.texts.push(n);keys.push('text:'+n.id)}});
+if(!keys.length)return toast('Move the playhead inside a selected item to split it');selSet([...S.multi,...keys])}
+function dupMulti(){const keys=[];
+selObjs('clip').forEach(c=>{const n={...c,id:S.id++};S.clips.splice(S.clips.indexOf(c)+1,0,n);keys.push('clip:'+n.id)});layout();
+selObjs('voice').forEach(a=>{const n={...a,id:S.id++,start:a.start+adur(a)};S.voices.splice(S.voices.indexOf(a)+1,0,n);keys.push('voice:'+n.id)});
+selObjs('text').forEach(x=>{const n={...x,id:S.id++,start:x.start+.5};S.texts.push(n);keys.push('text:'+n.id)});
+if(keys.length)selSet(keys)}
+function mvMulti(d){selObjs('voice').concat(selObjs('text')).forEach(a=>{a.start=Math.max(0,+(a.start+d*.1).toFixed(2))});
+const sc=new Set(selObjs('clip')),arr=S.clips;
+if(d<0){for(let i=1;i<arr.length;i++)if(sc.has(arr[i])&&!sc.has(arr[i-1]))[arr[i-1],arr[i]]=[arr[i],arr[i-1]]}
+else{for(let i=arr.length-2;i>=0;i--)if(sc.has(arr[i])&&!sc.has(arr[i+1]))[arr[i+1],arr[i]]=[arr[i],arr[i+1]]}
+layout();renderTL();hist()}
+/* ---------- auto-save (IndexedDB: media files + project state) ---------- */
+const DB={db:null};let DIRTY=0,ST=0,SAVING=0;
+const idb=r=>new Promise((ok,no)=>{r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const txp=(st,fn)=>new Promise((ok,no)=>{const t=DB.db.transaction(st,'readwrite');fn(t);t.oncomplete=ok;t.onerror=t.onabort=()=>no(t.error||new Error('tx'))});
+function save(){DIRTY=1;clearTimeout(ST);ST=setTimeout(doSave,400)}
+const stateStr=()=>JSON.stringify({c:S.clips,t:S.texts,v:S.voices,md:S.media.map(m=>m.id),asp:S.asp,zoom:S.zoom,snap:S.snap,trk:S.trk,tab:S.tab,pos:S.t,id:S.id,sel:S.sel},(k,v)=>k=='_b'?undefined:v);
+async function doSave(){if(!DB.db||!S.ready)return;if(SAVING){DIRTY=1;return}if(!DIRTY)return;DIRTY=0;SAVING=1;
+try{const keep=new Set();S.media.forEach(m=>{keep.add(m.id);m.ref&&keep.add(m.ref)});
+const add=S.media.filter(m=>!m.saved);
+if(add.length){add.forEach(m=>m.saved=1);try{await txp('media',t=>add.forEach(m=>t.objectStore('media').put({id:m.id,name:m.name,type:m.type,dur:m.dur,w:m.w||0,h:m.h||0,ref:m.ref||null,blob:m.ref?null:m.file})))}catch(e){add.forEach(m=>m.saved=0);if(!S.warned){S.warned=1;toast('Not enough browser storage to keep these files after refresh')}}}
+const keys=await idb(DB.db.transaction('media').objectStore('media').getAllKeys()),del=keys.filter(k=>!keep.has(k));
+if(del.length){await txp('media',t=>del.forEach(k=>t.objectStore('media').delete(k)));del.forEach(k=>ALL[k]&&(ALL[k].saved=0))}
+await txp('kv',t=>t.objectStore('kv').put(stateStr(),'state'))}catch(e){}
+SAVING=0;if(DIRTY)save()}
+addEventListener('pagehide',()=>{DIRTY=1;doSave()});document.addEventListener('visibilitychange',()=>{if(document.hidden){DIRTY=1;doSave()}});
+async function restoreProject(){try{
+await new Promise((ok,no)=>{const r=indexedDB.open('clipforge',1);r.onupgradeneeded=()=>{r.result.createObjectStore('media',{keyPath:'id'});r.result.createObjectStore('kv')};r.onsuccess=()=>{DB.db=r.result;ok()};r.onerror=()=>no(r.error)});
+const raw=await idb(DB.db.transaction('kv').objectStore('kv').get('state'));if(!raw){S.ready=1;return}
+const recs=await idb(DB.db.transaction('media').objectStore('media').getAll()),by=new Map(recs.map(r=>[r.id,r])),st=JSON.parse(raw);
+const load=id=>new Promise(res=>{const r=by.get(id);if(!r)return res(null);const blob=r.blob||(by.get(r.ref)||{}).blob;if(!blob)return res(null);
+const m={id,name:r.name,type:r.type,file:blob,url:URL.createObjectURL(blob),dur:r.dur,w:r.w,h:r.h,ref:r.ref,saved:1};
+if(m.type=='image'){const i=new Image();i.onload=()=>{m.el=i;m.w=i.width;m.h=i.height;res(m)};i.onerror=()=>res(null);i.src=m.url;return}
+const e=document.createElement(m.type);e.preload='auto';e.playsInline=true;let done=0;
+const fin=ok=>{if(done)return;done=1;if(!ok)return res(null);m.el=e;if(isFinite(e.duration)&&e.duration>0)m.dur=e.duration;m.w=e.videoWidth||m.w;m.h=e.videoHeight||m.h;res(m)};
+e.onloadedmetadata=()=>fin(1);e.onerror=()=>fin(0);e.src=m.url;setTimeout(()=>fin(m.dur>0),4000)});
+const ms=(await Promise.all(st.md.map(load))).filter(Boolean);
+ms.forEach(m=>{ALL[m.id]=m;try{route(m)}catch(x){}});S.media=ms;
+S.clips=st.c.filter(c=>M(c.mid));S.texts=st.t||[];S.voices=st.v.filter(a=>M(a.mid));S.music=null;
+S.id=Math.max(S.id,st.id||1);S.zoom=st.zoom||S.zoom;S.snap=st.snap?1:0;Object.assign(S.trk,st.trk||{});S.tab=st.tab||'media';
+if(st.asp&&ASP[st.asp])setAsp(st.asp);
+layout();S.t=Math.min(st.pos||0,total());S.curId=null;S.sel=st.sel||null;if(!getSel())S.sel=null;S.multi=S.sel?[S.sel.k+':'+S.sel.id]:[];
+$('#zm').value=Math.round(250*Math.log10(S.zoom/ZMIN));$('#snb').classList.toggle('on',!!S.snap);trkUI();
+ms.forEach(m=>{if(m.type=='video'){thumb(m);peaks(m)}else if(m.type=='audio')peaks(m)});
+HS.cur=snap();HS.u=[];HS.r=[];renderPane();renderIns();renderTL();
+const eb=document.querySelector('#mb [data-sh=ins]');eb&&eb.classList.toggle('has',!!S.sel);
+S.ready=1;save();if(ms.length||S.texts.length)toast('Project restored')
+}catch(e){console.warn('ClipForge restore failed',e);if(DB.db&&!S.ready)toast('Could not restore the saved project')}}
+HS.cur=snap();trkUI();setAsp('9:16');renderPane();renderIns();renderTL();requestAnimationFrame(frame);restoreProject();
+</script></body></html>
