@@ -47,6 +47,9 @@ canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-acti
 #L,#L *{user-select:none;-webkit-user-select:none}#L textarea,#L input{user-select:text;-webkit-user-select:text}.mbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.mbar button{flex:1;padding:6px 4px;font-size:12px;white-space:nowrap}.mi.ms{outline:3px solid var(--ac);outline-offset:-3px}.mi .ck{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;z-index:2}
 .blk.ovb{background:#2c7be5}.row.o{height:40px}.lb .lo{height:40px}.mi .ly{position:absolute;top:4px;right:28px;width:20px;height:20px;border-radius:50%;background:#000c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;z-index:2;cursor:pointer}.mi .ly:hover{background:var(--ac)}
 .row.dz{background:#6d4aff40!important}.row.dz:after{content:'';position:absolute;inset:0;border:2px dashed var(--ac);pointer-events:none}
+#tl{--p:#1a1c26;--p2:#262a3b;--bd:#2f3348;--tx:#e8eaf4;--mu:#8e94ad;background:#1a1c26;color:var(--tx)}
+#sc,#in{background:#14161f}#in{min-width:100%}.row{background:#1b1e2b}.row.v{background:#202437}.row.o{background:#1c2030}.row.a{background:#1b1e2b}
+#rul{background:#1f2232}#rul span{border-left-color:#3a3f58}
 .tc{display:flex;gap:4px}.tc b{cursor:pointer;font-weight:400;font-size:12px;line-height:1;padding:2px 4px;border-radius:4px}.tc b:hover{background:var(--p2)}.tc b.off{background:#e5384f40}
 .lb div{flex-direction:column;gap:2px;line-height:1.1}
 .blk{min-width:4px}
@@ -195,7 +198,7 @@ $('#ins').addEventListener('input',e=>{const t=e.target,k=t.dataset.k;if(!k)retu
 $('#ins').addEventListener('click',e=>{if(e.target.id=='rs'){(S.multi.length>1&&S.sel?selObjs(S.sel.k):[INS.o]).forEach(x=>Object.assign(x,DEF));renderIns();hist()}});
 
 /* ---------- timeline ---------- */
-function renderTL(){const z=S.zoom,T=Math.max(total(),10)+6,sel=(k,id)=>isM(k,id)?' sel':'';
+function renderTL(){const z=S.zoom,T=Math.max(Math.max(total(),10)+6,($('#sc').clientWidth||0)/z+1),sel=(k,id)=>isM(k,id)?' sel':'';
 $('#in').style.width=T*z+'px';const ST=[.01,.02,.05,.1,.2,.5,1,2,5,10,30,60,120,300,600,1800,3600],st=ST.find(s=>s*z>=70)||3600,lab=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(st<1?s.toFixed(st<.1?2:1).padStart(st<.1?5:4,'0'):String(Math.round(s)).padStart(2,'0'))};let r='';for(let k=0;k*st<T;k++)r+=`<span style="left:${k*st*z}px">${lab(k*st)}</span>`;$('#rul').innerHTML=r;
 $('#rT').innerHTML=S.texts.map(x=>`<div class="blk txt${sel('text',x.id)}" data-k="text" data-id="${x.id}" style="left:${x.start*z}px;width:${x.dur*z}px"><i class="h l"></i>${esc(x.txt)}<i class="h"></i></div>`).join('');
 $('#rV').innerHTML=S.clips.map(c=>`<div class="blk vid${sel('clip',c.id)}" data-k="clip" data-id="${c.id}" style="left:${c.start*z}px;width:${c.dur*z}px${th(M(c.mid))}"><i class="h l"></i>${vwf(c)}<span class="lbl">${esc(M(c.mid).name)}${c.sp!=1?' ×'+c.sp:''}${c.mute?' 🔇':''}${c.hide?' 🙈':''}</span><i class="h"></i></div>`).join('');
@@ -351,6 +354,7 @@ clean();tgt=where(ev);if(tgt){tgt.el.classList.add('dz');showSn(tgt.t)}};
 const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
 if(!g)return;g.remove();clean();S.nc=1;S.nc2=1;setTimeout(()=>{S.nc=0;S.nc2=0},50);if(tgt){dropMedia(ids,tgt);if(mob())sheet(null)}};
 addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)}
+{let lw=0;new ResizeObserver(()=>{const w=$('#sc').clientWidth;if(Math.abs(w-lw)>2){lw=w;requestAnimationFrame(()=>renderTL())}}).observe($('#sc'))}
 /* ---------- media library multi-select ---------- */
 S.msel=[];S.msm=0;
 function msBar(){if(!S.media.length)return'';const n=S.msel.length;return`<div class="mbar"><button data-ms="mode" class="${S.msm?'on':''}">☑ Select</button><button data-ms="all">All</button>${n?'<button data-ms="none">None</button>':''}<button data-ms="clr" title="Remove all media from the library">🗑 Clear all</button></div>${n?`<div class="mbar"><button class="pr" data-ms="add">＋ Add ${n} to timeline</button><button data-ms="addov" title="Put each selected item on its own overlay layer">◫ ${n} as layers</button><button data-ms="del">🗑 Remove ${n}</button></div>`:''}`}
