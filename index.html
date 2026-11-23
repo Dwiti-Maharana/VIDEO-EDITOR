@@ -116,6 +116,14 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 .snb{display:flex;flex-direction:column;gap:4px;min-width:0}.snb small{color:var(--mu)}.sng{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}.sng button{padding:4px 8px;font-size:12px;min-height:0}
 .snx{position:absolute;top:6px;right:9px;cursor:pointer;color:var(--mu)}@keyframes snin{from{opacity:0;transform:translateY(-8px)}}
 @media(max-width:900px){#snc{left:10px;top:56px}}
+@media(pointer:coarse){
+#ins input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;pointer-events:none;touch-action:pan-y;height:34px;margin:0}
+#ins input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--ac) var(--v,50%),#e5e7eb var(--v,50%))}
+#ins input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:26px;height:26px;margin-top:-10px;border-radius:50%;background:var(--ac);border:3px solid #fff;box-shadow:0 1px 4px #0006}
+#ins input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#e5e7eb}
+#ins input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--ac)}
+#ins input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:var(--ac);border:3px solid #fff}
+}
 </style></head><body>
 <header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
@@ -768,5 +776,10 @@ else if(a=='jpg'){const im=d.querySelector('img'),c=document.createElement('canv
 document.body.append(d);S.snT=setTimeout(close,9000)}
 $('#snp').onclick=takeSnap;
 addEventListener('keydown',e=>{if(e.code=='KeyS'&&e.altKey&&(e.ctrlKey||e.metaKey)){e.preventDefault();takeSnap()}});
+/* Touch fix: sliders in the Edit panel only react when you drag the round handle, so scrolling the panel never changes a value */
+const syncR=r=>{const mn=+r.min||0,mx=r.max===''?100:+r.max,f=mx>mn?(r.value-mn)/(mx-mn):0;r.style.setProperty('--v',`calc(${f} * (100% - 26px) + 13px)`)};
+const syncAllR=()=>$('#ins').querySelectorAll('input[type=range]').forEach(syncR);
+$('#ins').addEventListener('input',e=>{if(e.target.type=='range')syncR(e.target)});
+new MutationObserver(syncAllR).observe($('#ins'),{childList:true,subtree:true});syncAllR();
 HS.cur=snap();trkUI();setAsp('9:16');renderPane();renderIns();renderTL();requestAnimationFrame(frame);restoreProject();
 </script></body></html>
