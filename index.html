@@ -124,6 +124,9 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 #ins input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--ac)}
 #ins input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:var(--ac);border:3px solid #fff}
 }
+#ins label.f input.nv{float:right;width:70px;padding:2px 6px;text-align:right;font-size:13px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:6px;margin:-3px 0 2px 8px}
+#ins label.f input.nv:focus{outline:2px solid var(--ac);border-color:var(--ac)}
+@media(pointer:coarse){#ins label.f input.nv{font-size:16px;width:76px;padding:4px 6px}}
 </style></head><body>
 <header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
@@ -780,6 +783,14 @@ addEventListener('keydown',e=>{if(e.code=='KeyS'&&e.altKey&&(e.ctrlKey||e.metaKe
 const syncR=r=>{const mn=+r.min||0,mx=r.max===''?100:+r.max,f=mx>mn?(r.value-mn)/(mx-mn):0;r.style.setProperty('--v',`calc(${f} * (100% - 26px) + 13px)`)};
 const syncAllR=()=>$('#ins').querySelectorAll('input[type=range]').forEach(syncR);
 $('#ins').addEventListener('input',e=>{if(e.target.type=='range')syncR(e.target)});
-new MutationObserver(syncAllR).observe($('#ins'),{childList:true,subtree:true});syncAllR();
+/* Typeable values: the number next to every slider is an input you can type into */
+const enhNum=()=>$('#ins').querySelectorAll('label.f>em').forEach(em=>{const r=em.nextElementSibling;if(!r||r.type!='range')return;const n=document.createElement('input');n.type='number';n.className='nv';n.step='any';n.min=r.min;n.max=r.max;n.value=r.value;n.setAttribute('aria-label','Type a value');em.replaceWith(n)});
+const nvR=n=>n.parentNode.querySelector('input[type=range]');
+$('#ins').addEventListener('input',e=>{const t=e.target;
+if(t.type=='range'){const n=t.parentNode.querySelector('.nv');if(n&&document.activeElement!==n)n.value=t.value;return}
+if(!t.classList||!t.classList.contains('nv'))return;const r=nvR(t);let v=parseFloat(t.value);if(isNaN(v)||!r)return;const mn=+r.min,mx=r.max===''?100:+r.max;r.value=Math.min(mx,Math.max(mn,v));r.dispatchEvent(new Event('input',{bubbles:true}))});
+$('#ins').addEventListener('change',e=>{const n=e.target;if(!n.classList||!n.classList.contains('nv'))return;const r=nvR(n);if(r)n.value=r.value});
+$('#ins').addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.classList&&e.target.classList.contains('nv'))e.target.blur()});
+new MutationObserver(()=>{enhNum();syncAllR()}).observe($('#ins'),{childList:true,subtree:true});enhNum();syncAllR();
 HS.cur=snap();trkUI();setAsp('9:16');renderPane();renderIns();renderTL();requestAnimationFrame(frame);restoreProject();
 </script></body></html>
