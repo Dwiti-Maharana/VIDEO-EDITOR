@@ -124,9 +124,10 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 #ins input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--ac)}
 #ins input[type=range]::-moz-range-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:var(--ac);border:3px solid #fff}
 }
-#ins label.f input.nv{float:right;width:70px;padding:2px 6px;text-align:right;font-size:13px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:6px;margin:-3px 0 2px 8px}
+#ins label.f input.nv{float:right;width:70px;height:28px;line-height:28px;padding:0 4px;text-align:center;-moz-appearance:textfield;appearance:textfield;font-size:13px;color:var(--tx);background:var(--p2);border:1px solid var(--bd);border-radius:6px;margin:-3px 0 2px 8px}
 #ins label.f input.nv:focus{outline:2px solid var(--ac);border-color:var(--ac)}
-@media(pointer:coarse){#ins label.f input.nv{font-size:16px;width:76px;padding:4px 6px}}
+#ins label.f input.nv::-webkit-inner-spin-button,#ins label.f input.nv::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+@media(pointer:coarse){#ins label.f input.nv{font-size:16px;width:76px;height:34px;line-height:34px;padding:0 4px}}
 </style></head><body>
 <header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
