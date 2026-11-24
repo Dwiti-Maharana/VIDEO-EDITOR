@@ -128,6 +128,25 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 #ins label.f input.nv:focus{outline:2px solid var(--ac);border-color:var(--ac)}
 #ins label.f input.nv::-webkit-inner-spin-button,#ins label.f input.nv::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 @media(pointer:coarse){#ins label.f input.nv{font-size:16px;width:76px;height:34px;line-height:34px;padding:0 4px}}
+#od{position:fixed;inset:0;z-index:92;background:#000a;display:flex;align-items:center;justify-content:center;padding:12px}#od[hidden]{display:none}#od .xb{height:min(680px,100%)}
+#od textarea{width:100%;background:var(--p2);border:1px solid var(--bd);border-radius:8px;padding:8px;color:var(--tx);font:inherit;font-size:13px;resize:vertical}
+.olbar{display:flex;gap:8px;margin-bottom:10px}.olbar input,.olbar select{flex:1;min-width:0;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:7px;color:var(--tx)}.olbar select{flex:none;max-width:48%}
+.okey{border:1px dashed var(--bd);border-radius:10px;padding:10px;margin-bottom:10px}.okey a,#od .xn a{color:var(--ac)}
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}.ot{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#000;cursor:pointer;border:1px solid var(--bd)}.ot img{width:100%;height:100%;object-fit:cover;display:block}
+.ob{position:absolute;left:0;right:0;bottom:0;padding:14px 6px 4px;font-size:11px;color:#fff;background:linear-gradient(transparent,#000c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oa{position:absolute;top:6px;right:6px;background:var(--ac);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px}.ot.done .oa{background:#16a34a}.ot.busy{opacity:.6}
+.orw{display:flex;gap:10px;align-items:center;border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin-bottom:8px}.ort{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.ort b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ort small{color:var(--mu)}.ort audio{width:100%;height:32px;margin-top:4px}
+.ora{display:flex;flex-direction:column;gap:6px;align-items:stretch;text-align:center}.ora a{color:var(--ac);font-size:12px}
+.odi{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--bd)}.odi small{color:var(--mu);word-break:break-all}.odi.err>div>div{color:#ff6b81}.odi.ok>span{color:#22c55e}
+.osg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.oss{border:1px solid var(--bd);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:3px}.oss small{color:var(--mu)}.osb{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.osb button{padding:4px 8px;font-size:12px}
+@media(pointer:coarse){#od textarea,.olbar input,.olbar select{font-size:16px}}
+#xo{position:fixed;inset:0;z-index:120;background:#000c;display:flex;align-items:center;justify-content:center;padding:14px}#xo[hidden]{display:none}
+.xob{background:var(--p);border:1px solid var(--bd);border-radius:16px;width:min(460px,100%);max-height:100%;overflow:auto;padding:18px 20px;text-align:center;box-shadow:0 20px 70px #000b}
+.xob h3{margin:0 0 4px;font-size:16px}.xob .xw{color:#ffb020;font-weight:600;margin:0 0 12px;font-size:12.5px}.xob .xw.bad{color:#ff6b81}
+#xop{display:block;margin:0 auto 12px;max-width:100%;max-height:44vh;border-radius:8px;background:#000;box-shadow:0 8px 28px #0007}
+#xpc{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.xbar{height:10px;border-radius:6px;background:var(--p2);border:1px solid var(--bd);overflow:hidden;margin:8px 0}.xbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .15s}
+#xpt{color:var(--mu);font-size:12px;min-height:16px}
 </style></head><body>
 <header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
@@ -144,7 +163,7 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 <div id="sc"><div id="in"><div id="rul"></div><div id="rTx"></div><div class="row" id="rT"></div><div id="rO"></div><div class="row v" id="rV"></div><div class="row a" id="rA"></div><div class="row a" id="rM"></div><div id="rX"></div><div id="sn"></div><div id="ph"></div></div></div></div>
 </section>
 <nav id="mb"><button data-sh="L">＋ Add</button><button data-sh="ins">✎ Edit</button></nav>
-<div id="recui" hidden><span class="rdot"></span><b id="rtm">0:00.0</b><canvas id="rwv" width="300" height="48"></canvas><button class="pr" id="rstop">■ Stop</button></div><div id="cd" hidden></div><div id="xd" hidden><div class="xb" role="dialog" aria-label="Export"><div class="xh"><span>Export</span><button id="xc" title="Close">✕</button></div><div class="xm"><div class="xl" id="xl"></div><div class="xr" id="xr"></div></div><div class="xf"><span id="xs"></span><button id="xx">Cancel</button><button class="pr" id="xgo">⬇ Export</button></div></div></div><input type="file" id="fi" accept="video/*,image/*,audio/*" multiple hidden>
+<div id="recui" hidden><span class="rdot"></span><b id="rtm">0:00.0</b><canvas id="rwv" width="300" height="48"></canvas><button class="pr" id="rstop">■ Stop</button></div><div id="cd" hidden></div><div id="od" hidden><div class="xb" role="dialog" aria-label="Online media"><div class="xh"><span>🌐 Online media · free photos, videos &amp; music</span><button id="odx" title="Close">✕</button></div><div class="xm"><div class="xl" id="odl"></div><div class="xr" id="odr"></div></div><div class="xf"><span id="ods" style="flex:1;min-width:180px;color:var(--mu)">Always check an item's license before you publish.</span><button id="odc">Close</button></div></div></div><div id="xd" hidden><div class="xb" role="dialog" aria-label="Export"><div class="xh"><span>Export</span><button id="xc" title="Close">✕</button></div><div class="xm"><div class="xl" id="xl"></div><div class="xr" id="xr"></div></div><div class="xf"><span id="xs"></span><button id="xx">Cancel</button><button class="pr" id="xgo">⬇ Export</button></div></div></div><div id="xo" hidden role="alertdialog" aria-label="Exporting"><div class="xob"><h3 id="xoh">Exporting your video…</h3><p class="xw" id="xow">⚠ Do not close, refresh or leave this tab until the export finishes. Keep it open and in front.</p><canvas id="xop" width="360" height="640"></canvas><div id="xpc">0%</div><div class="xbar"><i id="xpb"></i></div><div id="xpt"></div></div></div><input type="file" id="fi" accept="video/*,image/*,audio/*" multiple hidden>
 <script>
 const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d');
 const S={media:[],clips:[],texts:[],voices:[],music:null,t:0,play:false,sel:null,zoom:60,id:1,tab:'media',curId:null,last:0,multi:[],mm:0};
@@ -194,7 +213,7 @@ $('#stage').addEventListener('pointerdown',e=>{if(e.target===$('#stage'))sheet(n
 
 /* ---------- left pane ---------- */
 function renderPane(){const p=$('#pane'),t=S.tab;S.msel=(S.msel||[]).filter(id=>M(id));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
-if(t=='media')p.innerHTML=`<div class="drop" id="dz">＋ Import video, image or audio<br><small>or drop files anywhere</small></div>${msBar()}<div class="grid">${S.media.map(m=>`<div class="mi${S.msel.includes(m.id)?' ms':''}" data-m="${m.id}" title="Click to add">${S.msel.includes(m.id)?'<span class="ck">✓</span>':''}${m.type=='image'?`<img src="${m.url}">`:m.type=='video'?`<video src="${m.url}#t=.5" muted preload="metadata"></video>`:'<span style="font-size:28px">🎵</span>'}<b>${esc(m.name)}</b><span class="ly" data-ov="${m.id}" title="Add on a layer (video, image or audio)">◫</span><span class="rm" data-rm="${m.id}" title="Remove">✕</span></div>`).join('')}</div><p style="color:var(--mu)">Click a media item to add it to the timeline. Audio files become background music. Click a layer's name on the timeline to select it, then media, audio and text you add go into that layer.</p>`;
+if(t=='media')p.innerHTML=`<div class="drop" id="dz">＋ Import video, image or audio<br><small>or drop files anywhere</small></div><button class="pr" id="odopen" style="width:100%;margin:0 0 10px">🌐 Online media · Pixabay, Pexels…</button>${msBar()}<div class="grid">${S.media.map(m=>`<div class="mi${S.msel.includes(m.id)?' ms':''}" data-m="${m.id}" title="Click to add">${S.msel.includes(m.id)?'<span class="ck">✓</span>':''}${m.type=='image'?`<img src="${m.url}">`:m.type=='video'?`<video src="${m.url}#t=.5" muted preload="metadata"></video>`:'<span style="font-size:28px">🎵</span>'}<b>${esc(m.name)}</b><span class="ly" data-ov="${m.id}" title="Add on a layer (video, image or audio)">◫</span><span class="rm" data-rm="${m.id}" title="Remove">✕</span></div>`).join('')}</div><p style="color:var(--mu)">Click a media item to add it to the timeline. Audio files become background music. Click a layer's name on the timeline to select it, then media, audio and text you add go into that layer.</p>`;
 else if(t=='text')p.innerHTML=`<button class="pr" style="width:100%" data-tp="Plain text">＋ Add text</button><h4>Styles</h4><div class="grid">${Object.keys(TP).slice(1).map(k=>`<button data-tp="${k}">${k}</button>`).join('')}</div><h4>Stickers</h4><div class="emo">${EMO.map(e=>`<button data-e="${e}">${e}</button>`).join('')}</div>`;
 else if(t=='fx')p.innerHTML=`<label class="f"><input type="checkbox" id="all"> Apply to all clips</label><div class="grid">${Object.keys(FX).map(k=>`<button data-fx="${k}">${k}</button>`).join('')}</div><h4>Speed</h4><div class="spg">${[.1,.25,.5,.75,1,1.5,2,3,4,6,8].map(v=>`<button data-sp="${v}">${v}×</button>`).join('')}</div><p style="color:var(--mu);margin:6px 0 0">Slow motion below 1×, fast forward above 1×. Applies to the selected clip(s), or to all clips if the box above is ticked.</p><h4>Transitions</h4><button data-tr="1" style="width:100%">Fade in/out on all clips</button><p style="color:var(--mu)">Select a clip to adjust speed, zoom, rotation, flip and colour in the right panel.</p>`;
 else p.innerHTML=`<h4>Voice-over</h4><button class="pr" id="rc" style="width:100%">● Record voice-over</button><p style="color:var(--mu)">Recording starts at the playhead and plays the video so you can narrate along. Use headphones to avoid echo.</p><h4>Background music</h4>${S.media.filter(m=>m.type=='audio').map(m=>`<div style="display:flex;gap:6px;margin-bottom:6px"><button data-au="${m.id}" style="flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">🎵 ${esc(m.name)}</button><button data-rm="${m.id}" title="Remove">✕</button></div>`).join('')||'<p style="color:var(--mu)">Import an audio file in the Media tab first.</p>'}<p style="color:var(--mu)">Volume of each clip is set in its inspector. Everything is mixed into the exported file.</p>`}
@@ -219,7 +238,7 @@ if(t=='select')return`<label class="f">${l}<select data-k="${key}">${a.map(x=>`<
 if(t=='textarea')return`<label class="f">${l}<textarea data-k="${key}" rows="2">${esc(v)}</textarea></label>`;
 return`<label class="f">${l}<input type="${t}" data-k="${key}" ${t=='number'?'data-n="1"':''} value="${v}" ${a}></label>`};
 let h='';const rotF=`<label class="f">Rotate<em>${o.rot||0}</em><input type="range" data-k="rot" data-n="1" min="-180" max="180" value="${o.rot||0}"></label><div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>`;const lyF=`<label class="f">Layer (0 = none)<input type="number" data-k="ly" data-n="1" min="0" step="1" value="${o.ly||0}"></label>`;
-if(k=='clip'){const m=M(o.mid);h=`<h4>Clip</h4>`+f('Fit','fit','select',['cover','contain','blur'])+f('Zoom','zoom','range','min="1" max="3" step=".01"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Zoom animation','za','select',['None','Zoom in','Zoom out','Pan left','Pan right','Pulse','Shake',ZW])+(o.za==ZW?zwPanel(o):f('Animation strength','zs','range','min="5" max="100"'))+(m.type=='video'?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))+`<h4>Colour</h4>`+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button>'+(m.type=='video'?' <button id="dt">🔊 Detach audio</button>':'')}
+if(k=='clip'){const m=M(o.mid);h=`<h4>Clip</h4>`+f('Fit','fit','select',['cover','contain','blur'])+f('Zoom','zoom','range','min="1" max="3" step=".01"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Zoom animation','za','select',['None','Zoom in','Zoom out','Pan left','Pan right','Pulse','Shake',ZW])+(o.za==ZW?zwPanel(o):f('Animation strength','zs','range','min="5" max="100"'))+(m.type=='video'?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))+ckPanel(o,f)+`<h4>Colour</h4>`+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button>'+(m.type=='video'?' <button id="dt">🔊 Detach audio</button>':'')}
 else if(k=='text')h=`<h4>Text</h4>`+f('Content','txt','textarea')+f('Hide text','hide','checkbox')+f('Font','font','select',FONTS)+f('Size','size','range','min="16" max="260"')+f('Colour','color','color')+f('Bold','bold','checkbox')+f('Outline','stroke','checkbox')+f('Background box','bgOn','checkbox')+f('Box colour','bgc','color')+f('Animation','anim','select',['none','fade','pop','zoom','slide'])+f('Start (s)','start','number','min="0" step=".1"')+f('Duration (s)','dur','number','min=".2" step=".1"')+f('Position X','x','range','min="0" max="100"')+f('Position Y','y','range','min="0" max="100"')+rotF+lyF;
 else if(k=='voice'){h=`<h4>${o.ly?'Audio · Layer '+o.ly:o.tr=='m'?'Music':'Voice-over'}</h4>`+f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"')+f('Fade in (s)','fi','range','min="0" max="5" step=".1"')+f('Fade out (s)','fo','range','min="0" max="5" step=".1"')+f('Start on timeline (s)','start','number','min="0" step=".1"')+f('Trim start (s)','in','number','min="0" step=".1"')+f('Trim end (s)','out','number','min=".2" step=".1"')+lyF+`<h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-ms">${(o.ly||o.tr=='m')?'→ Voice track':'→ Music track'}</button><button id="a-de">🗑 Delete</button></div>`}else if(k=='ov')h=ovIns(o,f);else h=`<h4>Music</h4>`+f('Volume','vol','range','min="0" max="1" step=".05"');
 el.innerHTML=(S.multi.length>1?`<div class="mbn">${S.multi.length} items selected · edits apply to all</div>`:'')+h}
@@ -311,7 +330,7 @@ if(ia=='Fade')r.a=e;else if(ia=='Pop'){r.s=.4+.6*e;r.a=Math.min(1,p*3)}else if(i
 function ovIns(o,f){const m=M(o.mid),v=m.type=='video';if(o.zs==null)o.zs=30;if(!o.za)o.za='None';if(!o.ia)o.ia='None';
 return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Entrance animation','ia','select',IA)+f('Motion animation','za','select',ZA)+f('Motion strength','zs','range','min="5" max="100"')+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')
 +(v?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))
-+'<div class="grid" style="margin-top:8px"><button id="ov-ct">Center</button><button id="ov-fu">Fill screen</button></div><h4>Colour</h4>'+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button><h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-de">🗑 Delete</button></div>'}
++'<div class="grid" style="margin-top:8px"><button id="ov-ct">Center</button><button id="ov-fu">Fill screen</button></div>'+ckPanel(o,f)+'<h4>Colour</h4>'+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button><h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-de">🗑 Delete</button></div>'}
 function splitOv(){const o=getSel(),d=odur(o),r=S.t-o.start;if(r<=.1||r>=d-.1)return toast('Move the playhead inside the selected layer clip to split it');const cut=o.in+r*o.sp,n={...o,id:S.id++,start:S.t,in:cut};o.out=cut;S.ovs.splice(S.ovs.indexOf(o)+1,0,n);pick('ov',n.id)}
 function dupOv(){const o=getSel(),n={...o,id:S.id++,start:o.start+odur(o)};S.ovs.splice(S.ovs.indexOf(o)+1,0,n);pick('ov',n.id)}
 function ovPtr(e,o,edge,grp,fin){const z=S.zoom,m=M(o.mid),s0=o.start,in0=o.in,out0=m.type=='video'?Math.min(o.out,m.dur):o.out,d0=odur(o);
@@ -348,7 +367,7 @@ if(m.type=='video'){const want=o.in+(S.t-o.start)*o.sp;e.playbackRate=o.sp;e.vol
 if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
 const AN=anim({start:o.start,dur:d,za:o.za||'None',zs:o.zs||30}),EN=entr(o,d),k=Math.min(W/m.w,H/m.h)*o.sc/100*AN[0]*EN.s,w=m.w*k,h=m.h*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
 if(!hid){ctx.save();ctx.globalAlpha=fa*o.op/100;ctx.translate(cx,cy);ctx.rotate(rad);if(o.flip)ctx.scale(-1,1);const r=Math.min(w,h)/2*(o.rd||0)/100;
-ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=fl(o);ctx.drawImage(e,-w/2,-h/2,w,h);if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
+ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=fl(o);ctx.drawImage(ckSrc(o,e,m),-w/2,-h/2,w,h);if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
 const lx=o.flip?-w/2:w/2,pts=[[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(p=>[cx+p[0]*cs-p[1]*sn,cy+p[0]*sn+p[1]*cs]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
 o._b=[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys),cx+lx*cs-(h/2)*sn,cy+lx*sn+(h/2)*cs];dr.push({o,w,h,cx,cy,rad,lx})});
 while(ti<LT.length)drawText(LT[ti++]);ctx.filter='none';ctx.globalAlpha=1;
@@ -491,8 +510,8 @@ if(c){const m=M(c.mid),e=m.el;
 if(m.type=='video'){const want=c.in+(S.t-c.start)*c.sp;if(c.id!=S.curId){S.curId=c.id;e.currentTime=want}e.playbackRate=c.sp;e.volume=(S.trk.Vm||c.mute)?0:c.vol;
 if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
 const a=c.fade?Math.max(0,Math.min(1,(S.t-c.start)/.5,(c.start+c.dur-S.t)/.5)):1;ctx.globalAlpha=(S.trk.Vh||c.hide)?0:a;
-if(c.fit=='blur'){ctx.filter='blur(28px) brightness(.7)';blit(e,m,Math.max,1.2,0,0)}
-let[az,ax,ay]=anim(c);if(c.za==ZW){const q=zwAt(c);az=q[0];ax=q[1];ay=q[2]}ctx.filter=fl(c);blit(e,m,c.fit=='cover'?Math.max:Math.min,c.zoom*az,c.rot,c.flip,ax,ay);ctx.filter='none';ctx.globalAlpha=1}
+if(c.fit=='blur'&&!(c.ck&&!S.ckPick)){ctx.filter='blur(28px) brightness(.7)';blit(e,m,Math.max,1.2,0,0)}
+let[az,ax,ay]=anim(c);if(c.za==ZW){const q=zwAt(c);az=q[0];ax=q[1];ay=q[2]}ctx.filter=fl(c);blit(ckSrc(c,e,m),m,c.fit=='cover'?Math.max:Math.min,c.zoom*az,c.rot,c.flip,ax,ay);ctx.filter='none';ctx.globalAlpha=1}
 else if(total()==0){ctx.fillStyle='#777';ctx.font=`${W/22}px system-ui`;ctx.textAlign='center';ctx.fillText('Import media, then click it to add',W/2,H/2)}
 drawOvs();const mu=null;if(mu){const m=M(mu.mid),e=m.el;e.volume=mu.vol;if(S.play&&S.t<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-S.t)>.3)e.currentTime=S.t}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-Math.min(S.t,m.dur))>.1)e.currentTime=Math.min(S.t,m.dur)}}
 const on=new Set();S.voices.forEach(a=>{const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||(a.ly?S.lm[a.ly]:(a.tr=='m'?S.trk.Mm:(a.tr&&a.tr!='v')?S.xm[a.tr]:S.trk.Am)))?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
@@ -511,13 +530,27 @@ function frame(){requestAnimationFrame(frame);const now=performance.now();
 if(S.play){S.t+=(now-S.last)/1000;if(S.t>=total()){S.t=total();pause()}else if(S.stopAt!=null&&S.t>=S.stopAt){S.t=S.stopAt;pause()}}S.last=now;recTick();draw();zwDraw();if(S.exporting&&S.ecx)S.ecx.drawImage(cv,0,0,S.ecv.width,S.ecv.height);
 $('#tm').textContent=fmt(S.t)+' / '+fmt(total());const ph=$('#ph'),x=S.t*S.zoom;ph.style.left=x+'px';
 const sc=$('#sc');if((S.play||REC)&&x>sc.scrollLeft+sc.clientWidth-30)sc.scrollLeft=x-40;
-if(REC&&REC.t0&&$('#rc'))$('#rc').textContent='■ Stop recording · '+((performance.now()-REC.t0)/1000).toFixed(1)+'s';if(S.exporting)$('#ex').textContent='Exporting '+Math.round(S.t/Math.max(total(),.01)*100)+'%'}
+if(REC&&REC.t0&&$('#rc'))$('#rc').textContent='■ Stop recording · '+((performance.now()-REC.t0)/1000).toFixed(1)+'s';if(S.exporting){$('#ex').textContent='Exporting '+Math.round(S.t/Math.max(total(),.01)*100)+'%';xoTick()}}
 cv.onpointerdown=e=>{if(S.exporting)return;const r=cv.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width,py=(e.clientY-r.top)*H/r.height;
 const hit=[...S.texts].reverse().find(x=>!S.trk.Th&&!x.hide&&!S.th[x.tl||0]&&!(x.ly&&S.lh[x.ly])&&x._b&&S.t>=x.start&&S.t<x.start+x.dur&&px>=x._b[0]&&px<=x._b[2]&&py>=x._b[1]&&py<=x._b[3]);if(!hit)return ovDown(e,px,py,r);
 pick('text',hit.id);const ox=hit.x-(e.clientX-r.left)/r.width*100,oy=hit.y-(e.clientY-r.top)/r.height*100;
 drag(e,(d,ev)=>{hit.x=Math.min(100,Math.max(0,Math.round(ox+(ev.clientX-r.left)/r.width*100)));hit.y=Math.min(100,Math.max(0,Math.round(oy+(ev.clientY-r.top)/r.height*100)))},renderIns)};
 
 /* ---------- export ---------- */
+/* ---------- Export progress overlay: live preview + percentage, tab-close protection ---------- */
+const XO={on:0,wl:null,hid:0};
+const xoBusy=()=>!!(S.exporting||S.aexp);
+addEventListener('beforeunload',e=>{if(xoBusy()){e.preventDefault();e.returnValue='An export is still running. If you leave now it will be lost.';return e.returnValue}});
+async function xoWake(){try{if(navigator.wakeLock&&!XO.wl){XO.wl=await navigator.wakeLock.request('screen');XO.wl.addEventListener('release',()=>{XO.wl=null})}}catch(e){}}
+function xoShow(kind){XO.on=1;XO.hid=document.hidden?1:0;XO.kind=kind;const c=$('#xop');
+if(kind=='v'&&S.ecv){const k=Math.min(1,420/Math.max(S.ecv.width,S.ecv.height));c.width=Math.max(2,Math.round(S.ecv.width*k));c.height=Math.max(2,Math.round(S.ecv.height*k));c.style.display='block'}else c.style.display='none';
+$('#xoh').textContent=kind=='v'?'Exporting your video…':'Exporting your audio…';$('#xow').className='xw';$('#xow').textContent='⚠ Do not close, refresh or leave this tab until the export finishes. Keep it open and in front.';
+$('#xo').hidden=false;xoUpd(0,kind=='v'?'Recording in real time · '+fmt(total())+' long':'Preparing…');xoWake()}
+function xoUpd(p,t){const q=Math.max(0,Math.min(100,Math.round(p)));$('#xpc').textContent=q+'%';$('#xpb').style.width=q+'%';if(t!=null)$('#xpt').textContent=t;document.title='Exporting '+q+'% – ClipForge'}
+function xoText(t){if(XO.on)$('#xpt').textContent=t}
+function xoHide(){XO.on=0;$('#xo').hidden=true;document.title='ClipForge – Social Video Editor';try{XO.wl&&XO.wl.release()}catch(e){}XO.wl=null}
+function xoTick(){if(!XO.on||XO.kind!='v'||!S.exporting)return;const p=S.t/Math.max(total(),.01)*100;xoUpd(p,fmt(S.t)+' / '+fmt(total()));const c=$('#xop');if(S.ecv)c.getContext('2d').drawImage(S.ecv,0,0,c.width,c.height)}
+document.addEventListener('visibilitychange',()=>{if(!XO.on)return;if(document.hidden){XO.hid=1;document.title='⚠ Exporting – come back to this tab'}else{xoWake();if(XO.hid&&XO.kind=='v'){const w=$('#xow');w.className='xw bad';w.textContent='⚠ This tab was in the background. Browsers pause video rendering then, so part of the export may be frozen. Keep this tab in front, or re-export if the result looks wrong.'}}});
 /* ---------- Export dialog (Filmora-style): formats, resolution, fps, quality, audio, MP3 ---------- */
 const XF=[
 {id:'mp4',n:'MP4',d:'H.264 · plays everywhere',k:'v',ext:'mp4',mt:['video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=avc1','video/mp4']},
@@ -565,8 +598,8 @@ const cs=ec.captureStream(fps);
 if(o.aud){AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();AC.resume();S.media.forEach(route);DEST.stream.getAudioTracks().forEach(t=>cs.addTrack(t))}
 const ch=[];let r;try{r=new MediaRecorder(cs,{mimeType:F.mime,videoBitsPerSecond:Math.round(vbps(o)),audioBitsPerSecond:o.ab*1000})}catch(e){S.ecv=null;return toast('Could not start the encoder for this format')}
 r.ondataavailable=e=>e.data.size&&ch.push(e.data);
-r.onstop=()=>{dlBlob(new Blob(ch,{type:F.mime.split(';')[0]}),fname(o,F.ext));S.exporting=0;S.ecv=null;S.ecx=null;$('#ex').textContent='⬇ Export';toast('Export finished')};
-S.ecx.drawImage(cv,0,0,ew,eh);S.rec=r;S.exporting=1;r.start();play()}
+r.onstop=()=>{dlBlob(new Blob(ch,{type:F.mime.split(';')[0]}),fname(o,F.ext));S.exporting=0;S.ecv=null;S.ecx=null;xoHide();$('#ex').textContent='⬇ Export';toast('Export finished')};
+S.ecx.drawImage(cv,0,0,ew,eh);S.rec=r;S.exporting=1;r.start();play();xoShow('v')}
 async function mixAudio(onp){const SR=44100,dur=Math.max(.2,total());AC=AC||new AudioContext();
 const cV=S.clips.filter(c=>M(c.mid)&&M(c.mid).type=='video'),oV=S.ovs.filter(o=>M(o.mid)&&M(o.mid).type=='video'),vo=S.voices.filter(a=>M(a.mid)),ids=[...new Set([...cV.map(c=>c.mid),...oV.map(o=>o.mid),...vo.map(a=>a.mid)])],bufs={};let n=0;
 for(const id of ids){onp('Decoding audio '+(++n)+'/'+ids.length+'…');try{bufs[id]=await AC.decodeAudioData(await M(id).file.arrayBuffer())}catch(e){bufs[id]=null}}
@@ -585,13 +618,13 @@ const e=enc.flush();if(e.length)parts.push(e.slice());return new Blob(parts,{typ
 function encWav(b){const n=b.length,L=b.getChannelData(0),R=b.numberOfChannels>1?b.getChannelData(1):L,buf=new ArrayBuffer(44+n*4),v=new DataView(buf),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
 w(0,'RIFF');v.setUint32(4,36+n*4,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,2,true);v.setUint32(24,b.sampleRate,true);v.setUint32(28,b.sampleRate*4,true);v.setUint16(32,4,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*4,true);
 let p=44;for(let i=0;i<n;i++){const a=Math.max(-1,Math.min(1,L[i])),c=Math.max(-1,Math.min(1,R[i]));v.setInt16(p,a<0?a*32768:a*32767,true);v.setInt16(p+2,c<0?c*32768:c*32767,true);p+=4}return new Blob([buf],{type:'audio/wav'})}
-async function startAudioExport(o){S.aexp=1;pause();const b=$('#ex'),prog=t=>{b.textContent=t};
+async function startAudioExport(o){S.aexp=1;pause();const b=$('#ex'),prog=t=>{b.textContent=t;const m=String(t).match(/(\d+)%/);xoText(t);if(m)xoUpd(+m[1],t)};xoShow('a');
 try{prog('Rendering audio…');const buf=await mixAudio(prog);let pk=0;const ch0=buf.getChannelData(0);for(let i=0;i<ch0.length;i+=7)pk=Math.max(pk,Math.abs(ch0[i]));
-if(pk<1e-4){toast('No audible sound on the timeline (check volume, mute and that clips have audio)');S.aexp=0;b.textContent='⬇ Export';return}
+if(pk<1e-4){toast('No audible sound on the timeline (check volume, mute and that clips have audio)');S.aexp=0;xoHide();b.textContent='⬇ Export';return}
 let blob,ext='wav';
 if(o.f=='mp3'){try{prog('Loading MP3 encoder…');await loadLame();blob=await encMp3(buf,o.ab,p=>prog('Encoding MP3 '+p+'%'));ext='mp3'}catch(e){console.warn(e);toast('MP3 encoder could not load (needs internet once). Saved as WAV instead.');blob=encWav(buf)}}else blob=encWav(buf);
 dlBlob(blob,fname(o,ext));toast(ext.toUpperCase()+' export finished')}catch(e){console.warn(e);toast('Audio export failed')}
-S.aexp=0;b.textContent='⬇ Export'}
+S.aexp=0;xoHide();b.textContent='⬇ Export'}
 
 
 async function recStart(){if(!navigator.mediaDevices||!window.MediaRecorder)return toast('Recording is not supported in this browser');
@@ -742,7 +775,7 @@ hist();renderIns()});
 $('#ins').addEventListener('input',e=>{if(e.target.dataset.k=='za'&&S.sel&&S.sel.k=='clip')renderIns()});
 
 /* ---------- Copy / Paste items, and Copy / Paste settings ---------- */
-const SK={clip:['fit','zoom','rot','flip','fade','za','zs','vol','mute','b','c','s','h','bl','g','se','sf','sx','sy','ef','ex','ey','ez'],
+const SK={clip:['ck','ckc','cks','ckb','ckd','fit','zoom','rot','flip','fade','za','zs','vol','mute','b','c','s','h','bl','g','se','sf','sx','sy','ef','ex','ey','ez'],
 ov:['x','y','sc','rot','op','flip','fade','rd','bw','bc','ia','za','zs','vol','mute','b','c','s','h','bl','g','se'],
 text:['font','size','color','bold','stroke','bgOn','bgc','anim','x','y','rot'],voice:['vol','mute','fi','fo']};
 const KN={clip:'clip',ov:'layer clip',text:'text',voice:'audio'};
@@ -765,7 +798,7 @@ if(!n)return toast(diff?'Settings can only be pasted onto the same kind of item 
 layout();renderIns();renderTL();hist();toast('Settings pasted to '+n+' item'+(n>1?'s':''))}
 $('#cp').onclick=copyCb;$('#pa').onclick=pasteCb;$('#cs').onclick=copySt;$('#ps').onclick=pasteSt;updCb();
 addEventListener('keydown',e=>{const tg=e.target,typing=/TEXTAREA|SELECT/.test(tg.tagName)||(tg.tagName=='INPUT'&&!['range','checkbox','color'].includes(tg.type));if(typing||!(e.ctrlKey||e.metaKey)||S.exporting||!$('#xd').hidden)return;
-if(e.code=='KeyC'){e.preventDefault();e.altKey?copySt():copyCb()}else if(e.code=='KeyV'){e.preventDefault();e.altKey?pasteSt():pasteCb()}});
+if(e.code=='KeyC'){e.preventDefault();e.altKey?copySt():copyCb()}else if(e.code=='KeyV'&&e.altKey){e.preventDefault();pasteSt()}});
 /* ---------- Snapshot: capture the current preview frame (Ctrl+Alt+S) ---------- */
 function takeSnap(){if(S.exporting||S.aexp)return toast('Wait for the export to finish');if(total()<=0)return toast('Add something to the timeline first');
 const at=S.t,ex=S.exporting;S.exporting=1;try{draw()}finally{S.exporting=ex}
@@ -793,5 +826,210 @@ if(!t.classList||!t.classList.contains('nv'))return;const r=nvR(t);let v=parseFl
 $('#ins').addEventListener('change',e=>{const n=e.target;if(!n.classList||!n.classList.contains('nv'))return;const r=nvR(n);if(r)n.value=r.value});
 $('#ins').addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.classList&&e.target.classList.contains('nv'))e.target.blur()});
 new MutationObserver(()=>{enhNum();syncAllR()}).observe($('#ins'),{childList:true,subtree:true});enhNum();syncAllR();
+/* ---------- Online media: paste links / search free sites (Pexels, Pixabay, Openverse) ---------- */
+const eh=s=>esc(String(s==null?'':s)),lsg=k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}},lss=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const blankRS=()=>({items:[],page:1,more:false,busy:0,err:''});
+const ODPH=[['all','All free sources · no key'],['openverse','Openverse'],['commons','Wikimedia Commons'],['nasa','NASA images'],['pexels','Pexels · needs free key'],['pixabay','Pixabay · needs free key']],odT=()=>OD.tab=='gimg'?'photo':OD.tab;
+const OD={tab:'link',links:'',gq:'',yq:'',gf:true,log:[],sq:'',sv:{photo:'all',video:'all',music:'all'},qs:{photo:'',video:'',music:''},rs:{photo:blankRS(),video:blankRS(),music:blankRS()},added:{},work:{}};
+const ODT=[['link','🔗 Paste link'],['photo','🖼 Photos'],['video','🎬 Videos'],['music','🎵 Music'],['gimg','🔍 Google Images'],['yt','▶ YouTube'],['sites','🌐 Free sites']];
+const ODX={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif','image/avif':'avif','video/mp4':'mp4','video/webm':'webm','video/quicktime':'mov','audio/mpeg':'mp3','audio/mp3':'mp3','audio/wav':'wav','audio/ogg':'ogg','audio/mp4':'m4a','audio/aac':'aac','audio/flac':'flac'};
+const ODE={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',avif:'image/avif',bmp:'image/bmp',mp4:'video/mp4',m4v:'video/mp4',webm:'video/webm',mov:'video/quicktime',ogv:'video/ogg',mp3:'audio/mpeg',wav:'audio/wav',ogg:'audio/ogg',oga:'audio/ogg',m4a:'audio/mp4',aac:'audio/aac',flac:'audio/flac',opus:'audio/ogg'};
+const ODS=[
+['Pixabay','Photos · videos · music · sound effects','https://pixabay.com/',[['Photos',q=>`https://pixabay.com/images/search/${q}/`],['Videos',q=>`https://pixabay.com/videos/search/${q}/`],['Music',q=>`https://pixabay.com/music/search/${q}/`]]],
+['Pexels','Photos · videos','https://www.pexels.com/',[['Photos',q=>`https://www.pexels.com/search/${q}/`],['Videos',q=>`https://www.pexels.com/search/videos/${q}/`]]],
+['Google Images','Photos · "Free to reuse" shows only reusable images','https://images.google.com/',[['Free to reuse',q=>`https://www.google.com/search?tbm=isch&q=${q}&tbs=sur:fmc`],['All images',q=>`https://www.google.com/search?tbm=isch&q=${q}`]]],
+['YouTube','Videos · "Creative Commons" filter (can\'t be downloaded in the app)','https://www.youtube.com/',[['Creative Commons',q=>`https://www.youtube.com/results?search_query=${q}&sp=EgIwAQ%253D%253D`]]],
+['Unsplash','Photos','https://unsplash.com/',[['Photos',q=>`https://unsplash.com/s/photos/${q}`]]],
+['Mixkit','Videos · music · sound effects','https://mixkit.co/',[]],
+['Coverr','Videos','https://coverr.co/',[['Videos',q=>`https://coverr.co/s?q=${q}`]]],
+['Freesound','Sound effects (Creative Commons)','https://freesound.org/',[['Sounds',q=>`https://freesound.org/search/?q=${q}`]]],
+['Free Music Archive','Music (Creative Commons)','https://freemusicarchive.org/',[['Music',q=>`https://freemusicarchive.org/search?quicksearch=${q}`]]],
+['Openverse','Photos · audio (Creative Commons)','https://openverse.org/',[['All',q=>`https://openverse.org/search/?q=${q}`]]],
+['Wikimedia Commons','Photos · video · audio','https://commons.wikimedia.org/',[['Search',q=>`https://commons.wikimedia.org/w/index.php?search=${q}`]]]];
+function odOpen(tab){if(tab)OD.tab=tab;odRender();$('#od').hidden=false}
+function odClose(){$('#od').hidden=true;document.querySelectorAll('#od audio').forEach(a=>a.pause())}
+function odRender(){const t=OD.tab;$('#odl').innerHTML=ODT.map(([k,l])=>`<button data-t="${k}" class="${k==t?'on':''}">${l}</button>`).join('');const R=$('#odr');
+if(t=='link'){R.innerHTML=`<p class="xn" style="margin:0 0 10px">Paste the link of a photo, video or music file — one link per line. It is downloaded and added to your <b>Media</b> library.</p><p class="xn" style="margin:-4px 0 10px">💡 You can also copy an <b>image</b> anywhere (right-click → <i>Copy image</i>) and press <b>Ctrl+V</b> here — it goes straight into Media.</p><textarea id="odt" rows="5" spellcheck="false" placeholder="https://images.pexels.com/photos/…/photo.jpeg&#10;https://cdn.pixabay.com/video/…/clip.mp4&#10;https://example.com/song.mp3">${eh(OD.links)}</textarea><div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap"><button class="pr" id="odgo">＋ Add to Media</button><button id="odpaste">📋 Paste from clipboard</button></div><label class="xck" style="margin:0 0 8px;color:var(--mu);font-size:12px"><input type="checkbox" id="odpx" ${lsg('cf_proxy')==='0'?'':'checked'}> If a site blocks the download, retry through a free public proxy (corsproxy.io). The link is sent to that service.</label><div id="odlog"></div><p class="xn"><b>How to get a link:</b> open a free site (see <a href="#" data-t="sites">Free sites</a>) → find your file → right-click the photo/video → <i>Copy image address</i> / <i>Copy video address</i> → paste it here. Page links from Pexels and Pixabay also work once you save a free API key in the Photos or Videos tab.</p><p class="xn">Some sites block downloads from other apps. If that happens, download the file to your device and use <b>Import</b> or drop it into the editor.</p>`;odLog()}
+else if(t=='gimg'){R.innerHTML=`<p class="xn" style="margin:0 0 10px">Search shows free-to-use images right here — click one to add it to your <b>Media</b>. Google's own results can't be shown inside apps: use <b>Google ↗</b> to open them in a new tab, then paste an image address in the box at the bottom.</p><div class="olbar"><select data-od="src">${ODPH.map(o=>`<option value="${o[0]}"${o[0]==OD.sv.photo?' selected':''}>${o[1]}</option>`).join('')}</select><input data-od="q" placeholder="Search images…" value="${eh(OD.qs.photo)}"><button class="pr" id="odsr">Search</button><button id="odgs">Google ↗</button></div><p class="xn" style="margin:-4px 0 10px">💡 Copied an image from Google or any site (right-click → <i>Copy image</i>)? Just press <b>Ctrl+V</b> here to add it to Media.</p><div id="odres"></div><details style="margin-top:14px"${OD.links?' open':''}><summary style="cursor:pointer;color:var(--ac)">Add an image from Google (paste its address)</summary><label class="xck" style="margin:10px 0;color:var(--mu);font-size:12px"><input type="checkbox" id="odgf" ${OD.gf?'checked':''}> Google ↗ shows only images that are free to reuse</label><ol class="xn" style="margin:0 0 10px;padding-left:18px"><li>Press <b>Google ↗</b>, then click an image so the large preview opens.</li><li>Right-click the large image → <i>Copy image address</i>.</li><li>Paste it in the box below.</li></ol><textarea id="odt" rows="3" spellcheck="false" placeholder="Paste the image address here (one per line)">${eh(OD.links)}</textarea><div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap"><button class="pr" id="odgo">＋ Add to Media</button><button id="odpaste">📋 Paste from clipboard</button></div><div id="odlog"></div><p class="xn">Only use images you have the right to use.</p></details>`;odRes()}
+else if(t=='yt'){R.innerHTML=`<p class="xn" style="margin:0 0 10px">YouTube videos cannot be downloaded into the editor — YouTube's terms do not allow saving videos from the site, and browsers cannot do it anyway. You can still find reusable videos here:</p><div class="olbar"><input data-od="yq" placeholder="Search YouTube Creative Commons videos…" value="${eh(OD.yq)}"><button class="pr" id="odys">Search ↗</button></div><ol class="xn" style="margin:0 0 12px;padding-left:18px"><li>The search opens in a new tab, showing only <b>Creative Commons</b> videos.</li><li>Get the video file with the creator's permission (or from your own YouTube Studio if it is yours).</li><li>Import the file from your device to add it to <b>Media</b>.</li></ol><button class="pr" id="odimp">＋ Import a video from my device</button><p class="xn">For ready-to-download free videos, use the <b>Videos</b> tab (Wikimedia Commons, NASA, Internet Archive, Pexels, Pixabay).</p>`}
+else if(t=='sites'){R.innerHTML=`<p class="xn" style="margin:0 0 8px">Find something on a free site, copy its link, then paste it in <a href="#" data-t="link">Paste link</a>. Always check the license of what you use.</p><div class="olbar"><input id="odsq" placeholder="What are you looking for? (optional)" value="${eh(OD.sq)}"></div><div class="osg">${ODS.map((s,i)=>`<div class="oss"><b>${s[0]}</b><small>${s[1]}</small><div class="osb"><button data-su="${i}:-1">Open ↗</button>${s[3].map((c,j)=>`<button data-su="${i}:${j}">${c[0]} ↗</button>`).join('')}</div></div>`).join('')}</div>`}
+else{const src=OD.sv[t],opt=t=='photo'?[['all','All free sources · no key'],['openverse','Openverse'],['commons','Wikimedia Commons'],['nasa','NASA images'],['pexels','Pexels · needs free key'],['pixabay','Pixabay · needs free key']]:t=='video'?[['all','All free sources · no key'],['commons','Wikimedia Commons'],['nasa','NASA videos'],['archive','Internet Archive'],['pexels','Pexels · needs free key'],['pixabay','Pixabay · needs free key']]:[['all','All free sources · no key'],['openverse','Openverse'],['commons','Wikimedia Commons'],['nasa','NASA audio'],['archive','Internet Archive']],need=src=='pexels'||src=='pixabay',key=need?lsg('cf_'+src):'',nm=src=='pexels'?'Pexels':'Pixabay';
+R.innerHTML=`<div class="olbar"><select data-od="src">${opt.map(o=>`<option value="${o[0]}"${o[0]==src?' selected':''}>${o[1]}</option>`).join('')}</select><input data-od="q" placeholder="Search free ${t=='music'?'music':t+'s'}…" value="${eh(OD.qs[t])}"><button class="pr" id="odsr">Search</button></div>`+
+(need&&!key?`<div class="okey"><b>Free ${nm} API key needed</b><p class="xn" style="margin:4px 0 8px">Create a free account on ${nm} and copy your API key. It is saved only in this browser and sent only to ${nm}.</p><div class="olbar"><input id="odk" placeholder="Paste your ${nm} API key" autocomplete="off" spellcheck="false"><button class="pr" id="odks">Save</button></div><a href="${src=='pexels'?'https://www.pexels.com/api/':'https://pixabay.com/api/docs/'}" target="_blank" rel="noopener noreferrer">Get a free key ↗</a></div>`:need?`<p class="xn" style="margin:0 0 8px">${nm} key saved in this browser · <a href="#" id="odck">change</a></p>`:'')+
+(t=='music'?`<p class="xn" style="margin:0 0 8px">Free music &amp; sound effects. Check the license shown on each track. For Pixabay Music or Mixkit, open the site from <a href="#" data-t="sites">Free sites</a> and paste the file link.</p>`:'')+`${need?'':`<p class="xn" style="margin:0 0 8px">No key needed — ${src=='all'?'searches several free libraries at once ('+(t=='photo'?'Openverse, Wikimedia Commons, NASA':t=='video'?'Wikimedia Commons, NASA, Internet Archive':'Openverse, Wikimedia Commons, NASA, Internet Archive')+')':'searches this free library'}.${t=='music'?'':' Pexels and Pixabay can be added with their free keys.'} Check each item's license.</p>`}<div id="odres"></div>`;odRes()}}
+function odLog(){const b=$('#odlog');if(!b)return;b.innerHTML=OD.log.map(l=>`<div class="odi ${l.s}"><span>${l.s=='ok'?'✓':l.s=='err'?'✕':l.s=='run'?'⏳':'…'}</span><div><small>${eh(l.u.length>70?l.u.slice(0,67)+'…':l.u)}</small><div>${eh(l.t)}</div>${l.k?`<div class="olbar" style="margin:8px 0 4px"><input id="odk2" placeholder="Paste your free Pixabay API key" autocomplete="off" spellcheck="false"><button class="pr" id="odks2">Save &amp; retry</button></div><a href="https://pixabay.com/api/docs/" target="_blank" rel="noopener noreferrer" style="color:var(--ac);font-size:12px">Get a free key ↗ (log in, then your key is shown on that page)</a>`:''}</div></div>`).join('')}
+function odRes(){const t=odT(),box=$('#odres');if(!box||t=='link'||t=='sites')return;const R=OD.rs[t];
+let h=t=='music'?`<div>${R.items.map((it,i)=>{const d=OD.added[it.id],w=OD.work[it.id];return`<div class="orw"><div class="ort"><b>${eh(it.title)}</b><small>${eh(it.by||'Unknown')}${it.lic?' · '+eh(it.lic):''}${it.dur?' · '+fmt(it.dur):''}</small>${it.src?`<audio controls preload="none" src="${eh(it.src)}"></audio>`:''}</div><div class="ora"><button class="pr" data-i="${i}">${d?'✓ Added':w?'…':'＋ Add'}</button>${it.link?`<a href="${eh(it.link)}" target="_blank" rel="noopener noreferrer">Page ↗</a>`:''}</div></div>`}).join('')}</div>`
+:`<div class="og">${R.items.map((it,i)=>{const d=OD.added[it.id],w=OD.work[it.id];return`<div class="ot${d?' done':''}${w?' busy':''}" data-i="${i}" title="${eh(it.name)}"><img src="${eh(it.thumb)}" loading="lazy" referrerpolicy="no-referrer" alt=""><span class="ob">${it.dur?fmt(it.dur)+' · ':''}${eh(it.by||'')}</span><span class="oa">${d?'✓ Added':w?'Adding…':'＋ Add'}</span></div>`}).join('')}</div>`;
+if(R.busy)h+='<p class="xn">Loading…</p>';else if(R.err)h+=`<p class="xn" style="color:#ff6b81">${eh(R.err)}</p>`;
+if(R.more&&!R.busy)h+='<button id="odmore" style="width:100%;margin-top:8px">Load more</button>';box.innerHTML=h}
+const odJ=async(u,h)=>{let r;try{r=await fetch(u,h?{headers:h}:undefined)}catch(e){throw Error('Could not reach the site. Check your internet connection.')}
+if(r.status==401||r.status==403||r.status==400)throw Error(/pexels|pixabay/.test(u)?'The API key was rejected. Check the key and try again.':'The service refused this request ('+r.status+'). Try another search word, or try again in a minute.');if(r.status==429)throw Error('Too many requests. Wait a minute and try again.');if(!r.ok)throw Error('Request failed ('+r.status+')');return r.json()};
+const pickPexVid=fs=>{fs=(fs||[]).filter(f=>f.file_type=='video/mp4'&&f.link);const ok=fs.filter(f=>Math.min(f.width||0,f.height||0)>=720).sort((a,b)=>a.width*a.height-b.width*b.height);return ok[0]||fs.sort((a,b)=>b.width*b.height-a.width*a.height)[0]||{}};
+/* key-free libraries: Wikimedia Commons, NASA, Internet Archive (+ Openverse) and an "All" mode */
+async function odCommons(t,q,pg){const per=24,ft=t=='photo'?'bitmap':t=='video'?'video':'audio';
+const j=await odJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q+' filetype:'+ft)}&gsrlimit=${per}&gsroffset=${(pg-1)*per}&prop=imageinfo&iiprop=url|mime|extmetadata|size&iiurlwidth=1280&format=json&formatversion=2&origin=*`);
+const pages=((j.query&&j.query.pages)||[]).slice().sort((a,b)=>(a.index||0)-(b.index||0)),items=[];
+pages.forEach(p=>{const ii=p.imageinfo&&p.imageinfo[0];if(!ii)return;const mime=ii.mime||'';
+if(t=='photo'&&!/^image\/(jpeg|png|webp|gif)$/.test(mime))return;if(t=='video'&&!/^video\/(webm|mp4|ogg)$/.test(mime))return;if(t=='music'&&!/^audio\//.test(mime))return;
+const md=ii.extmetadata||{},by=((md.Artist&&md.Artist.value)||'').replace(/<[^>]+>/g,'').trim().slice(0,40),lic=(md.LicenseShortName&&md.LicenseShortName.value)||'',nm=String(p.title||'').replace(/^File:/,''),th=ii.thumburl||ii.url;
+items.push({id:'wc'+p.pageid,thumb:t=='music'?'':th.replace('/1280px-','/320px-'),src:t=='photo'?th:ii.url,alt:ii.url,title:nm.replace(/\.[a-z0-9]+$/i,''),name:nm,by:'Commons'+(by?' · '+by:''),link:ii.descriptionurl,dur:ii.duration||0,lic})});
+return{items,more:!!(j.continue&&j.continue.gsroffset!=null)}}
+async function odNasa(t,q,pg){const mt=t=='photo'?'image':t=='video'?'video':'audio',u=s=>String(s||'').replace(/^http:/,'https:');
+const j=await odJ(`https://images-api.nasa.gov/search?q=${encodeURIComponent(q)}&media_type=${mt}&page=${pg}&page_size=24`),c=j.collection||{};
+return{items:(c.items||[]).map(x=>{const d=(x.data||[{}])[0],th=((x.links||[])[0]||{}).href;if((!th&&t!='music')||!x.href)return null;
+return{id:'na'+d.nasa_id,thumb:th?u(th):'',title:String(d.title||d.nasa_id),res:async()=>{const L=(await odJ(u(x.href))).map(u),pick=(...ss)=>{for(const s of ss){const f=L.find(z=>z.toLowerCase().endsWith(s));if(f)return f}return''},f=mt=='image'?pick('~large.jpg','~medium.jpg','~orig.jpg','~small.jpg'):mt=='audio'?pick('.mp3','.m4a','.wav'):pick('~medium.mp4','~large.mp4','~orig.mp4','~small.mp4','~mobile.mp4');if(!f)throw Error('No downloadable file found');return f},
+name:`${String(d.title||d.nasa_id).slice(0,60)}.${mt=='image'?'jpg':mt=='audio'?'mp3':'mp4'}`,by:'NASA',lic:'NASA media',link:'https://images.nasa.gov/details/'+d.nasa_id}}).filter(Boolean),more:(c.links||[]).some(l=>l.rel=='next')}}
+async function odArchive(t,q,pg){const mt=t=='music'?'audio':'movies';
+const j=await odJ(`https://archive.org/advancedsearch.php?q=${encodeURIComponent('('+q+') AND mediatype:('+mt+')')}&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=licenseurl&sort[]=downloads+desc&rows=24&page=${pg}&output=json`),r=j.response||{};
+return{items:(r.docs||[]).map(x=>({id:'ia'+x.identifier,thumb:'https://archive.org/services/img/'+x.identifier,title:String(x.title||x.identifier),
+res:async()=>{const m=await odJ('https://archive.org/metadata/'+encodeURIComponent(x.identifier)),F=m.files||[],ok=t=='music'?F.filter(f=>/\.mp3$/i.test(f.name)):F.filter(f=>/\.(mp4|webm|ogv)$/i.test(f.name)),pf=ok.filter(f=>/h\.264|mpeg4|mp3/i.test(f.format||'')),pool=(pf.length?pf:ok).slice().sort((a,b)=>(+a.size||0)-(+b.size||0));
+const f=pool.filter(z=>(+z.size||0)<1.2e8).pop()||pool[0];if(!f)throw Error('No playable file in this item');return`https://archive.org/download/${encodeURIComponent(x.identifier)}/${f.name.split('/').map(encodeURIComponent).join('/')}`},
+name:`${String(x.title||x.identifier).slice(0,60)}.${t=='music'?'mp3':'mp4'}`,by:'Internet Archive'+(x.creator?' · '+[].concat(x.creator)[0]:''),link:'https://archive.org/details/'+x.identifier,lic:x.licenseurl?'See license on page':'Check license on page'})),more:pg*24<(r.numFound||0)}}
+async function odAll(t,q,pg){const S=t=='photo'?['openverse','commons','nasa']:t=='video'?['commons','nasa','archive']:['openverse','commons','nasa','archive'];if(t!='music'){if(lsg('cf_pexels'))S.push('pexels');if(lsg('cf_pixabay'))S.push('pixabay')}
+const rs=await Promise.allSettled(S.map(s=>odFetch(t,s,q,pg))),ok=rs.filter(r=>r.status=='fulfilled').map(r=>r.value);if(!ok.length)throw rs[0].reason;
+const items=[],mx=Math.max(...ok.map(r=>r.items.length));for(let i=0;i<mx;i++)ok.forEach(r=>r.items[i]&&items.push(r.items[i]));return{items,more:ok.some(r=>r.more)}}
+async function odFetch(t,src,q,pg){const E=encodeURIComponent(q),per=24;if(src=='all')return odAll(t,q,pg);if(src=='commons')return odCommons(t,q,pg);if(src=='nasa')return odNasa(t,q,pg);if(src=='archive')return odArchive(t,q,pg);
+if(src=='pexels'){const h={Authorization:lsg('cf_pexels')};if(t=='photo'){const j=await odJ(`https://api.pexels.com/v1/search?query=${E}&per_page=${per}&page=${pg}`,h);return{items:(j.photos||[]).map(x=>({id:'px'+x.id,thumb:x.src.medium,src:x.src.large2x||x.src.large,alt:x.src.large,name:`Pexels ${x.id}${x.alt?' - '+x.alt.slice(0,40):''}.jpg`,by:x.photographer,link:x.url})),more:!!j.next_page}}
+const j=await odJ(`https://api.pexels.com/videos/search?query=${E}&per_page=${per}&page=${pg}`,h);return{items:(j.videos||[]).map(x=>({id:'pv'+x.id,thumb:x.image,src:pickPexVid(x.video_files).link,name:`Pexels video ${x.id}.mp4`,by:x.user&&x.user.name,link:x.url,dur:x.duration})).filter(x=>x.src),more:!!j.next_page}}
+if(src=='pixabay'){const k=encodeURIComponent(lsg('cf_pixabay'));if(t=='photo'){const j=await odJ(`https://pixabay.com/api/?key=${k}&q=${E}&image_type=photo&safesearch=true&per_page=${per}&page=${pg}`);return{items:(j.hits||[]).map(x=>({id:'pb'+x.id,thumb:x.webformatURL,src:x.largeImageURL||x.webformatURL,alt:x.webformatURL,name:`Pixabay ${x.id} - ${String(x.tags||'').split(',')[0]}.jpg`,by:x.user,link:x.pageURL})),more:pg*per<(j.totalHits||0)}}
+const j=await odJ(`https://pixabay.com/api/videos/?key=${k}&q=${E}&safesearch=true&per_page=${per}&page=${pg}`);return{items:(j.hits||[]).map(x=>{const v=x.videos||{},f=(v.small&&v.small.url?v.small:v.medium&&v.medium.url?v.medium:v.tiny)||{};return{id:'pbv'+x.id,thumb:`https://i.vimeocdn.com/video/${x.picture_id}_640x360.jpg`,src:f.url,name:`Pixabay video ${x.id}.mp4`,by:x.user,link:x.pageURL,dur:x.duration}}).filter(x=>x.src),more:pg*per<(j.totalHits||0)}}
+if(t=='music'){const j=await odJ(`https://api.openverse.org/v1/audio/?q=${E}&page_size=20&page=${pg}`);return{items:(j.results||[]).filter(x=>x.url).map(x=>({id:'ova'+x.id,thumb:x.thumbnail||'',src:x.url,title:x.title||'Untitled',name:`${(x.title||'Audio').slice(0,60)} - ${x.creator||'unknown'}.${x.filetype||'mp3'}`,by:x.creator,link:x.foreign_landing_url,dur:x.duration?x.duration/1000:0,lic:x.license?('CC '+String(x.license).toUpperCase()+(x.license_version?' '+x.license_version:'')):''})),more:pg<(j.page_count||0)}}
+const j=await odJ(`https://api.openverse.org/v1/images/?q=${E}&page_size=20&page=${pg}`);return{items:(j.results||[]).filter(x=>x.url).map(x=>({id:'ovi'+x.id,thumb:x.thumbnail||x.url,src:x.url,alt:x.thumbnail,name:`${(x.title||'Image').slice(0,60)}.${(x.filetype||'jpg')}`,by:x.creator,link:x.foreign_landing_url})),more:pg<(j.page_count||0)}}
+async function odSearch(more){const t=odT(),R=OD.rs[t],q=(OD.qs[t]||'').trim();if(!q)return toast('Type what to search for');
+if((OD.sv[t]=='pexels'||OD.sv[t]=='pixabay')&&!lsg('cf_'+OD.sv[t]))return toast('Save your free API key first');
+if(!more){R.items=[];R.page=1;R.err=''}else R.page++;R.busy=1;odRes();
+try{const r=await odFetch(t,OD.sv[t],q,R.page);R.items=R.items.concat(r.items);R.more=r.more;if(!R.items.length)R.err='No results. Try another word.'}catch(e){R.err=e.message;if(more)R.page--}R.busy=0;odRes()}
+async function odResolve(url){let u;try{u=new URL(url)}catch(e){throw Error('This is not a valid link')}const h=u.hostname.replace(/^www\./,''),p=u.pathname;
+if(/(^|\.)youtube\.com$|^youtu\.be$/.test(h))throw Error('YouTube videos cannot be downloaded in this app (YouTube\'s terms do not allow saving videos from the site). Use the Creative Commons search in Free sites to find reusable videos, get the file only with the creator\'s permission (or from your own YouTube Studio), then use Import.');
+if(/(^|\.)google\.[a-z.]+$/.test(h)){const iu=p=='/imgres'&&u.searchParams.get('imgurl');if(iu)return{url:iu};throw Error('This is a Google page, not an image file. Open the image, right-click it, choose "Copy image address" and paste that link. Only use images you have the right to use.')}
+if(h=='pexels.com'){const dm=p.match(/^\/download\/(?:(video|photo)\/)?(\d+)\/?$/),m=p.match(/\/(photo|video)\/(?:[^/]*-)?(\d+)\/?$/),kind=dm?(dm[1]||'photo'):m?m[1]:null,id=dm?dm[2]:m?m[2]:null;
+if(id){const k=lsg('cf_pexels');
+if(!k){if(kind=='video')return{url:`https://www.pexels.com/download/video/${id}/`,name:`Pexels video ${id}.mp4`,scrape:{page:`https://www.pexels.com/video/${id}/`,kind:'pexv'}};return{url:`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&dpr=2`,alts:[`https://www.pexels.com/download/${id}/`],name:`Pexels ${id}.jpg`}}
+if(kind=='photo'){const j=await odJ('https://api.pexels.com/v1/photos/'+id,{Authorization:k});return{url:j.src.large2x||j.src.original,name:`Pexels ${id}.jpg`}}
+const j=await odJ('https://api.pexels.com/videos/videos/'+id,{Authorization:k}),f=pickPexVid(j.video_files);if(!f.link)throw Error('No downloadable file found for this video');return{url:f.link,name:`Pexels video ${id}.mp4`}}}
+if(h=='pixabay.com'&&/\/download\//.test(p)){const im=p.match(/-(\d+)(?:_[a-z]+)?\.[a-z0-9]+$/i);if(im){const k=lsg('cf_pixabay');if(!k){const iv=/\/videos\//.test(p)||/\.(mp4|webm|mov)$/i.test(p);return{url,soft:1,scrape:{page:`https://pixabay.com/${iv?'videos':'photos'}/x-${im[1]}/`,kind:iv?'pbv':'pbp'}}}
+if(/\/videos\//.test(p)||/\.(mp4|webm|mov)$/i.test(p)){const j=await odJ(`https://pixabay.com/api/videos/?key=${encodeURIComponent(k)}&id=${im[1]}`),x=j.hits&&j.hits[0];if(!x)throw Error('Video not found on Pixabay');const v=x.videos||{},f=(v.small&&v.small.url?v.small:v.medium&&v.medium.url?v.medium:v.tiny)||{};return{url:f.url,name:`Pixabay video ${im[1]}.mp4`}}
+const j=await odJ(`https://pixabay.com/api/?key=${encodeURIComponent(k)}&id=${im[1]}`),x=j.hits&&j.hits[0];if(!x)throw Error('Photo not found on Pixabay');return{url:x.largeImageURL||x.webformatURL,name:`Pixabay ${im[1]}.jpg`}}}
+if(h=='pixabay.com'){const m=p.match(/\/(photos|illustrations|vectors|videos|music|sound-effects)\/.*?-(\d+)\/?$/);if(m){if(m[1]=='music'||m[1]=='sound-effects')throw Error('Pixabay has no download API for music. Open the page, press Download, then drop the file into the editor — or paste the direct MP3 link.');
+const k=lsg('cf_pixabay');if(!k)return{url,soft:1,scrape:{page:url,kind:m[1]=='videos'?'pbv':'pbp'}};
+if(m[1]=='videos'){const j=await odJ(`https://pixabay.com/api/videos/?key=${encodeURIComponent(k)}&id=${m[2]}`),x=j.hits&&j.hits[0];if(!x)throw Error('Video not found');const v=x.videos||{},f=(v.small&&v.small.url?v.small:v.medium&&v.medium.url?v.medium:v.tiny)||{};return{url:f.url,name:`Pixabay video ${m[2]}.mp4`}}
+const j=await odJ(`https://pixabay.com/api/?key=${encodeURIComponent(k)}&id=${m[2]}`),x=j.hits&&j.hits[0];if(!x)throw Error('Photo not found');return{url:x.largeImageURL||x.webformatURL,name:`Pixabay ${m[2]}.jpg`}}}
+return{url}}
+async function odFile(u){try{return await fetch(u)}catch(e){}
+if(lsg('cf_proxy')==='0')throw Error('blocked');
+for(const P of ['https://corsproxy.io/?url=','https://api.allorigins.win/raw?url=']){try{const r=await fetch(P+encodeURIComponent(u));if(r.ok&&!(r.headers.get('content-type')||'').includes('html'))return r}catch(e){}}
+throw Error('blocked')}
+async function odScrape(sc){const get=async u=>{try{const r=await fetch(u);if(r.ok)return await r.text()}catch(e){}return''};
+let html=await get(sc.page);const RX={pexv:/https:\/\/videos\.pexels\.com\/video-files\/\d+\/[^"'\s\\<>]+?\.mp4/g,pbv:/https:\/\/cdn\.pixabay\.com\/(?:video|vimeo)\/[^"'\s\\<>]+?\.mp4/g,pbp:/https:\/\/cdn\.pixabay\.com\/photo\/[^"'\s\\<>]+?\.(?:jpe?g|png|webp)/g},ok=t=>t&&(RX[sc.kind].lastIndex=0,RX[sc.kind].test(t));
+if(!ok(html)&&lsg('cf_proxy')!=='0')for(const P of ['https://corsproxy.io/?url=','https://api.allorigins.win/raw?url=']){html=await get(P+encodeURIComponent(sc.page));if(ok(html))break}
+if(!html)return'';const a=[...new Set((html.replace(/\\u002F/g,'/').replace(/\\\//g,'/').match(RX[sc.kind])||[]))];if(!a.length)return'';return a.find(x=>/medium|large|1280|1920|hd/i.test(x))||a[0]}
+async function odGet(url,onp,hint){url=url.trim();if(!/^https?:\/\//i.test(url))throw Error('A link must start with https://');const r0=await odResolve(url),KM='Pixabay protects its download links. Easiest fix: open the video on Pixabay, right-click the video, choose "Copy video address" and paste that link instead. Or save a free Pixabay API key below and this link will work.',nk=m=>{const er=Error(r0.soft?KM:m);if(r0.soft)er.needKey='pixabay';return er};let res;
+for(const c of[r0.url,...(r0.alts||[])]){try{const rr=await odFile(c);if(rr.ok&&!(rr.headers.get('content-type')||'').toLowerCase().includes('html')){res=rr;r0.url=c;break}}catch(e){}}
+if(!res&&r0.scrape){const d=await odScrape(r0.scrape);if(d){try{const rr=await odFile(d);if(rr.ok){res=rr;r0.url=d}}catch(e){}}}
+if(!res)try{res=await odFile(r0.url)}catch(e){throw nk('This site blocks downloads from other apps'+(lsg('cf_proxy')==='0'?'. Turn on the proxy option below, or':', even through the fallback proxy. Please')+' download the file to your device, then use Import or drop it into the editor.')}
+if(!res.ok)throw nk('Download failed ('+res.status+')');
+let ct=(res.headers.get('content-type')||'').split(';')[0].trim().toLowerCase();if(ct.includes('html'))throw nk('That is a web page, not a file. Right-click the photo/video/audio and choose "Copy … address", then paste that link.');
+const path=r0.url.split(/[?#]/)[0],ext=((path.match(/\.([a-z0-9]{2,5})$/i)||[])[1]||'').toLowerCase();
+if(!/^(image|video|audio)\//.test(ct))ct=ODE[ext]||'';if(!ct)throw Error('Unsupported file type (use a photo, video or audio file)');
+const len=+res.headers.get('content-length')||0;if(len>9e8)throw Error('This file is too large (over 900 MB)');
+const rd=res.body&&res.body.getReader(),ch=[];let got=0;if(rd){for(;;){const{done,value}=await rd.read();if(done)break;ch.push(value);got+=value.length;if(len&&onp)onp(Math.round(got/len*100))}}else ch.push(await res.arrayBuffer());
+let name=(hint||r0.name||decodeURIComponent(path.split('/').pop()||'')||'online-media').replace(/[\\/:*?"<>|]+/g,'_');if(!/\.[a-z0-9]{2,5}$/i.test(name))name+='.'+(ODX[ct]||ext||'bin');
+addFiles([new File([new Blob(ch,{type:ct})],name,{type:ct})]);return name}
+async function odAddLinks(){const us=OD.links.split(/\s+/).map(s=>s.trim()).filter(Boolean);if(!us.length)return toast('Paste at least one link');OD.log=us.map(u=>({u,s:'wait',t:'Waiting…',k:''}));odLog();
+for(const L of OD.log){try{L.s='run';L.t='Downloading…';odLog();const n=await odGet(L.u,p=>{L.t='Downloading '+p+'%';odLog()});L.s='ok';L.t='Added to Media: '+n}catch(e){L.s='err';L.t=e.message||'Failed';L.k=e.needKey||''}odLog()}}
+async function odAddItem(it){if(OD.added[it.id]||OD.work[it.id])return;OD.work[it.id]=1;odRes();const R=OD.rs[odT()];
+try{const sr=it.src||await it.res();try{await odGet(sr,null,it.name)}catch(e){if(it.alt)await odGet(it.alt,null,it.name);else throw e}OD.added[it.id]=1;toast('Added to Media')}catch(e){R.err=e.message;toast('Could not add this one')}delete OD.work[it.id];odRes()}
+$('#od').addEventListener('click',e=>{const t=e.target,id=t.id||'';
+if(id=='odx'||id=='odc')return odClose();
+const tb=t.closest('[data-t]');if(tb){e.preventDefault();OD.tab=tb.dataset.t;return odRender()}
+if(id=='odgs'){const q=(OD.qs.photo||'').trim();window.open(q?`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}${OD.gf?'&tbs=sur:fmc':''}`:'https://images.google.com/','_blank','noopener');return}
+if(id=='odys'){const q=(OD.yq||'').trim();window.open(q?`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=EgIwAQ%253D%253D`:'https://www.youtube.com/','_blank','noopener');return}
+if(id=='odimp'){$('#fi').click();return}
+if(id=='odgo')return odAddLinks();
+if(id=='odpaste'){odPasteBtn();return}
+if(id=='odsr')return odSearch(false);if(id=='odmore')return odSearch(true);
+if(id=='odks2'){const v=($('#odk2').value||'').trim();if(!v)return toast('Paste your key first');lss('cf_pixabay',v);return odAddLinks()}
+if(id=='odks'){const v=($('#odk').value||'').trim();if(!v)return toast('Paste your key first');lss('cf_'+OD.sv[OD.tab],v);return odRender()}
+if(id=='odck'){e.preventDefault();lss('cf_'+OD.sv[OD.tab],'');return odRender()}
+const su=t.closest('[data-su]');if(su){const[i,j]=su.dataset.su.split(':').map(Number),s=ODS[i],q=encodeURIComponent((OD.sq||'').trim());window.open(j<0||!q?s[2]:s[3][j][1](q),'_blank','noopener');return}
+if(t.tagName=='AUDIO'||t.tagName=='A')return;const it=t.closest('[data-i]');if(it){const x=OD.rs[odT()].items[+it.dataset.i];x&&odAddItem(x)}});
+$('#od').addEventListener('input',e=>{const t=e.target,k=t.dataset.od;if(t.id=='odpx')lss('cf_proxy',t.checked?'1':'0');else if(t.id=='odgf')OD.gf=t.checked;else if(k=='gq')OD.gq=t.value;else if(k=='yq')OD.yq=t.value;else if(t.id=='odt')OD.links=t.value;else if(t.id=='odsq')OD.sq=t.value;else if(k=='q')OD.qs[odT()]=t.value;else if(k=='src'){OD.sv[odT()]=t.value;OD.rs[odT()]=blankRS();odRender()}});
+$('#od').addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.dataset.od=='q')odSearch(false);if(e.key=='Enter'&&e.target.dataset.od=='gq')$('#odgs').click();if(e.key=='Enter'&&e.target.dataset.od=='yq')$('#odys').click();if(e.key=='Enter'&&e.target.id=='odk')$('#odks').click();if(e.key!='Escape')e.stopPropagation()});
+addEventListener('keydown',e=>{if(e.key=='Escape'&&!$('#od').hidden)odClose()});
+$('#pane').addEventListener('click',e=>{if(e.target.closest('#odopen'))odOpen()});
+/* Paste images straight from the clipboard (right-click → Copy image anywhere, then Ctrl+V here) */
+async function odPasteBtn(){try{if(navigator.clipboard&&navigator.clipboard.read){const its=await navigator.clipboard.read();let n=0;
+for(const it of its){const ty=it.types.find(x=>/^image\//.test(x));if(ty){const b=await it.getType(ty);addFiles([new File([b],`Pasted_image_${(S.pn=(S.pn||0)+1)}.${ODX[ty]||'png'}`,{type:ty})]);n++}}
+if(n)return toast(n+' image'+(n>1?'s':'')+' pasted into Media');
+for(const it of its){if(it.types.includes('text/plain')){const t=(await(await it.getType('text/plain')).text()).trim();if(t){OD.links+=(OD.links?'\n':'')+t;const a=$('#odt');a&&(a.value=OD.links);return}}}
+toast('Nothing to paste. Copy an image or a link first')}else if(navigator.clipboard&&navigator.clipboard.readText){const t=(await navigator.clipboard.readText()).trim();OD.links+=(OD.links?'\n':'')+t;const a=$('#odt');a&&(a.value=OD.links)}else toast('Press Ctrl+V to paste')}catch(e){toast('Press Ctrl+V to paste')}}
+document.addEventListener('paste',e=>{const cd=e.clipboardData;if(!cd)return;const tg=e.target,typing=/TEXTAREA|SELECT/.test(tg.tagName)||(tg.tagName=='INPUT'&&!['range','checkbox','color'].includes(tg.type));
+const fl=[...(cd.files||[])].filter(f=>/^(image|video|audio)\//.test(f.type));
+if(fl.length){e.preventDefault();fl.forEach(f=>{const k=f.type.split('/')[0],n=f.name&&!/^image\.(png|jpe?g|gif|webp)$/i.test(f.name)?f.name:`Pasted_${k}_${(S.pn=(S.pn||0)+1)}.${ODX[f.type]||'png'}`;addFiles([new File([f],n,{type:f.type})])});toast(fl.length+' item'+(fl.length>1?'s':'')+' pasted into Media');return}
+const txt=(cd.getData('text')||'').trim();
+if(!$('#od').hidden){if(!typing&&/^https?:\/\/\S+(\s+https?:\/\/\S+)*$/.test(txt)){e.preventDefault();OD.tab='link';OD.links=txt;odRender();odAddLinks()}return}
+if(typing||S.exporting||!$('#xd').hidden)return;e.preventDefault();pasteCb()});
 HS.cur=snap();trkUI();setAsp('9:16');renderPane();renderIns();renderTL();requestAnimationFrame(frame);restoreProject();
+
+/* ---------- Green screen / chroma key ---------- */
+const CKC={};
+const ckRGB=h=>{h=(h||'#00ff00').replace('#','');if(h.length==3)h=h.replace(/./g,'$&$&');const n=parseInt(h,16)||0;return[n>>16&255,n>>8&255,n&255]};
+function ckSrc(o,e,m){
+ if(!o.ck||S.ckPick)return e;
+ const w0=m.w||e.videoWidth||e.naturalWidth||e.width,h0=m.h||e.videoHeight||e.naturalHeight||e.height;
+ if(!w0||!h0)return e;
+ if(m.type=='video'&&e.readyState<2)return CKC[o.id]?CKC[o.id].c:e;
+ const cap=S.exporting?1280:640,k=Math.min(1,cap/Math.max(w0,h0)),w=Math.max(2,Math.round(w0*k)),h=Math.max(2,Math.round(h0*k));
+ let q=CKC[o.id];
+ if(!q){const c=document.createElement('canvas');q=CKC[o.id]={c,x:c.getContext('2d',{willReadFrequently:true}),sig:''}}
+ const sig=[o.ckc,o.cks,o.ckb,o.ckd,w,h,m.id].join('|');
+ if(m.type=='image'&&q.sig==sig)return q.c;
+ if(q.c.width!=w||q.c.height!=h){q.c.width=w;q.c.height=h}
+ const x=q.x;x.clearRect(0,0,w,h);x.drawImage(e,0,0,w,h);
+ let im;try{im=x.getImageData(0,0,w,h)}catch(err){return e}
+ const d=im.data,[kr,kg,kb]=ckRGB(o.ckc),
+  kcb=-.169*kr-.331*kg+.5*kb,kcr=.5*kr-.419*kg-.081*kb,
+  thr=(o.cks==null?50:o.cks)*1.5,sm=(o.ckb==null?15:o.ckb)*1.2+1,sp=(o.ckd==null?60:o.ckd)/100,
+  dom=kg>=kr&&kg>=kb?1:kb>=kr?2:0;
+ for(let i=0;i<d.length;i+=4){
+  const r=d[i],g=d[i+1],b=d[i+2],cb=-.169*r-.331*g+.5*b,cr=.5*r-.419*g-.081*b,
+   dist=Math.sqrt((cb-kcb)*(cb-kcb)+(cr-kcr)*(cr-kcr));
+  let a=(dist-thr)/sm;a=a<0?0:a>1?1:a;
+  if(a<1){d[i+3]=d[i+3]*a}
+  if(a>0&&sp>0){
+   const v=dom==1?g:dom==2?b:r,lim=dom==1?(r+b)/2:dom==2?(r+g)/2:(g+b)/2;
+   if(v>lim){const nv=v-(v-lim)*sp;if(dom==1)d[i+1]=nv;else if(dom==2)d[i+2]=nv;else d[i]=nv}
+  }
+ }
+ x.putImageData(im,0,0);q.sig=sig;return q.c;
+}
+function ckPanel(o,f){
+ if(o.ckc==null){o.ckc='#00ff00';o.cks=50;o.ckb=15;o.ckd=60}
+ return'<h4>Green screen (Chroma key)</h4>'+f('Remove green screen','ck','checkbox')+(o.ck?
+  f('Key colour','ckc','color')+
+  '<div class="grid" style="margin-bottom:6px"><button id="ck-pick" title="Click, then click the background colour in the preview">💧 Pick from preview</button><button id="ck-reset" title="Reset key settings">↺ Reset</button><button id="ck-g">Green</button><button id="ck-b">Blue</button></div>'+
+  f('Similarity','cks','range','min="0" max="100"')+f('Smoothness (edge)','ckb','range','min="0" max="100"')+f('Spill removal','ckd','range','min="0" max="100"')+
+  '<p style="color:var(--mu);font-size:11px;margin:2px 0 8px">Tip: put the green-screen video on a Layer above your background clip. Raise Similarity until the green disappears.</p>':'');
+}
+$('#ins').addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.k=='ck'){renderIns();hist()}});
+function ckSet(v){(S.multi.length>1&&S.sel?selObjs(S.sel.k):[INS.o]).forEach(x=>Object.assign(x,v));renderIns();hist()}
+$('#ins').addEventListener('click',e=>{const id=e.target.id;
+ if(id=='ck-g')ckSet({ckc:'#00ff00'});
+ else if(id=='ck-b')ckSet({ckc:'#0000ff'});
+ else if(id=='ck-reset')ckSet({ckc:'#00ff00',cks:50,ckb:15,ckd:60});
+ else if(id=='ck-pick'){S.ckPick=1;toast('Click the green background in the preview');if(mob())sheet(null)}
+});
+$('#stage').addEventListener('pointerdown',e=>{
+ if(!S.ckPick||e.target!==cv)return;
+ e.stopImmediatePropagation();e.preventDefault();S.ckPick=0;
+ const r=cv.getBoundingClientRect(),px=Math.round((e.clientX-r.left)*W/r.width),py=Math.round((e.clientY-r.top)*H/r.height);
+ try{
+  const x0=Math.max(0,px-2),y0=Math.max(0,py-2),im=ctx.getImageData(x0,y0,Math.min(5,W-x0),Math.min(5,H-y0)).data;let R=0,G=0,B=0,n=im.length/4;
+  for(let i=0;i<im.length;i+=4){R+=im[i];G+=im[i+1];B+=im[i+2]}
+  const hx=v=>Math.round(v/n).toString(16).padStart(2,'0');
+  if(INS.o)ckSet({ckc:'#'+hx(R)+hx(G)+hx(B)});
+ }catch(err){toast('Could not read that colour')}
+},true);
+addEventListener('keydown',e=>{if(e.key=='Escape'&&S.ckPick){S.ckPick=0;toast('Colour pick cancelled')}});
 </script></body></html>
