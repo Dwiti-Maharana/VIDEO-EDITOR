@@ -21,7 +21,7 @@ aside{background:var(--p);overflow:auto;padding:10px}
 #L{border-right:1px solid var(--bd)}#ins{border-left:1px solid var(--bd)}
 #stage{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0}
 canvas{border-radius:6px;box-shadow:0 12px 40px #0005;background:#000;touch-action:none}
-.tabs{display:flex;gap:4px;margin-bottom:10px}.tabs button{flex:1;padding:6px 2px;font-size:12px}
+.tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}.tabs button{flex:1 1 auto;padding:6px 6px;font-size:12px;white-space:nowrap}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mi{position:relative;border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--p2);cursor:pointer;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center}
 .mi img,.mi video{width:100%;height:100%;object-fit:cover;pointer-events:none}
@@ -180,7 +180,7 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 .cmdf{outline:2px solid #ff3b5c!important;outline-offset:2px;transition:outline .2s}
 </style><style>
 #ae{position:fixed;inset:0;z-index:95;background:#000a;display:flex;align-items:center;justify-content:center;padding:12px}#ae[hidden]{display:none}#ae .xb{width:min(980px,100%);height:min(740px,100%)}
-#ae canvas{width:100%;height:110px;box-shadow:none;border:1px solid var(--bd);border-radius:8px;background:var(--p2);margin-bottom:10px;display:block}
+#aew{overflow-x:auto;margin-bottom:10px;border-radius:8px}#aez{display:flex;gap:6px;align-items:center;margin-bottom:6px}#aez input{flex:1;padding:0}#aez small{color:var(--mu);min-width:92px;text-align:right}#ae canvas{height:110px;max-width:none;margin:0;box-shadow:none;border:1px solid var(--bd);border-radius:8px;background:var(--p2);margin-bottom:10px;display:block}
 #ae .xl button{width:100%;text-align:left;margin-bottom:6px}#ae .xl button.on{background:var(--ac);border-color:var(--ac);color:#fff}
 #ae .xrw{grid-template-columns:140px 1fr 56px}#ae .xr input[type=range]{padding:0}#ae .xr h4{margin:14px 0 8px}
 #ae .pre{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}#aeb{width:100%;margin:0 0 10px;background:linear-gradient(135deg,#00c2a8,#6d4aff);border:0;color:#fff;font-weight:700;padding:10px}
@@ -189,7 +189,7 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 <header><span class="logo">◆ ClipForge</span><div id="asp"></div><span style="flex:1"></span>
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
 <main>
-<aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button><button data-t="rec">⏺ Record</button></div><div id="pane"></div></aside>
+<aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button><button data-t="rec">⏺ Record</button><button data-t="tools" title="Load your own custom tools">🧩 Load Tools</button></div><div id="pane"></div></aside>
 <div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Full screen preview (F)">⛶ Full screen</button><button id="snp" title="Take a snapshot of the preview (Ctrl+Alt+S)">📷 Snapshot</button></div>
 <aside id="ins"></aside>
 </main>
@@ -1249,7 +1249,7 @@ const CM=[
 {n:'square',a:['11'],d:'Aspect 1:1',f:()=>setAsp('1:1')},
 {n:'wide',a:['169'],d:'Aspect 16:9',f:()=>setAsp('16:9')},
 {n:'theme',a:['dark','light'],d:'Switch dark / light',f:clk('#th')}
-];
+];window.__cfCM=CM;
 let buf='',hi=0,hb=0,msg='',tIdle=0,tMsg=0,eatUp='';const CH=[];
 const P=document.createElement('div');P.id='cmdp';P.hidden=true;document.body.append(P);
 function match(q){const ex=[],pn=[],pa=[],sub=[];CM.forEach(c=>{if(c.n==q||c.a.includes(q))ex.push(c);else if(c.n.startsWith(q))pn.push(c);else if(c.a.some(x=>x.startsWith(q)))pa.push(c);else if(c.n.includes(q))sub.push(c)});return[...ex,...pn,...pa,...sub]}
@@ -1297,17 +1297,19 @@ addEventListener('resize',()=>{if(!P.hidden)place()});
 </script><script>
 /* ===== Pro Audio Editor: Silence Remover, Noise Remover, Voice/EQ/Dynamics/Effects ===== */
 (()=>{
-const A={src:null,buf:null,tab:'sil',out:null,key:'',ply:null},DP={th:-40,min:.4,pad:.12,gap:0,mode:'join',rep:1};
+const A={z:1,src:null,buf:null,tab:'sil',out:null,key:'',ply:null},DP={th:-40,min:.4,pad:.12,gap:0,mode:'join',rep:1};
 const P={sil:{...DP},nr:{on:0,amt:60,hp:0,hum:0},eq:[0,0,0,0,0],cp:{on:0,th:-24,ra:3,mk:0},rv:{mix:0,sz:1.5},ec:{mix:0,t:.3},fx:{fi:0,fo:0,gn:0,nm:0,rev:0,rep:1}};
 const PRE={'🎙 Podcast voice':{nr:{on:1,amt:55,hp:80,hum:0},eq:[-3,-2,1,3,2],cp:{on:1,th:-22,ra:3,mk:3},fx:{nm:1}},'🗣 Clear speech':{nr:{on:1,amt:70,hp:100,hum:0},eq:[-6,-3,2,4,0],cp:{on:1,th:-26,ra:4,mk:4},fx:{nm:1}},'📻 Warm broadcast':{nr:{on:1,amt:45,hp:70,hum:0},eq:[4,2,0,2,3],cp:{on:1,th:-20,ra:4,mk:3},fx:{nm:1}},'☎ Phone':{nr:{on:0,amt:0,hp:400,hum:0},eq:[-12,0,6,0,-12],cp:{on:1,th:-24,ra:6,mk:4},fx:{nm:1}},'🎵 Music polish':{nr:{on:0,amt:0,hp:30,hum:0},eq:[2,0,0,1,3],cp:{on:1,th:-16,ra:2,mk:1},fx:{nm:1}},'🔄 Reset all':{}};
 const $$=(s,r=document)=>[...r.querySelectorAll(s)],yld=()=>new Promise(r=>setTimeout(r)),AUD=()=>S.media.filter(m=>m.type=='audio'||m.type=='video');
 const el=document.createElement('div');el.id='ae';el.hidden=true;el.innerHTML=`<div class="xb" role="dialog" aria-label="Audio editor"><div class="xh"><span>🎚 Audio Editor · pro tools</span><button id="aex">✕</button></div><div class="xm"><div class="xl" id="ael"></div><div class="xr" id="aer"></div></div><div class="xf"><span id="aes" style="flex:1;min-width:160px;color:var(--mu)"></span><button id="aeo">▶ Original</button><button id="aep">▶ Processed</button><button class="pr" id="aeg">＋ Add to timeline</button></div></div>`;document.body.append(el);
-const st=t=>$('#aes').textContent=t,TABS={sil:'✂ Silence Remover',nr:'🔇 Noise Remover',vo:'🎙 Voice Enhance',eq:'🎛 Equalizer',dy:'📈 Compressor',fx:'🏛 Reverb & Echo',fd:'🔊 Fade · Gain · Level'};
+const st=t=>$('#aes').textContent=t,TABS={au:'✨ Auto Settings',sil:'✂ Silence Remover',nr:'🔇 Noise Remover',vo:'🎙 Voice Enhance',eq:'🎛 Equalizer',dy:'📈 Compressor',fx:'🏛 Reverb & Echo',fd:'🔊 Fade · Gain · Level'};
 /* ---- analysis ---- */
 function ana(){const b=A.buf,w=Math.round(b.sampleRate*.01),k=Math.floor(b.length/w),db=new Float32Array(k),ch=[...Array(b.numberOfChannels)].map((_,i)=>b.getChannelData(i));for(let i=0;i<k;i++){let s=0;for(const c of ch)for(let j=i*w;j<(i+1)*w;j+=2)s+=c[j]*c[j];db[i]=10*Math.log10(s/(w/2*ch.length)+1e-12)}A.db=db;A.w=w/b.sampleRate;const c0=ch[0],W=900,sz=b.length/W;A.pk=[];for(let i=0;i<W;i++){let v=0;for(let j=Math.floor(i*sz);j<(i+1)*sz;j+=Math.max(1,sz/40|0))v=Math.max(v,Math.abs(c0[j]));A.pk.push(v)}}
 function segs(){const{th,min,pad}=P.sil,db=A.db,dt=A.w,D=A.buf.duration,runs=[];let s=-1;for(let i=0;i<=db.length;i++){const q=i<db.length&&db[i]<th;if(q&&s<0)s=i;if(!q&&s>=0){const a=s*dt,b=i*dt;if(b-a>=Math.max(min,2*pad+.02))runs.push([a,b]);s=-1}}const K=[];let p=0;for(const[a,b]of runs){if(a+pad-p>.02)K.push([p,a+pad]);p=b-pad}if(D-p>.02)K.push([p,D]);return K}
-function draw(){const c=$('#aec');if(!c||!A.pk)return;const w=c.width=c.clientWidth*devicePixelRatio||900,h=c.height=110*devicePixelRatio,x=c.getContext('2d'),D=A.buf.duration;x.fillStyle='#6d4aff';A.pk.forEach((v,i)=>{const H=Math.max(1,v*h*.9);x.fillRect(i*w/A.pk.length,(h-H)/2,Math.max(1,w/A.pk.length-.5),H)});
-if(A.tab=='sil'){const K=segs();x.fillStyle='#ff3b5c55';let p=0;K.forEach(([a,b])=>{x.fillRect(p/D*w,0,(a-p)/D*w,h);p=b});x.fillRect(p/D*w,0,(D-p)/D*w,h);x.fillStyle='#00c2a8';x.fillRect(0,h-4,w,4);x.fillStyle='#ff3b5c';let q=0;K.forEach(([a,b])=>{x.fillRect(q/D*w,h-4,(a-q)/D*w,4);q=b});x.fillRect(q/D*w,h-4,(D-q)/D*w,4);const rm=D-K.reduce((s,[a,b])=>s+b-a,0);st(`${K.length} segments kept · ${rm.toFixed(1)}s of silence removed · red = removed`)}}
+function draw(){const c=$('#aec'),wr=$('#aew');if(!c||!A.buf)return;const vw=wr.clientWidth||900,w=Math.min(30000,Math.round(vw*A.z)),h=110,D=A.buf.duration,d0=A.buf.getChannelData(0),sz=d0.length/w,x=c.getContext('2d');c.width=w;c.height=h;c.style.width=w+'px';x.fillStyle='#6d4aff';for(let i=0;i<w;i++){let v=0;const e=Math.min(d0.length,(i+1)*sz);for(let j=Math.floor(i*sz);j<e;j+=Math.max(1,sz/30|0))v=Math.max(v,Math.abs(d0[j]));const H=Math.max(1,v*h*.9);x.fillRect(i,(h-H)/2,1,H)}
+if(A.tab=='sil'){const K=segs();x.fillStyle='#ff3b5c55';let p=0;K.forEach(([a,b])=>{x.fillRect(p/D*w,0,(a-p)/D*w,h);p=b});x.fillRect(p/D*w,0,(D-p)/D*w,h);x.fillStyle='#00c2a8';x.fillRect(0,h-4,w,4);x.fillStyle='#ff3b5c';let q=0;K.forEach(([a,b])=>{x.fillRect(q/D*w,h-4,(a-q)/D*w,4);q=b});x.fillRect(q/D*w,h-4,(D-q)/D*w,4);const rm=D-K.reduce((s,[a,b])=>s+b-a,0);st(`${K.length} segments kept · ${rm.toFixed(1)}s of silence removed · red = removed`)}
+const s=$('#aezs');if(s)s.value=A.z;const l=$('#aezl');if(l)l.textContent='Zoom '+A.z.toFixed(1)+'×'}
+function setZ(z,fx){const wr=$('#aew');if(!wr||!A.buf)return;z=Math.max(1,Math.min(40,z));fx=fx==null?wr.clientWidth/2:fx;const fr=(wr.scrollLeft+fx)/wr.scrollWidth;A.z=z;draw();wr.scrollLeft=fr*wr.scrollWidth-fx}
 /* ---- noise reduction (spectral subtraction) ---- */
 function fft(re,im,inv){const n=re.length;for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t}}for(let l=2;l<=n;l<<=1){const a=(inv?2:-2)*Math.PI/l,wr=Math.cos(a),wi=Math.sin(a),h=l>>1;for(let i=0;i<n;i+=l){let cr=1,ci=0;for(let j=0;j<h;j++){const u=i+j,v=u+h,xr=re[v]*cr-im[v]*ci,xi=re[v]*ci+im[v]*cr;re[v]=re[u]-xr;im[v]=im[u]-xi;re[u]+=xr;im[u]+=xi;const t=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=t}}}if(inv)for(let i=0;i<n;i++){re[i]/=n;im[i]/=n}}
 async function nr(x,amt,pg){const N=2048,H=512,n=x.length,xp=new Float32Array(n+2*N);xp.set(x,N);const win=new Float32Array(N).map((_,i)=>.5-.5*Math.cos(2*Math.PI*i/N)),F=Math.floor((xp.length-N)/H)+1,en=[];for(let f=0;f<F;f++){let s=0;for(let j=0;j<N;j+=8)s+=xp[f*H+j]**2;en.push([s,f])}en.sort((a,b)=>a[0]-b[0]);const q=en.slice(0,Math.max(8,Math.min(300,F*.1|0))),nz=new Float32Array(N),re=new Float32Array(N),im=new Float32Array(N);
@@ -1316,7 +1318,7 @@ const al=1+amt/100*2.5,be=Math.max(.03,.15-amt/100*.12),y=new Float32Array(xp.le
 for(let f=0;f<F;f++){const o=f*H;for(let j=0;j<N;j++){re[j]=xp[o+j]*win[j];im[j]=0}fft(re,im);for(let k=0;k<N;k++){const m=Math.hypot(re[k],im[k])+1e-9;let g=Math.max(m-al*nz[k],be*m)/m;g=.6*g+.4*pg0[k];pg0[k]=g;re[k]*=g;im[k]*=g}fft(re,im,1);for(let j=0;j<N;j++)y[o+j]+=re[j]*win[j]*(2/3);if(f%120==0){pg(f/F);await yld()}}
 return y.slice(N,N+n)}
 /* ---- render chain ---- */
-const sig=()=>JSON.stringify([A.src&&A.src.id,P.nr,P.eq,P.cp,P.rv,P.ec,P.fx]);
+const sig=()=>JSON.stringify([A.ck,A.cur&&A.cur.o.in,A.cur&&A.cur.o.out,P.nr,P.eq,P.cp,P.rv,P.ec,P.fx]);
 async function render(){const b=A.buf,sr=b.sampleRate,nc=b.numberOfChannels,ch=[];for(let c=0;c<nc;c++){let d=b.getChannelData(c).slice();if(P.nr.on)d=await nr(d,P.nr.amt,p=>st(`Removing noise… ${Math.round(p*100/(nc)+c*100/nc)}%`));ch.push(d)}
 const ib=AC.createBuffer(nc,b.length,sr);ch.forEach((d,c)=>ib.copyToChannel(d,c));const tail=(P.rv.mix>0?P.rv.sz:0)+(P.ec.mix>0?2:0),oc=new OfflineAudioContext(nc,Math.ceil((b.duration+tail)*sr),sr),s=oc.createBufferSource();s.buffer=ib;let n=s;const add=f=>{n.connect(f);n=f},bq=(t,f,g,q)=>{const x=oc.createBiquadFilter();x.type=t;x.frequency.value=f;if(g!=null)x.gain.value=g;if(q)x.Q.value=q;add(x)};
 if(P.nr.hp)bq('highpass',P.nr.hp,null,.7);if(P.nr.hum){bq('notch',P.nr.hum,null,30);bq('notch',P.nr.hum*2,null,30)}
@@ -1333,29 +1335,200 @@ async function proc(){const k=sig();if(A.out&&A.key==k)return A.out;st('Processi
 /* ---- playback ---- */
 function stop(){if(A.ply){try{A.ply.stop()}catch(e){}A.ply=null}}
 async function play(proc_){stop();if(!A.buf)return;AC=AC||new AudioContext();AC.resume();const b=proc_?await proc().catch(e=>{console.warn(e);st('Processing failed')}):A.buf;if(!b)return;const s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.onended=()=>{if(A.ply==s)A.ply=null};s.start();A.ply=s}
-/* ---- put on timeline ---- */
-function put(m,list,join,gap,rep){const ex=S.voices.filter(v=>v.mid==A.src.id||v.mid==m.id),base=ex.length?Math.min(...ex.map(v=>v.start)):S.t;if(rep)S.voices=S.voices.filter(v=>!ex.includes(v));let at=base,last;list.forEach(([a,b])=>{const v={id:S.id++,mid:m.id,start:join?at:base+a,in:a,out:b,vol:1,sp:1,fi:list.length>1?.02:0,fo:list.length>1?.02:0,mute:0,tr:'v',ly:S.al||0};if(join)at+=b-a+gap;S.voices.push(v);last=v});S.nl=Math.max(S.nl||0,S.al||0);pick('voice',last.id);renderPane();renderTL()}
-async function addProc(){const b=await proc();const bl=encWav(b),url=URL.createObjectURL(bl),e=new Audio(url),m={id:S.id++,name:A.src.name.replace(/\.[^.]+$/,'')+' (pro)',url,type:'audio',file:bl};e.preload='auto';e.onloadedmetadata=()=>{m.el=e;m.dur=b.duration;route(m);ALL[m.id]=m;S.media.push(m);peaks(m);put(m,[[0,m.dur]],0,0,P.fx.rep);toast('Processed audio added to the timeline');close()}}
-function addSil(){const K=segs();if(!K.length)return toast('Nothing left after removing silence — lower the threshold');put(A.src,K,P.sil.mode=='join',P.sil.gap,P.sil.rep);toast(K.length+' clips added to the timeline');close()}
+/* ---- apply to the selected timeline clip only ---- */
+async function addProc(){const b=await proc(),s=A.cur,o=s.o,c=s.k=='clip',bl=encWav(b),url=URL.createObjectURL(bl),e=new Audio(url),m={id:S.id++,name:A.src.name.replace(/\.[^.]+$/,'')+' (pro)',url,type:'audio',file:bl};e.preload='auto';e.onloadedmetadata=()=>{m.el=e;m.dur=b.duration;route(m);ALL[m.id]=m;S.media.push(m);peaks(m);const v={id:S.id++,mid:m.id,start:o.start,in:0,out:m.dur,vol:c?(o.vol==null?1:o.vol)||1:o.vol,sp:o.sp||1,fi:c?0:o.fi,fo:c?0:o.fo,mute:0,tr:c?'v':o.tr,ly:c?(S.al||0):o.ly};if(P.fx.rep){if(c)o.vol=0;else S.voices=S.voices.filter(x=>x!==o)}S.voices.push(v);S.nl=Math.max(S.nl||0,v.ly||0);pick('voice',v.id);renderPane();renderTL();toast('Processed audio applied to the selected clip');close()}}
+function addSil(){const K=segs();if(!K.length)return toast('Nothing left after removing silence — lower the threshold');const s=A.cur,o=s.o,sp=o.sp||1,join=P.sil.mode=='join',g=P.sil.gap;let at=o.start,last;
+if(s.k=='clip'){const i=S.clips.indexOf(o),parts=K.map(([a,b])=>({...o,id:S.id++,in:o.in+a,out:o.in+b}));S.clips.splice(i,1,...parts);layout();pick('clip',parts[0].id)}
+else{if(P.sil.rep)S.voices=S.voices.filter(v=>v!==o);K.forEach(([a,b])=>{const v={...o,id:S.id++,start:join?at:o.start+a/sp,in:o.in+a,out:o.in+b,fi:.02,fo:.02};if(join)at+=(b-a)/sp+g;S.voices.push(v);last=v});pick('voice',last.id)}
+renderPane();renderTL();toast(K.length+' clips added from the selected clip');close()}
+/* ---- auto default settings ---- */
+function gz(d,n,f,sr){const w=2*Math.PI*f/sr,c=2*Math.cos(w);let a=0,b=0;for(let i=0;i<n;i++){const s=d[i]+c*a-b;b=a;a=s}return a*a+b*b-c*a*b}
+function auto(){if(!A.buf)return;const q=[...A.db].sort((a,b)=>a-b),pc=x=>q[Math.min(q.length-1,Math.floor(q.length*x))],nf=pc(.1),sp=pc(.9),snr=sp-nf,dyn=pc(.95)-pc(.3),d=A.buf.getChannelData(0),sr=A.buf.sampleRate,n=Math.min(d.length,sr*8),L=[];
+let z=0;const zn=Math.min(d.length,sr*20);for(let i=1;i<zn;i++)if((d[i]>0)!=(d[i-1]>0))z++;z/=zn;
+let hum=0,hp=0;for(const f of[50,60]){const e=gz(d,n,f,sr),r=e/((gz(d,n,f-7,sr)+gz(d,n,f+7,sr))/2+1e-12);if(r>8&&r>hp){hp=r;hum=f}}
+const c=(v,a,b)=>Math.max(a,Math.min(b,v));reset(1);
+P.sil.th=c(Math.round(nf+10),-60,-20);L.push(`Silence level: ${P.sil.th} dB (noise floor ${nf.toFixed(0)} dB)`);
+if(snr<45){P.nr.on=1;P.nr.amt=Math.round(c((50-snr)*2.5+30,30,85));L.push(`Noise remover ON at ${P.nr.amt}% (signal-to-noise ${snr.toFixed(0)} dB)`)}else L.push(`Recording is clean (${snr.toFixed(0)} dB) — noise remover off`);
+P.nr.hp=80;L.push('Low-rumble filter: 80 Hz');if(hum){P.nr.hum=hum;L.push(`Mains hum found — ${hum} Hz notch ON`)}
+if(dyn>18){P.cp.on=1;P.cp.th=Math.round(c(sp-10,-50,-10));P.cp.ra=3;P.cp.mk=3;L.push(`Level varies a lot (${dyn.toFixed(0)} dB) — compressor ON, threshold ${P.cp.th} dB`)}else L.push('Level is steady — compressor off');
+P.eq=z<.04?[-2,-1,1,3,3]:z>.12?[-2,-1,0,0,-3]:[-3,-2,0,2,1];L.push(z<.04?'Sound is dull — presence & air boosted':z>.12?'Sound is harsh/bright — highs softened':'Voice EQ: cut mud, add clarity');
+P.fx.nm=1;P.fx.fi=.03;P.fx.fo=.05;L.push('Normalize to −1 dB, short fades in/out');A.rep='✓ Auto settings applied:\n• '+L.join('\n• ');A.out=null;ui();st('Auto settings applied — press ▶ Processed to listen')}
+function reset(quiet){Object.assign(P.sil,DP);Object.assign(P.nr,{on:0,amt:60,hp:0,hum:0});P.eq=[0,0,0,0,0];Object.assign(P.cp,{on:0,th:-24,ra:3,mk:0});Object.assign(P.rv,{mix:0,sz:1.5});Object.assign(P.ec,{mix:0,t:.3});Object.assign(P.fx,{fi:0,fo:0,gn:0,nm:0,rev:0});if(!quiet){A.rep='';if(A.buf)P.sil.th=Math.round(Math.min(-20,Math.max(-60,ana.nf())));ui();st('All settings reset to default')}}
+/* ---- every tool starts from fresh defaults tuned to the clip ---- */
+function tabDef(t){reset(1);if(!A.db)return;const q=[...A.db].sort((a,b)=>a-b),pc=x=>q[Math.min(q.length-1,Math.floor(q.length*x))],nf=pc(.1),sp=pc(.9),snr=sp-nf,c=(v,a,b)=>Math.max(a,Math.min(b,v));
+if(t=='sil')P.sil.th=c(Math.round(nf+10),-60,-20);
+if(t=='nr'){P.nr.on=1;P.nr.amt=Math.round(c((50-snr)*2.5+30,30,85));P.nr.hp=80}
+if(t=='eq')P.eq=[-3,-2,0,2,1];
+if(t=='dy'){P.cp.on=1;P.cp.th=Math.round(c(sp-10,-50,-10));P.cp.ra=3;P.cp.mk=3}
+if(t=='fx')P.rv.mix=20;
+if(t=='fd'){P.fx.nm=1;P.fx.fi=.05;P.fx.fo=.1}}
 /* ---- UI ---- */
 const rg=(l,o,k,mn,mx,sp,u)=>`<div class="xrw"><label>${l}</label><input type="range" min="${mn}" max="${mx}" step="${sp}" value="${o[k]}" data-o="${o===P.sil?'sil':o===P.nr?'nr':o===P.cp?'cp':o===P.rv?'rv':o===P.ec?'ec':'fx'}" data-k="${k}"><span class="xv">${o[k]}${u||''}</span></div>`,ck=(l,o,k)=>`<label class="xck" style="margin-bottom:10px"><input type="checkbox" ${o[k]?'checked':''} data-o="${o===P.nr?'nr':o===P.cp?'cp':o===P.sil?'sil':'fx'}" data-k="${k}"> ${l}</label>`;
-function body(){const t=A.tab;if(t=='sil')return`<p class="xn" style="margin-top:0">Detects pauses and auto-splits the audio at them. Press confirm and every kept part is added to the timeline as its own clip.</p><div style="display:flex;gap:8px;margin-bottom:10px"><button id="aea">⚡ Auto threshold</button></div>`+rg('Silence below',P.sil,'th',-70,-15,1,' dB')+rg('Min. silence length',P.sil,'min',.1,3,.05,' s')+rg('Keep around speech',P.sil,'pad',0,.5,.01,' s')+rg('Gap between clips',P.sil,'gap',0,1,.05,' s')+`<div class="xrw"><label>Mode</label><select id="aem"><option value="join" ${P.sil.mode=='join'?'selected':''}>Remove silence (join clips together)</option><option value="keep" ${P.sil.mode=='keep'?'selected':''}>Split only (keep original timing)</option></select><span></span></div>`+ck('Replace this audio if it is already on the timeline',P.sil,'rep');
+function body(){const t=A.tab;if(t=='au')return`<p class="xn" style="margin-top:0">Listens to the selected clip (noise level, loudness, dynamics, tone, mains hum) and sets every tool to the best default values for it. Switching to another tool starts it from fresh defaults.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="pr" id="aeau">✨ Auto-set from this clip</button><button id="aerd">↺ Reset all to default</button></div><div id="aerp" style="white-space:pre-line;color:var(--mu)">${esc(A.rep||'')}</div>`;if(t=='sil')return`<p class="xn" style="margin-top:0">Detects pauses and auto-splits the audio at them. Press confirm and every kept part is added to the timeline as its own clip.</p><div style="display:flex;gap:8px;margin-bottom:10px"><button id="aea">⚡ Auto threshold</button></div>`+rg('Silence below',P.sil,'th',-70,-15,1,' dB')+rg('Min. silence length',P.sil,'min',.1,3,.05,' s')+rg('Keep around speech',P.sil,'pad',0,.5,.01,' s')+rg('Gap between clips',P.sil,'gap',0,1,.05,' s')+`<div class="xrw"><label>Mode</label><select id="aem"><option value="join" ${P.sil.mode=='join'?'selected':''}>Remove silence (join clips together)</option><option value="keep" ${P.sil.mode=='keep'?'selected':''}>Split only (keep original timing)</option></select><span></span></div>`+ck('Replace the selected clip (video clip: mute its original sound)',P.sil,'rep');
 if(t=='nr')return`<p class="xn" style="margin-top:0">Learns the background noise from the quietest parts of the recording and subtracts it (hiss, fan, AC, room noise). Works best when there is a moment of silence.</p>`+ck('Enable background noise remover',P.nr,'on')+rg('Reduction strength',P.nr,'amt',0,100,1,'%')+rg('Remove low rumble (high-pass)',P.nr,'hp',0,300,10,' Hz')+`<div class="xrw"><label>Mains hum</label><select id="aeh"><option value="0">Off</option><option value="50" ${P.nr.hum==50?'selected':''}>50 Hz (India / EU)</option><option value="60" ${P.nr.hum==60?'selected':''}>60 Hz (US)</option></select><span></span></div>`;
-if(t=='vo')return`<p class="xn" style="margin-top:0">One-click pro chains: noise removal + EQ + compressor + loudness normalize. Pick a preset, then fine-tune in the other tabs.</p><div class="pre">${Object.keys(PRE).map(k=>`<button data-pre="${k}">${k}</button>`).join('')}</div>`;
+if(t=='vo')return`<p class="xn" style="margin-top:0">One-click pro chains: noise removal + EQ + compressor + loudness normalize. Pick a preset, then add it to the timeline.</p><div class="pre">${Object.keys(PRE).map(k=>`<button data-pre="${k}">${k}</button>`).join('')}</div>`;
 if(t=='eq')return`<p class="xn" style="margin-top:0">5-band equalizer. Cut low-mids for clarity, boost highs for air.</p>`+['Bass 100 Hz','Body 300 Hz','Mids 1.2 kHz','Presence 3.5 kHz','Air 9 kHz'].map((l,i)=>`<div class="xrw"><label>${l}</label><input type="range" min="-12" max="12" step="1" value="${P.eq[i]}" data-e="${i}"><span class="xv">${P.eq[i]} dB</span></div>`).join('');
 if(t=='dy')return`<p class="xn" style="margin-top:0">Compressor evens out loud and quiet parts for a consistent, professional level.</p>`+ck('Enable compressor',P.cp,'on')+rg('Threshold',P.cp,'th',-60,0,1,' dB')+rg('Ratio',P.cp,'ra',1,20,.5,':1')+rg('Make-up gain',P.cp,'mk',0,18,1,' dB');
 if(t=='fx')return`<p class="xn" style="margin-top:0">Add space and depth.</p>`+rg('Reverb amount',P.rv,'mix',0,100,1,'%')+rg('Room size',P.rv,'sz',.3,4,.1,' s')+rg('Echo amount',P.ec,'mix',0,100,1,'%')+rg('Echo time',P.ec,'t',.05,1,.05,' s');
-return`<p class="xn" style="margin-top:0">Final polish.</p>`+rg('Fade in',P.fx,'fi',0,5,.1,' s')+rg('Fade out',P.fx,'fo',0,5,.1,' s')+rg('Gain',P.fx,'gn',-20,20,1,' dB')+ck('Normalize loudness to −1 dB peak (overrides gain)',P.fx,'nm')+ck('Reverse audio',P.fx,'rev')+ck('Replace this audio if it is already on the timeline',P.fx,'rep')}
-function ui(){const src=AUD();$('#ael').innerHTML=Object.keys(TABS).map(k=>`<button data-t="${k}" class="${A.tab==k?'on':''}">${TABS[k]}</button>`).join('');$('#aer').innerHTML=`<div class="xrw" style="grid-template-columns:90px 1fr"><label>Audio source</label><select id="aesrc">${src.map(m=>`<option value="${m.id}" ${A.src&&A.src.id==m.id?'selected':''}>${m.type=='video'?'🎬':'🎵'} ${esc(m.name)}</option>`).join('')||'<option>Import audio or video first</option>'}</select></div><canvas id="aec"></canvas>`+body();const sil=A.tab=='sil';$('#aeg').textContent=sil?'✓ Confirm & add all to timeline':'＋ Add to timeline';$('#aep').hidden=sil;draw()}
-async function load(id){const m=M(id);if(!m)return;st('Decoding audio…');stop();try{AC=AC||new AudioContext();A.buf=await AC.decodeAudioData(await m.file.arrayBuffer());A.src=m;A.out=null;ana();P.sil.th=Math.round(Math.min(-20,Math.max(-60,ana.nf())));ui()}catch(e){st('Could not decode this file');A.buf=null}}
+return`<p class="xn" style="margin-top:0">Final polish.</p>`+rg('Fade in',P.fx,'fi',0,5,.1,' s')+rg('Fade out',P.fx,'fo',0,5,.1,' s')+rg('Gain',P.fx,'gn',-20,20,1,' dB')+ck('Normalize loudness to −1 dB peak (overrides gain)',P.fx,'nm')+ck('Reverse audio',P.fx,'rev')+ck('Replace the selected clip (video clip: mute its original sound)',P.fx,'rep')}
+function ui(){const src=AUD();$('#ael').innerHTML=Object.keys(TABS).map(k=>`<button data-t="${k}" class="${A.tab==k?'on':''}">${TABS[k]}</button>`).join('');$('#aer').innerHTML=`<div class="xrw" style="grid-template-columns:90px 1fr"><label>Selected clip</label><select id="aesrc">${SEL().map(s=>`<option value="${s.key}" ${A.ck==s.key?'selected':''}>${s.k=='clip'?'🎬':'🎙'} ${esc(s.m.name)} · ${fmt(s.o.start)}</option>`).join('')||'<option>Select a clip on the timeline</option>'}</select></div><div id="aez"><button id="aez-" title="Zoom out (Ctrl + scroll down)">−</button><input type="range" id="aezs" min="1" max="40" step=".1" value="${A.z}"><button id="aez+" title="Zoom in (Ctrl + scroll up)">+</button><button id="aezf">Fit</button><small id="aezl"></small></div><div id="aew"><canvas id="aec"></canvas></div>`+body();const sil=A.tab=='sil';$('#aeg').textContent=sil?'✓ Confirm & add all to timeline':'＋ Add to timeline';$('#aep').hidden=sil;draw()}
+const SEL=()=>S.multi.map(k=>{const[a,b]=k.split(':'),id=+b,o=a=='voice'?S.voices.find(v=>v.id==id):a=='clip'?S.clips.find(c=>c.id==id):null,m=o&&M(o.mid);return m&&m.type!='image'?{key:k,k:a,o,m}:null}).filter(Boolean);
+async function load(key){const s=SEL().find(x=>x.key==key);if(!s)return;const m=s.m;st('Decoding audio…');stop();try{AC=AC||new AudioContext();if(!A.dec||A.dec.id!=m.id)A.dec={id:m.id,b:await AC.decodeAudioData(await m.file.arrayBuffer())};const b=A.dec.b,sr=b.sampleRate,i0=Math.max(0,Math.floor(s.o.in*sr)),i1=Math.min(b.length,Math.floor(Math.min(s.o.out,m.dur)*sr)),nb=AC.createBuffer(b.numberOfChannels,Math.max(1,i1-i0),sr);for(let c=0;c<nb.numberOfChannels;c++)nb.copyToChannel(b.getChannelData(c).subarray(i0,i1),c);A.buf=nb;A.src=m;A.cur=s;A.ck=key;A.out=null;A.z=1;ana();A.rep='';tabDef(A.tab);ui()}catch(e){console.warn(e);st('Could not decode this clip');A.buf=null}}
 ana.nf=()=>{const s=[...A.db].sort((a,b)=>a-b);return s[Math.floor(s.length*.1)]+10};
-function open(){const s=AUD();if(!s.length)return toast('Import an audio or video file in the Media tab first');el.hidden=false;const v=S.sel&&S.sel.k=='voice'&&getSel(),id=v?v.mid:(A.src&&M(A.src.id)?A.src.id:(s.find(m=>m.type=='audio')||s[0]).id);ui();load(id)}
+function open(){const s=SEL();if(!s.length)return toast('Select an audio or video clip on the timeline first (Ctrl/Shift-click for several)');el.hidden=false;const c=S.sel&&S.sel.k+':'+S.sel.id;ui();load((s.find(x=>x.key==c)||s[0]).key)}
 function close(){stop();el.hidden=true}
-el.addEventListener('click',e=>{const t=e.target;if(t==el||t.id=='aex')return close();if(t.id=='aeo')return play(0);if(t.id=='aep')return play(1);if(t.id=='aeg')return stop(),A.buf?(A.tab=='sil'?addSil():addProc()):0;if(t.id=='aea'){P.sil.th=Math.round(ana.nf());return ui()}if(t.dataset.t){A.tab=t.dataset.t;ui()}if(t.dataset.pre){const p=PRE[t.dataset.pre];Object.assign(P.nr,{on:0,amt:60,hp:0,hum:0},p.nr||{});P.eq=[...(p.eq||[0,0,0,0,0])];Object.assign(P.cp,{on:0,th:-24,ra:3,mk:0},p.cp||{});Object.assign(P.fx,{nm:0},p.fx||{});if(!p.eq){P.rv.mix=0;P.ec.mix=0}st('Preset applied — press ▶ Processed to listen');}});
-el.addEventListener('input',e=>{const t=e.target;if(t.id=='aesrc')return load(+t.value);if(t.id=='aem'){P.sil.mode=t.value;return draw()}if(t.id=='aeh'){P.nr.hum=+t.value;return}const o=t.dataset.o&&P[t.dataset.o];if(o){o[t.dataset.k]=t.type=='checkbox'?+t.checked:+t.value;if(t.type=='range')t.nextElementSibling.textContent=t.value+t.nextElementSibling.textContent.replace(/^-?[\d.]+/,'');if(o===P.sil)draw()}if(t.dataset.e!=null){P.eq[+t.dataset.e]=+t.value;t.nextElementSibling.textContent=t.value+' dB'}});
+el.addEventListener('click',e=>{const t=e.target;if(t==el||t.id=='aex')return close();if(t.id=='aeo')return play(0);if(t.id=='aep')return play(1);if(t.id=='aeg')return stop(),A.buf?(A.tab=='sil'?addSil():addProc()):0;if(t.id=='aea'){P.sil.th=Math.round(ana.nf());return ui()}if(t.dataset.t){A.tab=t.dataset.t;A.rep='';A.out=null;tabDef(A.tab);ui()}if(t.dataset.pre){const p=PRE[t.dataset.pre];Object.assign(P.nr,{on:0,amt:60,hp:0,hum:0},p.nr||{});P.eq=[...(p.eq||[0,0,0,0,0])];Object.assign(P.cp,{on:0,th:-24,ra:3,mk:0},p.cp||{});Object.assign(P.fx,{nm:0},p.fx||{});if(!p.eq){P.rv.mix=0;P.ec.mix=0}st('Preset applied — press ▶ Processed to listen');}});
+el.addEventListener('input',e=>{const t=e.target;if(t.id=='aezs')return setZ(+t.value);if(t.id=='aesrc')return load(t.value);if(t.id=='aem'){P.sil.mode=t.value;return draw()}if(t.id=='aeh'){P.nr.hum=+t.value;return}const o=t.dataset.o&&P[t.dataset.o];if(o){o[t.dataset.k]=t.type=='checkbox'?+t.checked:+t.value;if(t.type=='range')t.nextElementSibling.textContent=t.value+t.nextElementSibling.textContent.replace(/^-?[\d.]+/,'');if(o===P.sil)draw()}if(t.dataset.e!=null){P.eq[+t.dataset.e]=+t.value;t.nextElementSibling.textContent=t.value+' dB'}});
+el.addEventListener('click',e=>{const i=e.target.id;if(i=='aez-')setZ(A.z/1.5);if(i=='aez+')setZ(A.z*1.5);if(i=='aezf')setZ(1);if(i=='aeau')auto();if(i=='aerd')reset()});
+el.addEventListener('wheel',e=>{const w=e.target.closest('#aew');if(w&&(e.ctrlKey||e.metaKey)){e.preventDefault();setZ(A.z*(e.deltaY<0?1.25:.8),e.clientX-w.getBoundingClientRect().left)}},{passive:false});
+addEventListener('keydown',e=>{if(el.hidden||!(e.ctrlKey||e.metaKey))return;if(e.key=='='||e.key=='+'){e.preventDefault();setZ(A.z*1.5)}else if(e.key=='-'){e.preventDefault();setZ(A.z/1.5)}else if(e.key=='0'){e.preventDefault();setZ(1)}});
 /* ---- entry button in the Audio tab ---- */
-const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);if(S.tab=='audio'){const p=$('#pane');p.insertAdjacentHTML('afterbegin','<button id="aeb">🎚 Audio Editor<br><small style="font-weight:400">Silence remover · Noise remover · Pro tools</small></button>')}};
+const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);if(S.tab=='audio'){const p=$('#pane');p.insertAdjacentHTML('afterbegin','<button id="aeb">🎚 Audio Editor<br><small style="font-weight:400">Works on the clip selected on the timeline</small></button>')}};
 $('#pane').addEventListener('click',e=>{if(e.target.closest('#aeb'))open()});renderPane();
+})();
+</script>
+<script>
+/* ===== Load Tools: custom tools (load / edit / download sample) with key commands ===== */
+(()=>{
+const CM=window.__cfCM,LSK='cf_tools',cl=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,''),eh=s=>esc(String(s==null?'':s));
+const SAMPLE=String.raw`/* =====================================================================
+   ClipForge custom tool  -  SAMPLE
+   ---------------------------------------------------------------------
+   1. Edit this file in any text editor and save it.
+   2. In ClipForge: left side -> "Load Tools" tab -> "Load tool file".
+      (or use "Write / edit" to change the code right inside the app,
+       or "From URL" to load a tool hosted online)
+   3. Type a command name ANYWHERE on the page (no box needed), then
+      press Space / Enter. Example: type  hello  then Space.
+   ---------------------------------------------------------------------
+   api helpers you can use:
+     api.toast("text")            show a message
+     api.time / api.seek(sec)     read / set playhead time
+     api.duration()               total timeline length (sec)
+     api.play() / api.pause()
+     api.selected()               the selected clip / text object
+     api.clips() / api.texts()    lists of timeline items
+     api.addText({txt,size,dur})  add a text at the playhead
+     api.split() api.remove() api.duplicate() api.selectAll()
+     api.setSpeed(0.5)            speed of selected clip(s)
+     api.setAspect("9:16")        "9:16" "4:5" "1:1" "16:9"
+     api.command("export")        run any built-in command by name
+     api.commit()                 call after you change clip values
+   ===================================================================== */
+ClipForge.registerTool({
+  id: "sample",                 // letters + numbers only
+  name: "Sample Tool",
+  icon: "🧪",
+  description: "Shows how to build your own ClipForge tool.",
+
+  // Key commands: type the name (or an alias) anywhere, then Space / Enter
+  commands: [
+    { name: "hello", aliases: ["hi"], description: "Show a message",
+      run: function (api) { api.toast("Hello from my tool!"); } },
+
+    { name: "title", aliases: ["tt"], description: "Add a title at the playhead",
+      key: "Alt+T",             // optional hotkey: must include Alt (or Ctrl+Shift)
+      run: function (api) { api.addText({ txt: "My Title", size: 80, dur: 3 }); } },
+
+    { name: "half", aliases: ["hf"], description: "Selected clip to 0.5x speed",
+      run: function (api) { api.setSpeed(0.5); } },
+
+    { name: "middle", aliases: ["mid"], description: "Jump playhead to the middle",
+      run: function (api) { api.seek(api.duration() / 2); } }
+  ],
+
+  // Optional panel shown inside the Load Tools tab (type  sample  to open it)
+  panel: function (box, api) {
+    box.innerHTML =
+      '<input id="sx" placeholder="Type your text" style="width:100%;margin-bottom:6px">' +
+      '<button id="sb" class="pr" style="width:100%">＋ Add text at playhead</button>';
+    box.querySelector("#sb").onclick = function () {
+      api.addText({ txt: box.querySelector("#sx").value || "Hello", dur: 3 });
+    };
+  }
+});
+`;
+let SRC=[],REG={},CUR=null,LT={ed:null,url:0,open:null,msg:''};
+try{SRC=JSON.parse(localStorage.getItem(LSK)||'[]')||[]}catch(e){SRC=[]}
+const persist=()=>{try{localStorage.setItem(LSK,JSON.stringify(SRC.map(s=>({sid:s.sid,name:s.name,code:s.code,url:s.url}))))}catch(e){}};
+const dl=(name,text)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/javascript'}));a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)};
+const getCmd=n=>CM.find(c=>c.n==n);
+const api={S,version:1,$,esc,
+ toast:m=>toast(m),get time(){return S.t},seek:t=>{S.t=Math.max(0,Math.min(total(),+t||0));S.curId=null},duration:()=>total(),
+ play:()=>play(),pause:()=>pause(),isPlaying:()=>!!S.play,selected:()=>getSel(),selection:()=>S.sel,select:(k,id)=>pick(k,id),
+ clips:()=>S.clips,texts:()=>S.texts,voices:()=>S.voices,split:()=>split(),remove:()=>del(),duplicate:()=>dup(),selectAll:()=>selAll(),
+ addText:o=>addText(o||{}),setSpeed:v=>setSpeed(v),setAspect:k=>setAsp(k),
+ command:n=>{const c=getCmd(cl(n));if(!c)throw new Error('No command: '+n);c.f()},
+ commit:()=>{try{layout()}catch(e){}renderTL();renderIns();hist()},refresh:()=>renderPane()};
+/* hotkeys */
+const HK=[];
+const parseKey=s=>{const t=String(s||'').toLowerCase().split('+').map(x=>x.trim()),k=t.pop();if(!k)return null;const o={ctrl:t.includes('ctrl')||t.includes('cmd'),alt:t.includes('alt'),shift:t.includes('shift'),code:/^[a-z]$/.test(k)?'Key'+k.toUpperCase():/^[0-9]$/.test(k)?'Digit'+k:k.toUpperCase().replace(/^F(\d+)$/,'F$1')};return(o.alt||(o.ctrl&&o.shift))?o:null};
+addEventListener('keydown',e=>{const t=e.target,tn=t&&t.tagName;if(/TEXTAREA|SELECT/.test(tn||'')||(tn=='INPUT'&&!['range','checkbox','color','button'].includes(t.type)))return;if(S.exporting)return;
+ const h=HK.find(h=>h.o.code==e.code&&h.o.alt==e.altKey&&h.o.shift==e.shiftKey&&h.o.ctrl==(e.ctrlKey||e.metaKey));if(!h)return;e.preventDefault();e.stopImmediatePropagation();h.f()},true);
+/* registry */
+const guard=(id,fn)=>()=>{try{fn(api)}catch(e){console.error(e);toast('Tool error ('+id+'): '+e.message)}};
+function openPanel(id){LT.open=id;S.tab='tools';renderPane();save();if(mob())sheet('L')}
+function unregister(id){const r=REG[id];if(!r)return;for(let i=CM.length-1;i>=0;i--)if(CM[i]._tool==id)CM.splice(i,1);for(let i=HK.length-1;i>=0;i--)if(HK[i].id==id)HK.splice(i,1);delete REG[id]}
+function used(n,except){return CM.some(c=>c._tool!=except&&(c.n==n||c.a.includes(n)))}
+function register(def){
+ if(!def||typeof def!='object')throw new Error('registerTool needs an object');
+ const name=String(def.name||'').trim();if(!name)throw new Error('Tool needs a "name"');
+ let id=cl(def.id||name)||'tool'+Date.now();if(REG[id]&&REG[id].sid!=CUR)id+=Math.floor(Math.random()*90+10);
+ unregister(id);const r=REG[id]={id,def,sid:CUR,cmds:[],warn:[]},icon=def.icon||'🧩',tag=' · '+icon+' '+name;
+ const add=(c,hk)=>{const n=cl(c.name);if(!n)return;if(typeof c.run!='function'){r.warn.push('"'+c.name+'" has no run function');return}
+  if(used(n,id)){r.warn.push('"'+n+'" is already a command — skipped');return}
+  const a=(c.aliases||[]).map(cl).filter(x=>x&&x!=n&&!used(x,id)&&!r.cmds.some(q=>q.a.includes(x)));
+  const e={n,a,d:String(c.description||'Custom tool command')+tag,f:guard(id,c.run),_tool:id,key:''};
+  if(c.key&&hk!==0){const o=parseKey(c.key);if(o){HK.push({id,o,f:e.f});e.key=c.key}else r.warn.push('Hotkey "'+c.key+'" ignored (use Alt+key or Ctrl+Shift+key)')}
+  CM.push(e);r.cmds.push(e)};
+ (Array.isArray(def.commands)?def.commands:[]).forEach(c=>add(c));
+ if(def.panel)add({name:id,description:'Open '+name+' panel',run:()=>openPanel(id)},0);
+ else if(typeof def.run=='function')add({name:id,description:def.description||'Run '+name,run:def.run,key:def.key});
+ return r}
+const CF=window.ClipForge={version:1,api,registerTool:register,tools:()=>Object.keys(REG),sample:()=>SAMPLE};
+function unload(sid){Object.keys(REG).filter(k=>REG[k].sid==sid).forEach(unregister)}
+function exec(s){CUR=s.sid;s.err='';try{new Function('ClipForge','api','"use strict";\n'+s.code+'\n//# sourceURL=clipforge-tool-'+cl(s.name))(CF,api)}catch(e){s.err=e.message||String(e)}CUR=null;if(!Object.keys(REG).some(k=>REG[k].sid==s.sid)&&!s.err)s.err='This file did not register a tool. Use ClipForge.registerTool({...}) — download the sample to see how.'}
+function loadSrc(code,name,url,sid){
+ const old=SRC.find(s=>s.sid==sid)||SRC.find(s=>s.name==name&&!sid);let s=old;if(s)unload(s.sid);else{s={sid:'s'+Date.now()+Math.floor(Math.random()*999)};SRC.push(s)}
+ Object.assign(s,{name,code,url:url||s.url||''});exec(s);
+ if(s.err){toast('Tool error: '+s.err);LT.msg='⚠ '+name+': '+s.err}
+ else{const t=Object.keys(REG).filter(k=>REG[k].sid==s.sid).length,c=Object.keys(REG).filter(k=>REG[k].sid==s.sid).reduce((a,k)=>a+REG[k].cmds.length,0);LT.msg='✓ Loaded '+name+' — '+t+' tool'+(t>1?'s':'')+', '+c+' command'+(c!=1?'s':'');toast(LT.msg)}
+ persist();LT.ed=null;LT.url=0;if(S.tab=='tools')renderPane();return s}
+function remove(sid){unload(sid);SRC=SRC.filter(s=>s.sid!=sid);persist();if(LT.open&&!REG[LT.open])LT.open=null;LT.msg='Tool removed';renderPane()}
+/* built-in commands for this tab */
+const tabTo=()=>{S.tab='tools';renderPane();save();if(mob())sheet('L')};
+CM.push({n:'tools',a:['lt','mytools'],d:'Open Load Tools tab',f:tabTo,b:null},
+ {n:'loadtool',a:['lf'],d:'Load a custom tool file (.js)',f:()=>{tabTo();$('#ltf').click()},b:null},
+ {n:'sampletool',a:['st2'],d:'Download a sample tool to edit',f:()=>dl('clipforge-sample-tool.js',SAMPLE),b:null});
+/* hidden file input */
+const fi=document.createElement('input');fi.type='file';fi.id='ltf';fi.accept='.js,.txt,text/javascript,application/javascript,text/plain';fi.multiple=true;fi.hidden=true;document.body.append(fi);
+fi.onchange=async()=>{for(const f of fi.files){try{loadSrc(await f.text(),f.name)}catch(e){toast('Could not read '+f.name)}}fi.value=''};
+/* pane */
+function view(){
+ const rows=SRC.map(s=>{const ts=Object.keys(REG).filter(k=>REG[k].sid==s.sid).map(k=>REG[k]);
+  const body=ts.map(r=>{const d=r.def,sh=r.cmds.map(c=>`<code title="${eh(c.d)}" style="background:var(--p2);border:1px solid var(--bd);border-radius:5px;padding:1px 5px;margin:0 3px 3px 0;display:inline-block">${eh(c.n)}${c.a.length?' <u>'+eh(c.a[0])+'</u>':''}${c.key?' · '+eh(c.key):''}</code>`).join('');
+   return`<div style="margin-top:6px"><b>${eh(d.icon||'🧩')} ${eh(d.name)}</b>${d.description?`<div style="color:var(--mu)">${eh(d.description)}</div>`:''}<div style="margin-top:4px">${sh||'<span style="color:var(--mu)">No key commands</span>'}</div>${r.warn.map(w=>`<div style="color:#e5384f">⚠ ${eh(w)}</div>`).join('')}${d.panel?`<button data-lt="open" data-id="${r.id}" class="${LT.open==r.id?'on':''}" style="margin-top:6px;width:100%">${LT.open==r.id?'▾ Panel open':'▸ Open panel'}</button>`:''}${LT.open==r.id&&d.panel?'<div id="lt-panel" style="margin-top:8px;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--p2)"></div>':''}</div>`}).join('');
+  return`<div style="border:1px solid var(--bd);border-radius:10px;padding:8px;margin-bottom:8px"><div style="display:flex;gap:4px;align-items:center"><span style="flex:1;font-size:11px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${eh(s.url||s.name)}">${s.url?'🌐':'📄'} ${eh(s.name)}</span>${s.url?`<button data-lt="reload" data-sid="${s.sid}" title="Reload from URL">↻</button>`:''}<button data-lt="edit" data-sid="${s.sid}" title="Edit script">✏</button><button data-lt="dl" data-sid="${s.sid}" title="Download this tool">⬇</button><button data-lt="rm" data-sid="${s.sid}" title="Remove">✕</button></div>${s.err?`<div style="color:#e5384f;margin-top:6px">⚠ ${eh(s.err)}</div>`:''}${body}</div>`}).join('');
+ const ed=LT.ed?`<div style="border:1px solid var(--ac);border-radius:10px;padding:8px;margin-bottom:10px"><input id="lt-n" value="${eh(LT.ed.name)}" placeholder="File name (my-tool.js)" style="width:100%;margin-bottom:6px;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:5px"><textarea id="lt-c" spellcheck="false" rows="14" style="width:100%;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:6px;white-space:pre;overflow:auto;tab-size:2">${eh(LT.ed.code)}</textarea><div style="display:flex;gap:6px;margin-top:6px"><button class="pr" data-lt="save" style="flex:1">▶ Save &amp; load</button><button data-lt="cancel">Cancel</button></div></div>`:'';
+ const ur=LT.url?`<div style="display:flex;gap:6px;margin-bottom:10px"><input id="lt-u" placeholder="https://…/my-tool.js" style="flex:1;min-width:0;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:5px"><button class="pr" data-lt="geturl">Load</button></div>`:'';
+ return`<button class="pr" data-lt="file" style="width:100%">📂 Load tool file (.js)</button><div style="display:flex;gap:6px;margin:8px 0"><button data-lt="sample" style="flex:1" title="Download a sample tool, edit it, then load it back">⬇ Sample</button><button data-lt="new" style="flex:1" title="Write or paste a tool here">✏ Write</button><button data-lt="url" style="flex:1" title="Load a tool hosted online">🌐 URL</button></div>${ur}${ed}${LT.msg?`<div style="margin-bottom:8px;color:var(--mu)">${eh(LT.msg)}</div>`:''}${rows||(LT.ed?'':'<p style="color:var(--mu)">No tools loaded yet. Download the sample, edit it, then load it here.</p>')}<h4>Key commands</h4><p style="color:var(--mu);margin:0">Loaded tools work like built-in ones: type the command name anywhere, then Space / Enter. Try <code>tools</code>, <code>hello</code>. Optional hotkeys (e.g. Alt+T) are shown beside a command. Only load tools you trust — they run with full access to this page.</p>`}
+const _rp=renderPane;renderPane=function(){_rp.apply(this,arguments);if(S.tab!='tools')return;const p=$('#pane');p.innerHTML=view();
+ const r=LT.open&&REG[LT.open],box=$('#lt-panel');if(r&&box&&r.def.panel){try{const o=typeof r.def.panel=='function'?r.def.panel(box,api):r.def.panel;if(typeof o=='string')box.innerHTML=o}catch(e){box.textContent='Panel error: '+e.message}}};
+$('#pane').addEventListener('click',async e=>{const g=e.target.closest('[data-lt]');if(!g||S.tab!='tools')return;const a=g.dataset.lt,sid=g.dataset.sid,s=SRC.find(x=>x.sid==sid);
+ if(a=='file')fi.click();
+ else if(a=='sample')dl('clipforge-sample-tool.js',SAMPLE);
+ else if(a=='new'){LT.ed={sid:'',name:'my-tool.js',code:SAMPLE};LT.url=0;renderPane()}
+ else if(a=='url'){LT.url=!LT.url;LT.ed=null;renderPane()}
+ else if(a=='cancel'){LT.ed=null;renderPane()}
+ else if(a=='edit'&&s){LT.ed={sid:s.sid,name:s.name,code:s.code};LT.url=0;renderPane()}
+ else if(a=='save'){const n=($('#lt-n').value||'my-tool.js').trim(),c=$('#lt-c').value;loadSrc(c,n,'',LT.ed&&LT.ed.sid||undefined)}
+ else if(a=='dl'&&s)dl(/\.js$/i.test(s.name)?s.name:s.name+'.js',s.code);
+ else if(a=='rm'&&s)remove(sid);
+ else if(a=='open')LT.open=LT.open==g.dataset.id?null:g.dataset.id,renderPane();
+ else if(a=='geturl'||a=='reload'){const u=a=='reload'?s.url:($('#lt-u').value||'').trim();if(!u)return;try{const r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);loadSrc(await r.text(),u.split('/').pop().split('?')[0]||'online-tool.js',u,a=='reload'?sid:undefined)}catch(err){LT.msg='⚠ Could not load URL ('+err.message+'). The server must allow cross-origin access (CORS).';toast('Could not load that URL');renderPane()}}});
+$('#pane').addEventListener('keydown',e=>{if(e.target.id=='lt-c'&&e.key=='Tab'){e.preventDefault();const t=e.target,i=t.selectionStart;t.setRangeText('  ',i,t.selectionEnd,'end')}if(e.target.id=='lt-u'&&e.key=='Enter')$('#pane [data-lt=geturl]').click()});
+/* restore saved tools */
+SRC.forEach(s=>exec(s));if(S.tab=='tools')renderPane();
 })();
 </script>
 </body></html>
