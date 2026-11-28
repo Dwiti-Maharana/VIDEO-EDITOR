@@ -212,7 +212,7 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
 <main>
 <aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button><button data-t="rec">⏺ Record</button><button data-t="tools" title="Load your own custom tools">🧩 Load Tools</button></div><div id="pane"></div></aside>
-<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Exit full screen" aria-label="Exit full screen">✕</button><div id="pc"><input type="range" id="pcs" min="0" max="1000" step="any" value="0" title="Seek"><div id="pcvr"><button id="pcvi" type="button" title="Mute / restore preview volume" aria-label="Mute preview">🔊</button><input type="range" id="pcv" min="0" max="100" step="1" value="100" title="Preview volume" aria-label="Preview volume"><span id="pcvn">100%</span></div><div id="pcb"><button data-pc="start" title="Go to start">⏮</button><button data-pc="b5" title="Back 5 seconds">⏪ 5s</button><button data-pc="pp" id="pcp" title="Play / pause">▶</button><button data-pc="f5" title="Forward 5 seconds">5s ⏩</button><button data-pc="end" title="Go to end">⏭</button><button data-pc="fb" title="Previous frame">◂|</button><button data-pc="ff" title="Next frame">|▸</button><span class="t" id="pct">0:00.0 / 0:00.0</span><button data-pc="loop" id="pcl" title="Loop playback">🔁</button><button data-pc="mute" id="pcm" title="Mute / unmute everything">🔊</button></div></div></div>
+<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Exit full screen" aria-label="Exit full screen">✕</button><div id="pc"><input type="range" id="pcs" min="0" max="1000" step="any" value="0" title="Seek"><div id="pcb"><button data-pc="start" title="Go to start">⏮</button><button data-pc="b5" title="Back 5 seconds">⏪ 5s</button><button data-pc="pp" id="pcp" title="Play / pause">▶</button><button data-pc="f5" title="Forward 5 seconds">5s ⏩</button><button data-pc="end" title="Go to end">⏭</button><button data-pc="fb" title="Previous frame">◂|</button><button data-pc="ff" title="Next frame">|▸</button><span class="t" id="pct">0:00.0 / 0:00.0</span><button data-pc="loop" id="pcl" title="Loop playback">🔁</button><span id="pcvw"><div id="pcvr" hidden><span id="pcvn">100%</span><input orient="vertical" type="range" id="pcv" min="0" max="100" step="1" value="100" title="Preview volume" aria-label="Preview volume"><button id="pcvi" type="button" title="Mute / restore preview volume" aria-label="Mute preview">🔊</button></div><button id="pcm" type="button" title="Volume" aria-label="Volume" aria-expanded="false">🔊</button></span></div></div></div>
 <aside id="ins"></aside>
 </main>
 <section id="tl">
@@ -1581,13 +1581,12 @@ pc.addEventListener('click',e=>{const b=e.target.closest('[data-pc]');if(!b)retu
  else if(a=='fb'||a=='ff'){if(S.play)pause();go(S.t+(a=='ff'?1:-1)/30)}
  else if(a=='pp')S.play?pause():play();
  else if(a=='loop'){loop=!loop;lp.classList.toggle('on',loop);toast(loop?'Loop on':'Loop off')}
- else if(a=='mute'){const all=S.trk.Vm&&S.trk.Am&&S.trk.Mm,v=all?0:1;S.trk.Vm=S.trk.Am=S.trk.Mm=v;trkUI();renderTL();save()}
  wake()});
 pc.addEventListener('pointerdown',e=>e.stopPropagation());pc.addEventListener('dblclick',e=>e.stopPropagation());
 function tick(){requestAnimationFrame(tick);const T=total();
  if(!dr){const sv=T>0?Math.min(1000,S.t/T*1000):0;if(Math.abs(sv-lv0)>.05){sl.value=sv;lv0=sv}}const tx=fmt(S.t)+' / '+fmt(T);if(tx!=tx0){tm.textContent=tx;tx0=tx}
  const ic=S.play?'⏸':'▶';if(pp.textContent!=ic)pp.textContent=ic;
- const m=!!(S.trk.Vm&&S.trk.Am&&S.trk.Mm),mi=m?'🔇':'🔊';if(mu.textContent!=mi)mu.textContent=mi;
+ const mi=PVOL==0?'🔇':PVOL<.5?'🔉':'🔊';if(mu.textContent!=mi)mu.textContent=mi;
  if(was&&!S.play&&loop&&!S.exporting&&T>0&&S.t>=T-.05){go(0);play()}
  if(!S.play)pc.classList.remove('hide');if(S.play&&!was)wake();was=!!S.play;pc.style.display=S.exporting?'none':''}
 tick();
@@ -1933,20 +1932,25 @@ patch(ctx);
 <style>
 /* phones: no player bar on the normal screen; in full screen it shows and stays while playing */
 @media(max-width:900px),(pointer:coarse){
-/* normal editing screen: only the seek bar and the volume slider, below the picture */
-#stage:not(:fullscreen):not(.pfs){padding-bottom:70px}
-#stage:not(:fullscreen):not(.pfs) #pc,#stage:not(:fullscreen):not(.pfs) #pc.hide{height:70px;box-sizing:border-box;padding:4px 14px;gap:2px;justify-content:center;background:none;color:var(--tx);opacity:1;pointer-events:auto}
-#stage:not(:fullscreen):not(.pfs) #pcb{display:none}
+/* normal editing screen: only the seek bar and the speaker (volume) button, below the picture */
+#stage:not(:fullscreen):not(.pfs){padding-bottom:46px}
+#stage:not(:fullscreen):not(.pfs) #pc,#stage:not(:fullscreen):not(.pfs) #pc.hide{height:46px;box-sizing:border-box;padding:2px 10px;flex-direction:row;align-items:center;gap:10px;background:none;color:var(--tx);opacity:1;pointer-events:auto}
+#stage:not(:fullscreen):not(.pfs) #pcs{flex:1;width:auto;min-width:0}
+#stage:not(:fullscreen):not(.pfs) #pcb{flex:none}
+#stage:not(:fullscreen):not(.pfs) #pcb>:not(#pcvw){display:none}
+#stage:not(:fullscreen):not(.pfs) #pcm{background:var(--p2);color:var(--tx);border:1px solid var(--bd);min-width:44px;height:36px}
 #stage:fullscreen #pc,#stage:fullscreen #pc.hide{display:flex;opacity:1;pointer-events:auto}
 #stage.pfs #pc,#stage.pfs #pc.hide{display:flex;opacity:1;pointer-events:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 <style>
-#pcvr{display:flex;align-items:center;gap:8px}
+#pcvw{position:relative;display:inline-flex}
+#pcvr{position:absolute;right:0;bottom:calc(100% + 8px);z-index:8;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#141723;color:#fff;border:1px solid #2c3248;border-radius:12px;box-shadow:0 8px 28px #0009;white-space:nowrap}
+#pcvr[hidden]{display:none}
 #pcv{width:160px;margin:0;height:16px;accent-color:#6d4aff;cursor:pointer}
 #pcvi{background:none;border:0;color:inherit;padding:0;width:30px;min-height:0;font-size:16px}
 #pcvn{font:12px ui-monospace,Menlo,Consolas,monospace;min-width:38px}
-@media(max-width:900px),(pointer:coarse){#pc #pcs,#pc #pcv{height:28px}#pc #pcv{flex:1;width:auto;min-width:0}#pcvi{height:30px}}
+@media(max-width:900px),(pointer:coarse){#pc #pcs,#pc #pcv{height:28px}#pc #pcv{width:min(180px,48vw)}#pcvi{height:30px}}
 </style>
 <script>
 /* ---------- preview volume slider ---------- */
@@ -1955,20 +1959,24 @@ const show=()=>{const v=Math.round(PVOL*100);sl.value=v;num.textContent=v+'%';ic
 const set=v=>{PVOL=Math.max(0,Math.min(1,v));if(PVOL)last=PVOL;if(MON)MON.gain.value=PVOL;try{localStorage.setItem('cf-pvol',PVOL)}catch(e){}if(AC&&AC.state=='suspended')AC.resume();show()};
 sl.addEventListener('input',()=>set(sl.value/100));
 ic.addEventListener('click',()=>set(PVOL?0:last));
+const btn=$('#pcm'),pop=$('#pcvr'),open=on=>{if(on)sl.style.setProperty('--vh',Math.max(44,Math.min(130,btn.getBoundingClientRect().top-86))+'px');pop.hidden=!on;btn.classList.toggle('on',on);btn.setAttribute('aria-expanded',on)};
+btn.addEventListener('click',()=>open(pop.hidden));
+document.addEventListener('pointerdown',e=>{if(!pop.hidden&&!e.target.closest('#pcvw'))open(false)},true);
+addEventListener('keydown',e=>{if(e.key=='Escape')open(false)});
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>open(false)));
 show();fit();
 })();
 </script>
 <style>
-/* sideways phones: both sliders share one slim row so the picture stays large */
-@media(max-height:500px) and (pointer:coarse),(max-height:500px) and (max-width:900px){
-#stage:not(:fullscreen):not(.pfs){padding-bottom:34px}
-#stage:not(:fullscreen):not(.pfs) #pc,#stage:not(:fullscreen):not(.pfs) #pc.hide{height:34px;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;padding:2px 12px}
-#stage:not(:fullscreen):not(.pfs) #pcs{flex:3;width:auto;min-width:0}
-#stage:not(:fullscreen):not(.pfs) #pcvr{flex:2;min-width:0}
-}
-</style>
-<style>
 .eyei{width:17px;height:17px;display:inline-block;vertical-align:middle;pointer-events:none}
 .blk .lbl .eyei{width:13px;height:13px;vertical-align:-2px}
+</style>
+<style>
+/* upright volume pop-up */
+#pcvr{flex-direction:column;gap:6px;padding:8px 6px;right:50%;transform:translateX(50%);width:52px;box-sizing:border-box}
+#pcvr[hidden]{display:none}
+#pc #pcvr #pcv{writing-mode:vertical-lr;direction:rtl;width:28px;height:var(--vh,130px);flex:none;margin:0;touch-action:none}
+#pc #pcvr #pcvn{min-width:0;font-size:11px}
+#pc #pcvr #pcvi{width:36px;height:30px;min-height:0;min-width:0;padding:0}
 </style>
 </body></html>
