@@ -110,7 +110,7 @@ label.f input:not([type=range]):not([type=checkbox]),label.f select,label.f text
 .xr select,.xr input:not([type=checkbox]){width:100%;background:var(--p2);border:1px solid var(--bd);border-radius:6px;padding:7px}.xrw small,.xv{color:var(--mu)}.xck{display:flex;gap:8px;align-items:center}
 .xn{color:var(--mu);margin:14px 0 0;font-size:12px}.xf{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--bd);flex-wrap:wrap}.xf #xs{flex:1;min-width:180px;color:var(--mu)}.xf button{padding:8px 16px}
 @media(max-width:700px){.xm{flex-direction:column}.xl{width:auto;border-right:0;border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;flex:none}.xl h5{display:none}.xl button{width:auto;white-space:nowrap;margin:0;flex:none}.xrw{grid-template-columns:96px 1fr auto}.xr select,.xr input:not([type=checkbox]){font-size:16px}}
-#stage{position:relative}#snp{position:absolute;right:10px;bottom:10px;z-index:5;font-weight:600}
+#stage{position:relative}#snp{position:absolute;right:10px;top:10px;z-index:5;font-weight:600}
 #snc{position:fixed;left:306px;top:62px;z-index:60;display:flex;gap:10px;align-items:center;background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:8px 30px 8px 8px;box-shadow:0 10px 40px #0007;max-width:min(92vw,360px);animation:snin .2s}
 #snc img{height:84px;width:auto;max-width:90px;object-fit:contain;border-radius:6px;background:#000;flex:none}
 .snb{display:flex;flex-direction:column;gap:4px;min-width:0}.snb small{color:var(--mu)}.sng{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}.sng button{padding:4px 8px;font-size:12px;min-height:0}
@@ -162,10 +162,18 @@ select{background-color:var(--p2);color:var(--tx);border:1px solid var(--bd);bor
 select option,select optgroup{background:var(--p);color:var(--tx)}
 .rcp select{width:100%;min-width:0;padding:7px 8px;font-size:12px}
 .rcp .sl{display:flex;flex-direction:column;gap:3px;color:var(--mu);font-size:11px;min-width:0}
-#fsb{position:absolute;right:122px;bottom:10px;z-index:5;font-weight:600}
+#fsb{position:absolute;right:122px;top:10px;z-index:5;font-weight:600}
 #stage:fullscreen,#stage:-webkit-full-screen{background:#000}
 #stage:fullscreen canvas{border-radius:0;box-shadow:none;cursor:pointer}
 #stage:fullscreen #snp{display:none}#stage:fullscreen #fsb{opacity:.35}#stage:fullscreen #fsb:hover{opacity:1}
+#pc{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:20px 12px 8px;background:linear-gradient(transparent,rgba(0,0,0,.75));display:flex;flex-direction:column;gap:5px;color:#fff;transition:opacity .25s}
+#pc.hide{opacity:0;pointer-events:none}
+#pcs{width:100%;margin:0;height:16px;accent-color:#6d4aff;cursor:pointer}
+#pcb{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+#pcb button{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:8px;padding:4px 9px;font-size:13px;min-width:32px;line-height:1.3}
+#pcb button:hover{background:rgba(255,255,255,.3)}#pcb button.on{background:#6d4aff}
+#pcb .t{margin-left:auto;font:12px ui-monospace,Menlo,Consolas,monospace;opacity:.92;padding:0 4px;white-space:nowrap}
+#stage:fullscreen #pc{padding-bottom:16px}
 #cd{text-align:center;padding:0 8vw;line-height:1.2}
 #cmdp{position:fixed;z-index:70;min-width:240px;max-width:min(380px,92vw);background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 30px #0007;padding:6px;font:13px system-ui,sans-serif;pointer-events:none}
 #cmdp[hidden]{display:none}
@@ -190,13 +198,13 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
 <main>
 <aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button><button data-t="rec">⏺ Record</button><button data-t="tools" title="Load your own custom tools">🧩 Load Tools</button></div><div id="pane"></div></aside>
-<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Full screen preview (F)">⛶ Full screen</button><button id="snp" title="Take a snapshot of the preview (Ctrl+Alt+S)">📷 Snapshot</button></div>
+<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Full screen preview (F)">⛶ Full screen</button><button id="snp" title="Take a snapshot of the preview (Ctrl+Alt+S)">📷 Snapshot</button><div id="pc"><input type="range" id="pcs" min="0" max="1000" step="any" value="0" title="Seek"><div id="pcb"><button data-pc="start" title="Go to start">⏮</button><button data-pc="b5" title="Back 5 seconds">⏪ 5s</button><button data-pc="pp" id="pcp" title="Play / pause">▶</button><button data-pc="f5" title="Forward 5 seconds">5s ⏩</button><button data-pc="end" title="Go to end">⏭</button><button data-pc="fb" title="Previous frame">◂|</button><button data-pc="ff" title="Next frame">|▸</button><span class="t" id="pct">0:00.0 / 0:00.0</span><button data-pc="loop" id="pcl" title="Loop playback">🔁</button><button data-pc="mute" id="pcm" title="Mute / unmute everything">🔊</button></div></div></div>
 <aside id="ins"></aside>
 </main>
 <section id="tl">
 <div class="tb"><button id="st" title="Go to start">⏮</button><button id="pp" class="pr" title="Play / pause (Space)">▶</button><button id="pf" title="Play in full screen (F)">⛶ Full screen</button><span id="tm">0:00.0 / 0:00.0</span>
 <button id="sp" title="Split at playhead (S)">✂ Split</button><button id="de" title="Delete (Del)">🗑 Delete</button><button id="du" title="Duplicate">⧉</button><button id="cp" title="Copy selected items (Ctrl+C)">⎘ Copy</button><button id="pa" title="Paste at the playhead (Ctrl+V)" disabled>📋 Paste</button><button id="cs" title="Copy settings of the selected item (Ctrl+Alt+C)">⚙ Copy settings</button><button id="ps" title="Paste settings onto the selected items (Ctrl+Alt+V)" disabled>⚙ Paste settings</button><button id="ml" title="Move earlier">◀</button><button id="mr" title="Move later">▶</button><select id="spd" title="Speed of selected clip (slow motion / fast forward)"><option value="0.1">🐢 0.1×</option><option value="0.25">🐢 0.25×</option><option value="0.5">🐢 0.5×</option><option value="0.75">0.75×</option><option value="1" selected>⏱ 1× normal</option><option value="1.25">1.25×</option><option value="1.5">🐇 1.5×</option><option value="2">🐇 2×</option><option value="3">🐇 3×</option><option value="4">🐇 4×</option><option value="6">🐇 6×</option><option value="8">🐇 8×</option><option value="" id="spc" hidden></option></select><button id="un" title="Undo (Ctrl+Z)">↶ Undo</button><button id="re" title="Redo (Ctrl+Y)">↷</button><button id="snb" class="on" title="Magnetic snapping to playhead and clip edges">🧲 Snap</button><button id="mm" title="Select multiple clips: Ctrl/Shift-click, drag a box, or tap this then tap clips">☑ Multi</button><button id="al" title="Add a layer that can hold video, images, audio and text together">＋ Layer</button>
-<span class="sp"></span><button id="zo" title="Zoom out">−</button><input type="range" id="zm" min="0" max="1000" value="575" title="Timeline zoom (Ctrl + scroll)"><button id="zi" title="Zoom in">+</button><button id="zf" title="Fit whole timeline">Fit</button></div>
+<span class="sp"></span><button id="zo" title="Zoom out">−</button><input type="range" id="zm" min="0" max="1830" value="1195" title="Timeline zoom (Ctrl + scroll)"><button id="zi" title="Zoom in">+</button><button id="zf" title="Fit whole timeline">Fit</button></div>
 <div class="tw"><div class="lb"><div></div><div class="ltx">Text<span class="tc"><b data-tg="Th" title="Hide / show all text"></b></span></div><div class="lv">Video<span class="tc"><b data-tg="Vh" title="Hide / show video"></b><b data-tg="Vm" title="Mute / unmute video sound"></b></span></div><div class="la">Voice<span class="tc"><b data-tg="Am" title="Mute / unmute voice track"></b></span></div><div class="la">Music<span class="tc"><b data-tg="Mm" title="Mute / unmute music track"></b></span></div></div>
 <div id="sc"><div id="in"><div id="rul"></div><div id="rTx"></div><div class="row" id="rT"></div><div id="rO"></div><div class="row v" id="rV"></div><div class="row a" id="rA"></div><div class="row a" id="rM"></div><div id="rX"></div><div id="sn"></div><div id="ph"></div></div></div></div>
 </section>
@@ -288,7 +296,7 @@ $('#ins').addEventListener('click',e=>{const bi=e.target.id;if(bi=='rot-l'||bi==
 
 /* ---------- timeline ---------- */
 function renderTL(){const z=S.zoom,T=Math.max(Math.max(total(),10)+6,($('#sc').clientWidth||0)/z+1),sel=(k,id)=>isM(k,id)?' sel':'';
-$('#in').style.width=T*z+'px';const ST=[.01,.02,.05,.1,.2,.5,1,2,5,10,30,60,120,300,600,1800,3600],st=ST.find(s=>s*z>=70)||3600,lab=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(st<1?s.toFixed(st<.1?2:1).padStart(st<.1?5:4,'0'):String(Math.round(s)).padStart(2,'0'))};let r='';for(let k=0;k*st<T;k++)r+=`<span style="left:${k*st*z}px">${lab(k*st)}</span>`;$('#rul').innerHTML=r;
+$('#in').style.width=T*z+'px';const ST=[.001,.002,.005,.01,.02,.05,.1,.2,.5,1,2,5,10,30,60,120,300,600,1800,3600,7200,21600,86400,604800],st=ST.find(s=>s*z>=70)||604800,lab=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(st<1?s.toFixed(st<.01?3:st<.1?2:1).padStart(st<.01?6:st<.1?5:4,'0'):String(Math.round(s)).padStart(2,'0'))};RZ={T,st,lab};rulDraw();
 $('#rT').innerHTML=S.texts.filter(x=>!x.tl&&!x.ly).map(x=>`<div class="blk txt${sel('text',x.id)}" data-k="text" data-id="${x.id}" style="left:${x.start*z}px;width:${x.dur*z}px"><i class="h l"></i>${esc(x.txt)}<i class="h"></i></div>`).join('');
 $('#rV').innerHTML=S.clips.map(c=>`<div class="blk vid${sel('clip',c.id)}" data-k="clip" data-id="${c.id}" style="left:${c.start*z}px;width:${c.dur*z}px${th(M(c.mid))}"><i class="h l"></i>${vwf(c)}<span class="lbl">${esc(M(c.mid).name)}${c.sp!=1?' ×'+c.sp:''}${c.mute?' 🔇':''}${c.hide?' 🙈':''}</span><i class="h"></i></div>`).join('');
 $('#rA').innerHTML=S.voices.map(v=>`<div class="blk mus${sel('voice',v.id)}" data-k="voice" data-id="${v.id}" style="left:${v.start*z}px;width:${M(v.mid).dur*z}px;background:#d98a00">${wf(M(v.mid))}<span class="lbl">🎙 ${esc(M(v.mid).name)}</span></div>`).join('');$('#rM').innerHTML=S.music?`<div class="blk mus${sel('music',0)}" data-k="music" data-id="0" style="left:0;width:${Math.min(M(S.music.mid).dur,Math.max(total(),1))*z}px">${wf(M(S.music.mid),Math.min(1,Math.max(total(),1)/M(S.music.mid).dur))}<span class="lbl">🎵 ${esc(M(S.music.mid).name)}</span></div>`:''}
@@ -342,8 +350,10 @@ $('#ins').addEventListener('click',e=>{const id=e.target.id;if(id=='dt')return d
 const TG={Th:['👁','🙈'],Vh:['👁','🙈'],Vm:['🔊','🔇'],Am:['🔊','🔇'],Mm:['🔊','🔇']};
 function trkUI(){document.querySelectorAll('[data-tg]').forEach(b=>{const k=b.dataset.tg;b.textContent=TG[k][S.trk[k]?1:0];b.classList.toggle('off',!!S.trk[k])});$('#rT').style.opacity=S.trk.Th?0.4:1;$('#rV').style.opacity=S.trk.Vh?0.4:1;$('#rA').style.opacity=S.trk.Am?0.5:1;$('#rM').style.opacity=S.trk.Mm?0.5:1}
 document.querySelector('.lb').onclick=e=>{const b=e.target.closest('[data-tg]');if(!b)return;const k=b.dataset.tg;S.trk[k]=S.trk[k]?0:1;trkUI();save()};
-const ZMIN=.3,ZMAX=3000;
-function setZoom(z,ax){const sc=$('#sc');z=Math.min(ZMAX,Math.max(ZMIN,z));if(ax==null)ax=sc.clientWidth/2;const t=(sc.scrollLeft+ax)/S.zoom;S.zoom=z;renderTL();sc.scrollLeft=t*z-ax;if(document.activeElement!==$('#zm'))$('#zm').value=Math.round(250*Math.log10(z/ZMIN));save()}
+const ZMIN=.001,ZMAX=20000;let RZ=null,RQ=0;
+function rulDraw(){if(!RZ)return;const sc=$('#sc'),z=S.zoom,{T,st,lab}=RZ,a=Math.max(0,Math.floor(sc.scrollLeft/z/st)-2),b=Math.ceil((sc.scrollLeft+(sc.clientWidth||1000))/z/st)+2;let r='';for(let k=a;k*st<T&&k<=b;k++)r+=`<span style="left:${k*st*z}px">${lab(k*st)}</span>`;$('#rul').innerHTML=r}
+function setZoom(z,ax){const sc=$('#sc');z=Math.min(ZMAX,2.4e7/(Math.max(total(),10)+7),Math.max(ZMIN,z));if(ax==null)ax=sc.clientWidth/2;const t=(sc.scrollLeft+ax)/S.zoom;S.zoom=z;renderTL();sc.scrollLeft=t*z-ax;rulDraw();if(document.activeElement!==$('#zm'))$('#zm').value=Math.round(250*Math.log10(z/ZMIN));save()}
+$('#sc').addEventListener('scroll',()=>{if(!RQ)RQ=requestAnimationFrame(()=>{RQ=0;rulDraw()})},{passive:true});
 $('#zm').oninput=e=>setZoom(ZMIN*Math.pow(10,e.target.value/250));
 $('#zi').onclick=()=>setZoom(S.zoom*1.5);$('#zo').onclick=()=>setZoom(S.zoom/1.5);
 $('#zf').onclick=()=>{setZoom(($('#sc').clientWidth-30)/Math.max(total(),1));$('#sc').scrollLeft=0};
@@ -1529,6 +1539,31 @@ $('#pane').addEventListener('click',async e=>{const g=e.target.closest('[data-lt
 $('#pane').addEventListener('keydown',e=>{if(e.target.id=='lt-c'&&e.key=='Tab'){e.preventDefault();const t=e.target,i=t.selectionStart;t.setRangeText('  ',i,t.selectionEnd,'end')}if(e.target.id=='lt-u'&&e.key=='Enter')$('#pane [data-lt=geturl]').click()});
 /* restore saved tools */
 SRC.forEach(s=>exec(s));if(S.tab=='tools')renderPane();
+})();
+</script>
+<script>
+/* ===== preview player controls ===== */
+(()=>{const pc=$('#pc'),sl=$('#pcs'),tm=$('#pct'),pp=$('#pcp'),lp=$('#pcl'),mu=$('#pcm'),stg=$('#stage');let dr=0,idle=0,loop=0,was=false;
+const go=t=>{S.t=Math.max(0,Math.min(total(),t));S.curId=null};
+const wake=()=>{pc.classList.remove('hide');clearTimeout(idle);if(S.play&&!dr)idle=setTimeout(()=>{if(S.play&&!dr&&!pc.matches(':hover'))pc.classList.add('hide')},2500)};
+['pointermove','pointerdown','touchstart','keydown'].forEach(ev=>(ev=='keydown'?document:stg).addEventListener(ev,wake,{passive:true}));
+sl.addEventListener('pointerdown',()=>{dr=1});['pointerup','pointercancel','change','blur'].forEach(ev=>sl.addEventListener(ev,()=>{dr=0;wake()}));
+sl.addEventListener('input',()=>go(sl.value/1000*total()));
+pc.addEventListener('click',e=>{const b=e.target.closest('[data-pc]');if(!b)return;const a=b.dataset.pc;b.blur();
+ if(a=='start')go(0);else if(a=='end')go(total());else if(a=='b5')go(S.t-5);else if(a=='f5')go(S.t+5);
+ else if(a=='fb'||a=='ff'){if(S.play)pause();go(S.t+(a=='ff'?1:-1)/30)}
+ else if(a=='pp')S.play?pause():play();
+ else if(a=='loop'){loop=!loop;lp.classList.toggle('on',loop);toast(loop?'Loop on':'Loop off')}
+ else if(a=='mute'){const all=S.trk.Vm&&S.trk.Am&&S.trk.Mm,v=all?0:1;S.trk.Vm=S.trk.Am=S.trk.Mm=v;trkUI();renderTL();save()}
+ wake()});
+pc.addEventListener('pointerdown',e=>e.stopPropagation());pc.addEventListener('dblclick',e=>e.stopPropagation());
+function tick(){requestAnimationFrame(tick);const T=total();
+ if(!dr)sl.value=T>0?Math.min(1000,S.t/T*1000):0;tm.textContent=fmt(S.t)+' / '+fmt(T);
+ const ic=S.play?'⏸':'▶';if(pp.textContent!=ic)pp.textContent=ic;
+ const m=!!(S.trk.Vm&&S.trk.Am&&S.trk.Mm),mi=m?'🔇':'🔊';if(mu.textContent!=mi)mu.textContent=mi;
+ if(was&&!S.play&&loop&&!S.exporting&&T>0&&S.t>=T-.05){go(0);play()}
+ if(!S.play)pc.classList.remove('hide');if(S.play&&!was)wake();was=!!S.play;pc.style.display=S.exporting?'none':''}
+tick();
 })();
 </script>
 </body></html>
