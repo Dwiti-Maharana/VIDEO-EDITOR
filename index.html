@@ -174,6 +174,18 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 #pcb button:hover{background:rgba(255,255,255,.3)}#pcb button.on{background:#6d4aff}
 #pcb .t{margin-left:auto;font:12px ui-monospace,Menlo,Consolas,monospace;opacity:.92;padding:0 4px;white-space:nowrap}
 #stage:fullscreen #pc{padding-bottom:16px}
+#cpv{position:relative;width:100%;max-height:300px;margin:6px auto;background:linear-gradient(135deg,#232842,#11131d);border:1px solid var(--bd);border-radius:10px;overflow:hidden;touch-action:none}
+#cpb,#lvb{position:absolute;transform:translate(-50%,-50%);overflow:hidden;box-sizing:border-box;background:#000;cursor:grab;touch-action:none}
+#cpb video,#lvb video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cph{position:absolute;left:8px;top:6px;font-size:11px;color:#fff9;pointer-events:none}
+.shp{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}.shp button{flex:1 1 auto;padding:5px 6px;font-size:12px}
+#rcLive{position:fixed;left:12px;bottom:12px;z-index:70;width:270px;background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:12px;box-shadow:0 10px 40px #0007;padding:8px;font-size:12px}
+#rcLive .lvh{display:flex;align-items:center;gap:6px;margin-bottom:6px}#rcLive .lvh span{flex:1;color:var(--mu);font-size:10px}
+#rcLive .sl{display:flex;flex-direction:column;gap:3px;color:var(--mu);font-size:11px;min-width:0}#rcLive .sl input[type=range]{width:100%}#rcLive .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}#rcLive input[type=color]{width:100%;height:26px;padding:0;border:0;background:none}
+#rcLive.min .lvbody{display:none}#rcLive .lvbody{display:flex;flex-direction:column;gap:6px}
+#lvbox{position:relative;width:100%;max-height:260px;background:#000;border-radius:8px;overflow:hidden;touch-action:none}
+#lvs{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#rcLive button.on,.shp button.on{background:var(--ac);color:#fff}
 #cd{text-align:center;padding:0 8vw;line-height:1.2}
 #cmdp{position:fixed;z-index:70;min-width:240px;max-width:min(380px,92vw);background:var(--p);color:var(--tx);border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 30px #0007;padding:6px;font:13px system-ui,sans-serif;pointer-events:none}
 #cmdp[hidden]{display:none}
@@ -378,8 +390,10 @@ o.ly=ly;S.nl=Math.max(S.nl,ly);S.ovs.push(o);pick('ov',o.id);if(!q)toast('Added 
 const IA=['None','Fade','Pop','Slide left','Slide right','Slide up','Slide down'],ZA=['None','Zoom in','Zoom out','Pan left','Pan right','Pulse','Shake'];
 function entr(o,d){const r={s:1,x:0,y:0,a:1},ia=o.ia||'None';if(ia=='None')return r;const D=Math.max(.1,Math.min(.6,d/2)),p=Math.max(0,Math.min(1,(S.t-o.start)/D)),e=1-Math.pow(1-p,3),q=1-e;
 if(ia=='Fade')r.a=e;else if(ia=='Pop'){r.s=.4+.6*e;r.a=Math.min(1,p*3)}else if(ia=='Slide left')r.x=-q*W*.7;else if(ia=='Slide right')r.x=q*W*.7;else if(ia=='Slide up')r.y=-q*H*.7;else if(ia=='Slide down')r.y=q*H*.7;return r}
-function ovIns(o,f){const m=M(o.mid),v=m.type=='video';if(o.zs==null)o.zs=30;if(!o.za)o.za='None';if(!o.ia)o.ia='None';
-return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Entrance animation','ia','select',IA)+f('Motion animation','za','select',ZA)+f('Motion strength','zs','range','min="5" max="100"')+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')
+const CA=['Original','1:1','4:3','3:4','16:9','9:16'];
+function ovIns(o,f){const m=M(o.mid),v=m.type=='video';if(!o.ca)o.ca='Original';if(o.cz==null)o.cz=100;if(o.cpx==null)o.cpx=0;if(o.cpy==null)o.cpy=0;if(o.sh==null)o.sh=0;if(o.zs==null)o.zs=30;if(!o.za)o.za='None';if(!o.ia)o.ia='None';
+return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Entrance animation','ia','select',IA)+f('Motion animation','za','select',ZA)+f('Motion strength','zs','range','min="5" max="100"')+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')+f('Shadow','sh','range','min="0" max="100"')
++'<h4>Camera frame</h4><div class="grid" style="margin-bottom:6px"><button data-cs="circle">⚪ Circle</button><button data-cs="round">▢ Rounded</button><button data-cs="square">⬜ Square</button><button data-cs="wide">▭ Wide</button></div>'+f('Frame shape','ca','select',CA)+f('Zoom into picture','cz','range','min="100" max="400"')+f('Pan left / right','cpx','range','min="-100" max="100"')+f('Pan up / down','cpy','range','min="-100" max="100"')+(o.camId&&S.ovs.filter(q=>q.camId==o.camId).length>1?'<button id="cam-all" style="width:100%;margin-bottom:6px">Apply this style to all camera parts</button>':'')
 +(v?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))
 +'<div class="grid" style="margin-top:8px"><button id="ov-ct">Center</button><button id="ov-fu">Fill screen</button></div>'+ckPanel(o,f)+'<h4>Colour</h4>'+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button><h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-de">🗑 Delete</button></div>'}
 function splitOv(){const o=getSel(),d=odur(o),r=S.t-o.start;if(r<=.1||r>=d-.1)return toast('Move the playhead inside the selected layer clip to split it');const cut=o.in+r*o.sp,n={...o,id:S.id++,start:S.t,in:cut};o.out=cut;S.ovs.splice(S.ovs.indexOf(o)+1,0,n);pick('ov',n.id)}
@@ -412,13 +426,16 @@ function ovEl(o,m){if(m.type=='image')return m.el;let r=OE[o.id];if(!r){const e=
 if(!r.node){try{AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();r.node=AC.createMediaElementSource(r.e);r.node.connect(DEST);r.node.connect(AC.destination)}catch(x){r.node=1}}
 return r.e}
 function rrect(x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+const CAR={'1:1':1,'4:3':4/3,'3:4':3/4,'16:9':16/9,'9:16':9/16};
+function ovCrop(o,m){const A=CAR[o.ca];let bw=m.w,bh=m.h;if(A){if(m.w/m.h>A)bw=m.h*A;else bh=m.w/A}const z=Math.max(1,(o.cz||100)/100),sw=bw/z,sh=bh/z;return{bw,bh,sw,sh,sx:(m.w-sw)/2*(1+(o.cpx||0)/100),sy:(m.h-sh)/2*(1+(o.cpy||0)/100)}}
 function drawOvs(){const act=new Set(),dr=[],LT=S.texts.filter(x=>x.ly).sort((a,b)=>a.ly-b.ly);let ti=0;
 S.ovs.filter(o=>S.t>=o.start&&S.t<o.start+odur(o)).sort((a,b)=>a.ly-b.ly).forEach(o=>{while(ti<LT.length&&LT[ti].ly<=o.ly)drawText(LT[ti++]);const m=M(o.mid);if(!m||(m.type!='image'&&!m.el))return;const e=ovEl(o,m);if(!e)return;act.add(o.id);const hid=S.lh[o.ly]||o.hide,d=odur(o);
 if(m.type=='video'){const want=o.in+(S.t-o.start)*o.sp;e.playbackRate=o.sp;e.volume=Math.max(0,Math.min(1,(o.mute||S.lm[o.ly]||S.trk.Vm)?0:o.vol));
 if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
-const AN=anim({start:o.start,dur:d,za:o.za||'None',zs:o.zs||30}),EN=entr(o,d),k=Math.min(W/m.w,H/m.h)*o.sc/100*AN[0]*EN.s,w=m.w*k,h=m.h*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
+const AN=anim({start:o.start,dur:d,za:o.za||'None',zs:o.zs||30}),EN=entr(o,d),cr=ovCrop(o,m),k=Math.min(W/cr.bw,H/cr.bh)*o.sc/100*AN[0]*EN.s,w=cr.bw*k,h=cr.bh*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
 if(!hid){ctx.save();ctx.globalAlpha=fa*o.op/100;ctx.translate(cx,cy);ctx.rotate(rad);if(o.flip)ctx.scale(-1,1);const r=Math.min(w,h)/2*(o.rd||0)/100;
-ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=fl(o);ctx.drawImage(ckSrc(o,e,m),-w/2,-h/2,w,h);if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
+if(o.sh>0){ctx.save();ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=o.sh*W/300;ctx.shadowOffsetY=o.sh*W/700;ctx.fillStyle='#000';ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.fill();ctx.restore()}
+ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=fl(o);{const sr=ckSrc(o,e,m),rk=(sr.videoWidth||sr.naturalWidth||sr.width||m.w)/m.w;ctx.drawImage(sr,cr.sx*rk,cr.sy*rk,cr.sw*rk,cr.sh*rk,-w/2,-h/2,w,h)}if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
 const lx=o.flip?-w/2:w/2,pts=[[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(p=>[cx+p[0]*cs-p[1]*sn,cy+p[0]*sn+p[1]*cs]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
 o._b=[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys),cx+lx*cs-(h/2)*sn,cy+lx*sn+(h/2)*cs];dr.push({o,w,h,cx,cy,rad,lx})});
 while(ti<LT.length)drawText(LT[ti++]);ctx.filter='none';ctx.globalAlpha=1;
@@ -715,7 +732,7 @@ return`<div class="rcp"><h4 style="margin-top:0">Record</h4><div class="rcm">${s
 ${sup?'':'<p style="color:#ff6b81;margin:0">Phone browsers (Chrome/Safari on Android &amp; iOS) do not allow websites to record the screen. To capture your screen, use your phone\'s built-in screen recorder (swipe down for Quick Settings / Control Centre → Screen Record), then import the video in the <b>Media</b> tab. Webcam, audio and the camera app below work here.</p>'}
 ${window.isSecureContext?'':'<p style="color:#ff6b81;margin:0">This page is not secure (https). Browsers block camera, mic and screen recording on insecure pages.</p>'}
 <button id="rcnat" style="padding:10px">📱 Record with phone camera app</button>
-<h4>Sound</h4><label class="f"><input type="checkbox" data-ro="sys" ${RC.sys?'checked':''}> 🔊 System / tab audio</label><label class="f"><input type="checkbox" data-ro="mic" ${RC.mic?'checked':''}> 🎙 Microphone (narration)</label>
+${typeof camSec=='function'?camSec():''}<h4>Sound</h4><label class="f"><input type="checkbox" data-ro="sys" ${RC.sys?'checked':''}> 🔊 System / tab audio</label><label class="f"><input type="checkbox" data-ro="mic" ${RC.mic?'checked':''}> 🎙 Microphone (narration)</label>
 <h4>Quality</h4><div class="row2"><label class="sl">Quality<select data-rsel="q">${o('q',[['ultra','Ultra · 24+ Mbps'],['high','High · 12+ Mbps'],['med','Medium · 6+ Mbps'],['low','Low · 3+ Mbps']])}</select></label><label class="sl">Frame rate<select data-rsel="fps">${o('fps',[[60,'60 fps'],[30,'30 fps'],[24,'24 fps'],[15,'15 fps']])}</select></label></div>
 <div class="row2"><label class="sl">Resolution<select data-rsel="res">${o('res',[['auto','Native size'],['1080','Max 1080p'],['720','Max 720p']])}</select></label><label class="sl">Mouse cursor<select data-rsel="cursor">${o('cursor',[['always','Show cursor'],['motion','Only on move'],['never','Hide cursor']])}</select></label></div>
 ${(RC.src=='cam'||RC.src=='both')?`<label class="sl">Camera<select data-rsel="face">${o('face',[['user','Front (selfie)'],['environment','Back']])}</select></label>`:''}
@@ -750,7 +767,7 @@ scr=await navigator.mediaDevices.getDisplayMedia(opt)}
 if(needCam)cam=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30},facingMode:{ideal:RC.face||'user'}},audio:false});
 if(RC.mic||audOnly)mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
 }catch(err){stopAll();const n=err&&err.name;return toast(n=='NotAllowedError'?'Permission denied or cancelled. Allow camera/mic in the browser site settings.':n=='NotFoundError'?'No camera/microphone found':n=='NotReadableError'?'Camera/mic is in use by another app':n=='OverconstrainedError'?'Camera does not support these settings':'Could not start recording'+(n?' ('+n+')':''))}
-const me=SR={cd:1,stop:stopAll,pAcc:0,tt:0};const go=$('#rcgo');go&&(go.textContent='✕ Cancel');
+const me=SR={cd:1,stop:stopAll,pAcc:0,tt:0};me.sep=src=='both'&&!!RC.sep;const go=$('#rcgo');go&&(go.textContent='✕ Cancel');
 const cd=$('#cd');
 if(scr){const vt=scr.getVideoTracks()[0];try{vt.contentHint=RC.fps>=60?'motion':'detail'}catch(e){}vt.addEventListener('ended',()=>{if(SR===me)srStop()})}
 /* countdown (this overlay is never recorded: the recorder starts after it) */
@@ -771,7 +788,7 @@ else if(aT.length==1){actx.createMediaStreamSource(new MediaStream([aT[0]])).con
 let vstream=null,stopTick=null;
 if(!audOnly){
 if(src=='cam')vstream=new MediaStream(cam.getVideoTracks());
-else if(src=='both'){const sv=document.createElement('video'),cvd=document.createElement('video');[sv,cvd].forEach(v=>{v.muted=true;v.playsInline=true});sv.srcObject=new MediaStream(scr.getVideoTracks());cvd.srcObject=new MediaStream(cam.getVideoTracks());
+else if(src=='both'&&!me.sep){const sv=document.createElement('video'),cvd=document.createElement('video');[sv,cvd].forEach(v=>{v.muted=true;v.playsInline=true});sv.srcObject=new MediaStream(scr.getVideoTracks());cvd.srcObject=new MediaStream(cam.getVideoTracks());
 await Promise.all([sv.play(),cvd.play()]).catch(()=>{});if(!sv.videoWidth)await new Promise(r=>{sv.onloadedmetadata=r;setTimeout(r,2000)});
 const sw=sv.videoWidth||1280,sh=sv.videoHeight||720,cvs=document.createElement('canvas');cvs.width=sw;cvs.height=sh;const c2=cvs.getContext('2d',{alpha:false}),d=Math.round(Math.min(sw,sh)*.26),mg=Math.round(d*.12),x=sw-d-mg,y=sh-d-mg;
 stopTick=srTicker(()=>{try{c2.drawImage(sv,0,0,sw,sh);const cw=cvd.videoWidth||16,ch=cvd.videoHeight||9,k=Math.max(d/cw,d/ch),dw=cw*k,dh=ch*k;c2.save();c2.beginPath();c2.arc(x+d/2,y+d/2,d/2,0,7);c2.clip();c2.translate(x+d/2,y+d/2);c2.scale(-1,1);c2.drawImage(cvd,-dw/2,-dh/2,dw,dh);c2.restore();c2.lineWidth=Math.max(3,d*.025);c2.strokeStyle='#ff3b5c';c2.beginPath();c2.arc(x+d/2,y+d/2,d/2,0,7);c2.stroke()}catch(e){}},Math.round(1000/RC.fps));
@@ -785,24 +802,25 @@ const tries=[{mimeType:mime||undefined,videoBitsPerSecond:audOnly?undefined:vb,a
 for(const o2 of tries){try{mr=new MediaRecorder(out,o2);break}catch(err){mr=null}}
 if(!mr){stopTick&&stopTick();stopAll();try{actx&&actx.close()}catch(e){}SR=null;srUI(0);return toast('Could not start the recorder')}
 const ch=[];mr.ondataavailable=e=>e.data.size&&ch.push(e.data);
+let cmr=null,camP=null;if(me.sep&&cam){try{const cch=[];cmr=new MediaRecorder(new MediaStream(cam.getVideoTracks()),{mimeType:mime||undefined,videoBitsPerSecond:6e6});cmr.ondataavailable=e=>e.data.size&&cch.push(e.data);camP=new Promise(res=>{cmr.onstop=()=>res(cch.length?new Blob(cch,{type:(cmr.mimeType||mime||'video/webm').split(';')[0]}):null)})}catch(err){cmr=null;me.sep=false;toast('The camera could not be recorded as a separate layer')}}
 const t0=performance.now();
-Object.assign(me,{cd:0,mr,t0,an,actx,paused:0,pAt:0,audOnly,src,hasA:!!audioTrack,buf:an?new Uint8Array(an.fftSize):null,bars:[],left:0,leftAt:null,backAt:null});
+Object.assign(me,{cd:0,mr,cmr,camP,t0,an,actx,paused:0,pAt:0,audOnly,src,hasA:!!audioTrack,buf:an?new Uint8Array(an.fftSize):null,bars:[],left:0,leftAt:null,backAt:null});
 /* remember when the user came back to the editor so the tail can be trimmed */
 const onBlur=()=>{if(SR===me&&!me.left){me.left=1;me.leftAt=me.tt}},onFoc=()=>{if(SR===me&&me.left&&me.backAt==null&&document.hasFocus()&&!document.hidden)me.backAt=me.tt};
 addEventListener('blur',onBlur);addEventListener('focus',onFoc);document.addEventListener('visibilitychange',()=>document.hidden?onBlur():onFoc());if(trimIn)me.left=1,me.leftAt=0;
 me.iv=setInterval(()=>{if(SR===me&&!me.paused)me.tt=(performance.now()-t0-me.pAcc)/1000},100);
-mr.onstop=()=>{stopTick&&stopTick();stopAll();try{actx&&actx.close()}catch(e){}clearInterval(me.iv);removeEventListener('blur',onBlur);removeEventListener('focus',onFoc);
+mr.onstop=()=>{if(cmr&&cmr.state!='inactive'){try{cmr.stop()}catch(e){}}stopTick&&stopTick();stopAll();try{actx&&actx.close()}catch(e){}clearInterval(me.iv);removeEventListener('blur',onBlur);removeEventListener('focus',onFoc);
 const type=(mr.mimeType||mime||'video/webm').split(';')[0],bl=new Blob(ch,{type}),sec=me.tt||((performance.now()-t0)/1000);
 if(!bl.size){SR=null;srUI(0);return toast('Nothing was recorded')}
 const ext=type.includes('mp4')?(audOnly?'m4a':'mp4'):(audOnly?'weba':'webm'),nm=(audOnly?'Audio rec ':src=='cam'?'Webcam ':src=='both'?'Screen+cam ':'Screen rec ')+(++RN)+'.'+ext;
 const trimOut=(src=='screen'||src=='both')&&me.backAt!=null&&me.backAt>me.leftAt+1?Math.max(0,me.backAt-.5):null;
-SR=null;srUI(0);srDone(bl,nm,sec,audOnly,type,{trimIn,trimOut})};
-mr.start(2000);srUI(1);
+SR=null;srUI(0);const kf=me.kf,cc=me.cc;(camP||Promise.resolve(null)).then(cb=>srDone(bl,nm,sec,audOnly,type,{trimIn,trimOut,cam:cb,kf,cc}))};
+mr.start(2000);if(cmr){try{cmr.start(2000)}catch(e){}}srUI(1);if(me.sep&&cmr)camLiveOpen(me,scr,cam);
 if(cam&&src=='cam'){let bub=$('#rcbub');if(!bub){bub=document.createElement('div');bub.id='rcbub';document.body.append(bub)}bub.innerHTML='<video autoplay muted playsinline></video>';const bv=bub.querySelector('video');bv.srcObject=cam;bv.style.transform=RC.face=='environment'?'none':'';bv.play().catch(()=>{});bub.hidden=false}
 }
 function srStop(){const r=SR;if(!r)return;if(r.cd){r.stop&&r.stop();SR=null;$('#cd').hidden=true;srUI(0);return}
-if(r.mr.state!='inactive'){if(r.paused){r.pAcc+=performance.now()-r.pAt;r.paused=0}r.tt=(performance.now()-r.t0-r.pAcc)/1000;try{r.mr.stop()}catch(e){}}}
-function srPause(){const r=SR;if(!r||r.cd)return;if(!r.paused){r.mr.pause();r.paused=1;r.pAt=performance.now();$('#rpz').textContent='▶ Resume'}else{r.mr.resume();r.pAcc+=performance.now()-r.pAt;r.paused=0;$('#rpz').textContent='⏸ Pause'}$('#recui .rdot').style.animationPlayState=r.paused?'paused':'running'}
+if(r.mr.state!='inactive'){if(r.paused){r.pAcc+=performance.now()-r.pAt;r.paused=0}r.tt=(performance.now()-r.t0-r.pAcc)/1000;if(r.cmr&&r.cmr.state!='inactive'){try{r.cmr.stop()}catch(e){}}try{r.mr.stop()}catch(e){}}}
+function srPause(){const r=SR;if(!r||r.cd)return;if(!r.paused){r.mr.pause();r.cmr&&r.cmr.state=='recording'&&r.cmr.pause();r.paused=1;r.pAt=performance.now();$('#rpz').textContent='▶ Resume'}else{r.mr.resume();r.cmr&&r.cmr.state=='paused'&&r.cmr.resume();r.pAcc+=performance.now()-r.pAt;r.paused=0;$('#rpz').textContent='⏸ Pause'}$('#recui .rdot').style.animationPlayState=r.paused?'paused':'running'}
 let srIv=0;
 function srUI(on){const ui=$('#recui'),go=$('#rcgo');clearInterval(srIv);ui.hidden=!on;ui.dataset.sr=on?1:'';$('#rpz').hidden=!on;$('#rpz').textContent='⏸ Pause';$('#rstop').onclick=on?srStop:recStop;const b=$('#rcbub');
 if(!on){b&&(b.hidden=true,b.innerHTML='')}
@@ -817,7 +835,7 @@ const m={id:S.id++,name,url,type:audOnly?'audio':'video',file};
 const e=document.createElement(audOnly?'audio':'video');e.preload='auto';e.playsInline=true;e.src=url;
 let done=0;const fin=()=>{if(done)return;done=1;e.currentTime=0;m.el=e;m.dur=isFinite(e.duration)&&e.duration>0?e.duration:sec;m.w=e.videoWidth||0;m.h=e.videoHeight||0;route(m);ALL[m.id]=m;S.media.push(m);hist();if(!audOnly)thumb(m);peaks(m);
 if(RC.add){if(audOnly){const v={id:S.id++,mid:m.id,start:S.t,in:0,out:m.dur,vol:1,sp:1,fi:0,fo:0,mute:0,tr:'v',ly:S.al||0};S.voices.push(v);pick('voice',v.id)}
-else{addClip(m);const c=S.clips[S.clips.length-1],i=tr.trimIn||0,o=tr.trimOut!=null?Math.min(m.dur,tr.trimOut):m.dur;if(c&&o-i>1){c.in=i;c.out=o;layout();renderTL();renderIns();hist()}}}
+else{addClip(m);const c=S.clips[S.clips.length-1],i=tr.trimIn||0,o=tr.trimOut!=null?Math.min(m.dur,tr.trimOut):m.dur;if(c&&o-i>1){c.in=i;c.out=o;layout();renderTL();renderIns();hist()}if(tr.cam)srCamAdd(tr,c,i,o,sec)}}else if(tr.cam)srCamAdd(tr,null,0,0,sec);
 renderPane();toast('Recording saved to Media'+(RC.add?' and added to the timeline':''))};
 e.onloadedmetadata=()=>{if(isFinite(e.duration)&&e.duration>0)fin();else{e.addEventListener('timeupdate',fin,{once:true});e.currentTime=1e101}};
 e.onerror=()=>toast('Recording could not be loaded')}
@@ -1564,6 +1582,91 @@ function tick(){requestAnimationFrame(tick);const T=total();
  if(was&&!S.play&&loop&&!S.exporting&&T>0&&S.t>=T-.05){go(0);play()}
  if(!S.play)pc.classList.remove('hide');if(S.play&&!was)wake();was=!!S.play;pc.style.display=S.exporting?'none':''}
 tick();
+})();
+</script>
+<script>
+/* ===== Camera bubble: own editable layer, live move / resize / style, settings ===== */
+(()=>{
+const SHP={circle:['1:1',100],round:['1:1',26],square:['1:1',0],wide:['16:9',14],tall:['9:16',16]},AR={'1:1':1,'4:3':4/3,'3:4':3/4,'16:9':16/9,'9:16':9/16},
+SHN={circle:'⚪ Circle',round:'▢ Rounded',square:'⬜ Square',wide:'▭ Wide',tall:'▯ Tall'};
+Object.assign(RC,{sep:1,cs:'circle',csz:26,cx:85,cy:80,cbw:5,cbc:'#ff3b5c',csh:45,cz:100,cmir:1,cdev:'',chide:0});
+const cl=(v,a,b)=>Math.min(b,Math.max(a,v));
+const box=(g,mw,mh)=>{const s=SHP[g.cs]||SHP.circle,A=AR[s[0]];let bw=mw,bh=mh;if(A){if(mw/mh>A)bw=mh*A;else bh=mw/A}const k=Math.min(W/bw,H/bh)*g.csz/100,w=bw*k,h=bh*k;return{w,h,r:Math.min(Math.min(w,h)/2*s[1]/100,w/2,h/2)}};
+function paint(el,g,bw,mw,mh){const q=box(g,mw,mh),sc=bw/W;Object.assign(el.style,{width:q.w*sc+'px',height:q.h*sc+'px',borderRadius:q.r*sc+'px',left:g.cx+'%',top:g.cy+'%',border:(g.cbw*sc)+'px solid '+g.cbc,boxShadow:g.csh?`0 ${g.csh*W/700*sc}px ${g.csh*W/300*sc}px rgba(0,0,0,.6)`:'none',opacity:g.chide?.25:1});
+ const v=el.firstElementChild;if(v)v.style.transform=`scaleX(${g.cmir?-1:1}) scale(${g.cz/100})`}
+window.cfgToOv=g=>{const s=SHP[g.cs]||SHP.circle;return{ca:s[0],rd:s[1],sc:g.csz,x:g.cx,y:g.cy,bw:g.cbw,bc:g.cbc,sh:g.csh,flip:g.cmir?1:0,cz:g.cz||100,cpx:0,cpy:0}};
+/* drag a bubble inside a mini stage; cfg object g is edited live */
+function dragBub(bub,stage,g,after){bub.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();try{bub.setPointerCapture(e.pointerId)}catch(x){}bub.style.cursor='grabbing';
+ const r=stage.getBoundingClientRect(),ox=g.cx-(e.clientX-r.left)/r.width*100,oy=g.cy-(e.clientY-r.top)/r.height*100;
+ const mv=ev=>{const rr=stage.getBoundingClientRect();g.cx=Math.round(cl(ox+(ev.clientX-rr.left)/rr.width*100,-20,120)*10)/10;g.cy=Math.round(cl(oy+(ev.clientY-rr.top)/rr.height*100,-20,120)*10)/10;after(0)};
+ const up=()=>{bub.removeEventListener('pointermove',mv);bub.removeEventListener('pointerup',up);bub.removeEventListener('pointercancel',up);bub.style.cursor='';after(1)};
+ bub.addEventListener('pointermove',mv);bub.addEventListener('pointerup',up);bub.addEventListener('pointercancel',up)});
+ stage.addEventListener('wheel',e=>{e.preventDefault();g.csz=Math.round(cl(g.csz*Math.exp(-e.deltaY*.0015),8,100));after(2)},{passive:false})}
+/* ---------- settings before recording ---------- */
+let CPV=null,CDEVS=[];
+const pv=()=>{const c=$('#cpv'),b=$('#cpb');if(!c||!b)return;const v=b.firstElementChild;paint(b,RC,c.clientWidth,v.videoWidth||1280,v.videoHeight||720)};
+const pvOff=()=>{CPV&&CPV.getTracks().forEach(t=>t.stop());CPV=null};
+async function pvOn(){try{CPV=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},...(RC.cdev?{deviceId:{exact:RC.cdev}}:{facingMode:{ideal:RC.face||'user'}})},audio:false});try{CDEVS=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=='videoinput')}catch(e){}}catch(e){CPV=null;toast('Camera blocked or not found. Allow camera access for this page.')}renderPane()}
+window.camSec=()=>{if(RC.src!='both')return'';const sl=(l,k,mn,mx)=>`<label class="sl">${l}<input type="range" data-cc="${k}" min="${mn}" max="${mx}" value="${RC[k]}"></label>`;
+ return`<h4>Camera bubble</h4><label class="f"><input type="checkbox" data-cco="sep" ${RC.sep?'checked':''}> Record camera as its own layer (move, resize &amp; restyle after recording)</label>`+(RC.sep?`
+<div id="cpv" style="aspect-ratio:${W}/${H}"><div id="cpb"><video muted playsinline autoplay></video></div><span class="cph">Drag the bubble · scroll to resize</span></div>
+<div class="row2"><button data-cca="pv">${CPV?'■ Stop preview':'📷 Preview camera'}</button><select data-ccsel="cdev"><option value="">Default camera</option>${CDEVS.map((d,i)=>`<option value="${d.deviceId}" ${RC.cdev==d.deviceId?'selected':''}>${(d.label||'Camera '+(i+1)).replace(/</g,'&lt;')}</option>`).join('')}</select></div>
+<div class="shp">${Object.keys(SHN).map(k=>`<button data-ccs="${k}" class="${RC.cs==k?'on':''}">${SHN[k]}</button>`).join('')}</div>
+<div class="shp"><button data-ccp="tl">↖</button><button data-ccp="tr">↗</button><button data-ccp="mid">⊙ Centre</button><button data-ccp="bl">↙</button><button data-ccp="br">↘</button></div>
+<div class="row2">${sl('Size','csz',8,100)}${sl('Zoom into face','cz',100,300)}</div>
+<div class="row2">${sl('Border','cbw',0,24)}${sl('Shadow','csh',0,100)}</div>
+<div class="row2"><label class="sl">Border colour<input type="color" data-cc="cbc" value="${RC.cbc}"></label><label class="f" style="align-self:end;padding-bottom:6px"><input type="checkbox" data-cco="cmir" ${RC.cmir?'checked':''}> Mirror</label></div>
+<p style="color:var(--mu);margin:0">While recording a control window lets you move or restyle the camera live. After recording, select the camera layer on the timeline to change anything (position, size, shape, border, filters, animation).</p>`:'')};
+const L=$('#L');
+L.addEventListener('input',e=>{const t=e.target.closest('[data-cc]');if(!t||S.tab!='rec')return;RC[t.dataset.cc]=t.type=='range'?+t.value:t.value;pv()});
+L.addEventListener('change',e=>{const t=e.target;if(S.tab!='rec')return;if(t.dataset.cco){RC[t.dataset.cco]=t.checked?1:0;if(t.dataset.cco=='sep')renderPane();else pv()}else if(t.dataset.ccsel){RC.cdev=t.value;if(CPV){pvOff();pvOn()}}});
+L.addEventListener('click',e=>{const g=e.target.closest('[data-cca],[data-ccs],[data-ccp]');if(!g||S.tab!='rec')return;
+ if(g.dataset.cca){if(CPV){pvOff();renderPane()}else pvOn();return}
+ if(g.dataset.ccs){RC.cs=g.dataset.ccs;renderPane();return}
+ const c=$('#cpv'),v=$('#cpb video'),q=box(RC,(v&&v.videoWidth)||1280,(v&&v.videoHeight)||720),mx=q.w/2/W*100+4,my=q.h/2/H*100+3,P={tl:[mx,my],tr:[100-mx,my],bl:[mx,100-my],br:[100-mx,100-my],mid:[50,50]}[g.dataset.ccp];RC.cx=Math.round(P[0]*10)/10;RC.cy=Math.round(P[1]*10)/10;pv()});
+const _rp2=renderPane;renderPane=function(){_rp2.apply(this,arguments);if(S.tab!='rec'){pvOff();return}
+ const b=$('#cpb');if(!b)return;const v=b.firstElementChild;if(CPV){v.srcObject=CPV;v.onloadedmetadata=pv;v.play().catch(()=>{})}pv();
+ if(!b._d){b._d=1;dragBub(b,$('#cpv'),RC,k=>{if(k==2){const s=$('[data-cc=csz]');s&&(s.value=RC.csz)}pv()})}};
+/* ---------- live controls while recording ---------- */
+let LV=null;
+const KF=()=>{const me=LV&&LV.me;if(!me)return;const t=me.tt||0,k={t,cc:{...me.cc}},l=me.kf[me.kf.length-1];if(l&&Math.abs(l.t-t)<.05)me.kf[me.kf.length-1]=k;else me.kf.push(k)};
+window.camLiveOpen=(me,scr,cam)=>{camLiveClose();pvOff();me.cc={...RC};me.kf=[{t:0,cc:{...me.cc}}];
+ const d=document.createElement('div');d.id='rcLive';
+ d.innerHTML=`<div class="lvh"><b>🎥 Camera layer</b><span>drag to move · scroll to resize</span><button data-lv="min" title="Collapse">–</button></div><div class="lvbody"><div id="lvbox" style="aspect-ratio:${W}/${H}"><video id="lvs" muted playsinline autoplay></video><div id="lvb"><video muted playsinline autoplay></video></div></div>
+ <div class="shp">${Object.keys(SHN).map(k=>`<button data-lvs="${k}">${SHN[k]}</button>`).join('')}</div>
+ <div class="row2"><label class="sl">Size<input type="range" data-lc="csz" min="8" max="100"></label><label class="sl">Zoom<input type="range" data-lc="cz" min="100" max="300"></label></div>
+ <div class="row2"><label class="sl">Border<input type="range" data-lc="cbw" min="0" max="24"></label><label class="sl">Shadow<input type="range" data-lc="csh" min="0" max="100"></label></div>
+ <div class="row2"><label class="sl">Colour<input type="color" data-lc="cbc"></label><label class="f" style="align-self:end"><input type="checkbox" data-lc="cmir"> Mirror</label></div>
+ <button data-lv="hide" style="width:100%">👁 Hide camera</button></div>`;
+ document.body.append(d);LV={me,d};
+ const bx=d.querySelector('#lvbox'),bub=d.querySelector('#lvb'),cv=bub.firstElementChild,sv=d.querySelector('#lvs');
+ sv.srcObject=new MediaStream(scr.getVideoTracks());cv.srcObject=new MediaStream(cam.getVideoTracks());sv.play().catch(()=>{});cv.play().catch(()=>{});
+ const sync=()=>{const g=me.cc;paint(bub,g,bx.clientWidth,cv.videoWidth||1280,cv.videoHeight||720);d.querySelectorAll('[data-lc]').forEach(i=>{const k=i.dataset.lc;if(i.type=='checkbox')i.checked=!!g[k];else if(document.activeElement!==i)i.value=g[k]});d.querySelectorAll('[data-lvs]').forEach(b=>b.classList.toggle('on',b.dataset.lvs==g.cs));const h=d.querySelector('[data-lv=hide]');h.textContent=g.chide?'👁 Show camera':'👁 Hide camera';h.classList.toggle('on',!!g.chide)};
+ LV.sync=sync;cv.onloadedmetadata=sync;sync();
+ dragBub(bub,bx,me.cc,k=>{sync();if(k==1||k==2)KF()});
+ d.addEventListener('input',e=>{const i=e.target.closest('[data-lc]');if(!i)return;me.cc[i.dataset.lc]=i.type=='range'?+i.value:i.type=='checkbox'?(i.checked?1:0):i.value;sync()});
+ d.addEventListener('change',e=>{if(e.target.closest('[data-lc]')){me.cc[e.target.dataset.lc]=e.target.type=='checkbox'?(e.target.checked?1:0):e.target.type=='range'?+e.target.value:e.target.value;sync();KF()}});
+ d.addEventListener('click',e=>{const b=e.target.closest('[data-lv],[data-lvs]');if(!b)return;if(b.dataset.lvs){me.cc.cs=b.dataset.lvs;sync();KF()}else if(b.dataset.lv=='hide'){me.cc.chide=me.cc.chide?0:1;sync();KF()}else d.classList.toggle('min')})};
+window.camLiveClose=()=>{if(!LV)return;LV.d.querySelectorAll('video').forEach(v=>v.srcObject=null);LV.d.remove();LV=null};
+const _su=srUI;srUI=function(on){_su.apply(this,arguments);if(!on)camLiveClose()};
+/* ---------- after recording: put the camera on the timeline ---------- */
+window.srCamAdd=(tr,c,i,o,sec)=>{const bl=tr.cam;if(!bl||!bl.size)return;const type=bl.type||'video/webm',nm='Camera '+RN+'.'+(type.includes('mp4')?'mp4':'webm'),url=URL.createObjectURL(bl),file=new File([bl],nm,{type});
+ const m={id:S.id++,name:nm,url,type:'video',file},e=document.createElement('video');e.preload='auto';e.playsInline=true;e.muted=true;e.src=url;let done=0;
+ const fin=()=>{if(done)return;done=1;e.currentTime=0;m.el=e;m.dur=isFinite(e.duration)&&e.duration>0?e.duration:(sec||1);m.w=e.videoWidth||1280;m.h=e.videoHeight||720;route(m);ALL[m.id]=m;S.media.push(m);thumb(m);
+  let msg='Camera saved to Media';
+  if(c){const kf=(tr.kf&&tr.kf.length?tr.kf:[{t:0,cc:tr.cc||RC}]).slice().sort((a,b)=>a.t-b.t),segs=[];
+   kf.forEach((k,j)=>{if(!k.cc||k.cc.chide)return;const a=Math.max(k.t,i),b=Math.min(j+1<kf.length?kf[j+1].t:1e9,o,m.dur);if(b-a>=.08)segs.push({a,b,cc:k.cc})});
+   if(segs.length){const s0=c.start+(segs[0].a-i),e0=c.start+(segs[segs.length-1].b-i);let ly=1;for(;ly<=S.nl;ly++)if(!layerBusy(ly,s0,e0))break;S.nl=Math.max(S.nl,ly);const camId='cam'+m.id;
+    segs.forEach(g=>S.ovs.push({id:S.id++,mid:m.id,start:c.start+(g.a-i),in:g.a,out:g.b,sp:1,vol:1,mute:1,rot:0,op:100,fade:0,hide:0,ly,ia:'None',za:'None',zs:30,...DEF,...cfgToOv(g.cc),camId}));
+    pick('ov',S.ovs.find(q=>q.camId==camId).id);msg='Camera added on layer '+ly+(segs.length>1?' in '+segs.length+' parts (it moved while recording)':'')+' · drag it on the preview or edit it in the right panel'}
+   else msg='Camera was hidden during the recording · saved to Media'}
+  hist();renderPane();renderTL();renderIns();toast(msg)};
+ e.onloadedmetadata=()=>{if(isFinite(e.duration)&&e.duration>0)fin();else{e.addEventListener('timeupdate',fin,{once:true});e.currentTime=1e101}};e.onerror=()=>toast('Camera recording could not be loaded')};
+/* ---------- editing the camera layer later ---------- */
+$('#ins').addEventListener('click',e=>{const b=e.target.closest('[data-cs],#cam-all');if(!b)return;const o=INS.o,L=S.multi.length>1?selObjs('ov'):[o];
+ if(b.dataset.cs){const s=SHP[b.dataset.cs];L.forEach(q=>{q.ca=s[0];q.rd=s[1]})}
+ else{const K=['ca','rd','sc','bw','bc','sh','cz','flip','op','b','c','s','h','bl','g','se'];S.ovs.filter(q=>q.camId&&q.camId==o.camId&&q!==o).forEach(q=>K.forEach(k=>q[k]=o[k]))}
+ renderIns();renderTL();hist()});
 })();
 </script>
 </body></html>
