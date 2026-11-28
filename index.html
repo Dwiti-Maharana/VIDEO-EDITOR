@@ -212,7 +212,7 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 <button id="th" title="Toggle theme">◐</button><button class="pr" id="ex">⬇ Export</button></header>
 <main>
 <aside id="L"><div class="tabs"><button data-t="media">Media</button><button data-t="text">Text</button><button data-t="fx">Effects</button><button data-t="audio">Audio</button><button data-t="rec">⏺ Record</button><button data-t="tools" title="Load your own custom tools">🧩 Load Tools</button></div><div id="pane"></div></aside>
-<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Exit full screen" aria-label="Exit full screen">✕</button><div id="pc"><input type="range" id="pcs" min="0" max="1000" step="any" value="0" title="Seek"><div id="pcb"><button data-pc="start" title="Go to start">⏮</button><button data-pc="b5" title="Back 5 seconds">⏪ 5s</button><button data-pc="pp" id="pcp" title="Play / pause">▶</button><button data-pc="f5" title="Forward 5 seconds">5s ⏩</button><button data-pc="end" title="Go to end">⏭</button><button data-pc="fb" title="Previous frame">◂|</button><button data-pc="ff" title="Next frame">|▸</button><span class="t" id="pct">0:00.0 / 0:00.0</span><button data-pc="loop" id="pcl" title="Loop playback">🔁</button><button data-pc="mute" id="pcm" title="Mute / unmute everything">🔊</button></div></div></div>
+<div id="stage"><canvas id="cv"></canvas><button id="fsb" title="Exit full screen" aria-label="Exit full screen">✕</button><div id="pc"><input type="range" id="pcs" min="0" max="1000" step="any" value="0" title="Seek"><div id="pcvr"><button id="pcvi" type="button" title="Mute / restore preview volume" aria-label="Mute preview">🔊</button><input type="range" id="pcv" min="0" max="100" step="1" value="100" title="Preview volume" aria-label="Preview volume"><span id="pcvn">100%</span></div><div id="pcb"><button data-pc="start" title="Go to start">⏮</button><button data-pc="b5" title="Back 5 seconds">⏪ 5s</button><button data-pc="pp" id="pcp" title="Play / pause">▶</button><button data-pc="f5" title="Forward 5 seconds">5s ⏩</button><button data-pc="end" title="Go to end">⏭</button><button data-pc="fb" title="Previous frame">◂|</button><button data-pc="ff" title="Next frame">|▸</button><span class="t" id="pct">0:00.0 / 0:00.0</span><button data-pc="loop" id="pcl" title="Loop playback">🔁</button><button data-pc="mute" id="pcm" title="Mute / unmute everything">🔊</button></div></div></div>
 <aside id="ins"></aside>
 </main>
 <section id="tl">
@@ -246,14 +246,16 @@ function toast(m){const d=document.createElement('div');d.textContent=m;d.style.
 const PK=1.5;
 function cvSize(w,h){cv.width=w;cv.height=h;ctx.setTransform(w/W,0,0,h/H,0,0);ctx.imageSmoothingQuality='high'}
 function setAsp(k){S.asp=k;save();[W,H]=ASP[k];cvSize(W*PK,H*PK);fit();$('#asp').innerHTML=Object.keys(ASP).map(a=>`<button class="${a==k?'on':''}" data-a="${a}">${a}<small>${LBL[a]}</small></button>`).join('')}
-function fit(){const r=$('#stage').getBoundingClientRect(),m=fsEl()?0:24,k=Math.min((r.width-m)/W,(r.height-m)/H);if(k>0){cv.style.width=W*k+'px';cv.style.height=H*k+'px'}}
+function fit(){const st=$('#stage'),r=st.getBoundingClientRect(),m=fsEl()?0:24;st.style.paddingBottom='';const pad=parseFloat(getComputedStyle(st).paddingBottom)||0,k=Math.min((r.width-m)/W,(r.height-pad-(pad?8:m))/H);if(k>0){cv.style.width=W*k+'px';cv.style.height=H*k+'px'}}
 new ResizeObserver(fit).observe($('#stage'));
 $('#asp').onclick=e=>{const b=e.target.closest('[data-a]');b&&setAsp(b.dataset.a)};
 $('#th').onclick=()=>{const d=document.documentElement,c=d.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');d.dataset.theme=c=='dark'?'light':'dark';};
 document.documentElement.dataset.theme='dark';
 
 /* ---------- media ---------- */
-function route(m){if(m.type=='image'||m.node||!m.el)return;AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();m.node=AC.createMediaElementSource(m.el);m.node.connect(DEST);m.node.connect(AC.destination)}
+let MON=null,PVOL=1;try{const v=parseFloat(localStorage.getItem('cf-pvol'));if(v>=0&&v<=1)PVOL=v}catch(e){}
+function monOut(){if(!MON){MON=AC.createGain();MON.gain.value=PVOL;MON.connect(AC.destination)}return MON}
+function route(m){if(m.type=='image'||m.node||!m.el)return;AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();m.node=AC.createMediaElementSource(m.el);m.node.connect(DEST);m.node.connect(monOut())}
 function addFiles(fs){for(const f of fs){const url=URL.createObjectURL(f),type=f.type.startsWith('video')?'video':f.type.startsWith('image')?'image':f.type.startsWith('audio')?'audio':null;if(!type)continue;
 const m={id:S.id++,name:f.name,url,type,file:f};
 if(type=='image'){const i=new Image();i.onload=()=>{m.el=i;m.w=i.width;m.h=i.height;m.dur=5;ALL[m.id]=m;S.media.push(m);hist();renderPane()};i.src=url}
@@ -425,7 +427,7 @@ const lb=document.querySelector('.lb'),vl=lb.querySelector('.lv');lb.querySelect
 for(let l=S.nl;l>=1;l--){const d=document.createElement('div');d.className='lo'+(S.al==l?' al':'');d.dataset.l=l;d.style.height=RH[l]+'px';d.title='Click to select this layer: media, audio and text you add will go into it';d.innerHTML=`Layer ${l}<span class="tc"><b data-lh="${l}" class="${S.lh[l]?'off':''}" title="Hide / show this layer">${S.lh[l]?'🙈':'👁'}</b><b data-lm="${l}" class="${S.lm[l]?'off':''}" title="Mute / unmute this layer">${S.lm[l]?'🔇':'🔊'}</b><b data-lx="${l}" title="Remove this layer and everything on it">✕</b></span>`;lb.insertBefore(d,vl)}}
 {const _r2=renderTL;renderTL=function(){_r2();ovRows()}}
 function ovEl(o,m){if(m.type=='image')return m.el;let r=OE[o.id];if(!r){const e=document.createElement('video');e.preload='auto';e.playsInline=true;e.src=m.url;r=OE[o.id]={e,node:null}}
-if(!r.node){try{AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();r.node=AC.createMediaElementSource(r.e);r.node.connect(DEST);r.node.connect(AC.destination)}catch(x){r.node=1}}
+if(!r.node){try{AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();r.node=AC.createMediaElementSource(r.e);r.node.connect(DEST);r.node.connect(monOut())}catch(x){r.node=1}}
 return r.e}
 function rrect(x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 const CAR={'1:1':1,'4:3':4/3,'3:4':3/4,'16:9':16/9,'9:16':9/16};
@@ -1875,7 +1877,7 @@ addEventListener('keydown',e=>{if(e.key=='Escape'&&fsEl())set(false)});addEventL
 <script>
 /* ---------- volume, mute and fades where the browser ignores media.volume (iPhone / iPad) ---------- */
 (()=>{const t=document.createElement('audio');try{t.volume=.5}catch(e){}if(Math.abs(t.volume-.5)<.01)return;
-function gainVolume(el,src){if(el._g)return;const g=AC.createGain();src.disconnect();src.connect(g);g.connect(DEST);g.connect(AC.destination);el._g=g;let v=1;
+function gainVolume(el,src){if(el._g)return;const g=AC.createGain();src.disconnect();src.connect(g);g.connect(DEST);g.connect(monOut());el._g=g;let v=1;
 Object.defineProperty(el,'volume',{configurable:true,get:()=>v,set:x=>{if(x!==v){v=x;g.gain.value=x}}})}
 const _route=route;route=function(m){_route(m);if(m.node&&m.el)gainVolume(m.el,m.node)};
 const _ovEl=ovEl;ovEl=function(o,m){const e=_ovEl(o,m),r=OE[o.id];if(r&&r.node&&r.node!==1)gainVolume(r.e,r.node);return e};
@@ -1928,9 +1930,38 @@ patch(ctx);
 <style>
 /* phones: no player bar on the normal screen; in full screen it shows and stays while playing */
 @media(max-width:900px),(pointer:coarse){
-#stage:not(:fullscreen) #pc{display:none}
+/* normal editing screen: only the seek bar and the volume slider, below the picture */
+#stage:not(:fullscreen):not(.pfs){padding-bottom:70px}
+#stage:not(:fullscreen):not(.pfs) #pc,#stage:not(:fullscreen):not(.pfs) #pc.hide{height:70px;box-sizing:border-box;padding:4px 14px;gap:2px;justify-content:center;background:none;color:var(--tx);opacity:1;pointer-events:auto}
+#stage:not(:fullscreen):not(.pfs) #pcb{display:none}
 #stage:fullscreen #pc,#stage:fullscreen #pc.hide{display:flex;opacity:1;pointer-events:auto}
 #stage.pfs #pc,#stage.pfs #pc.hide{display:flex;opacity:1;pointer-events:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+<style>
+#pcvr{display:flex;align-items:center;gap:8px}
+#pcv{width:160px;margin:0;height:16px;accent-color:#6d4aff;cursor:pointer}
+#pcvi{background:none;border:0;color:inherit;padding:0;width:30px;min-height:0;font-size:16px}
+#pcvn{font:12px ui-monospace,Menlo,Consolas,monospace;min-width:38px}
+@media(max-width:900px),(pointer:coarse){#pc #pcs,#pc #pcv{height:28px}#pc #pcv{flex:1;width:auto;min-width:0}#pcvi{height:30px}}
+</style>
+<script>
+/* ---------- preview volume slider ---------- */
+(()=>{const sl=$('#pcv'),ic=$('#pcvi'),num=$('#pcvn');let last=PVOL||1;
+const show=()=>{const v=Math.round(PVOL*100);sl.value=v;num.textContent=v+'%';ic.textContent=v==0?'🔇':v<50?'🔉':'🔊'};
+const set=v=>{PVOL=Math.max(0,Math.min(1,v));if(PVOL)last=PVOL;if(MON)MON.gain.value=PVOL;try{localStorage.setItem('cf-pvol',PVOL)}catch(e){}if(AC&&AC.state=='suspended')AC.resume();show()};
+sl.addEventListener('input',()=>set(sl.value/100));
+ic.addEventListener('click',()=>set(PVOL?0:last));
+show();fit();
+})();
+</script>
+<style>
+/* sideways phones: both sliders share one slim row so the picture stays large */
+@media(max-height:500px) and (pointer:coarse),(max-height:500px) and (max-width:900px){
+#stage:not(:fullscreen):not(.pfs){padding-bottom:34px}
+#stage:not(:fullscreen):not(.pfs) #pc,#stage:not(:fullscreen):not(.pfs) #pc.hide{height:34px;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;padding:2px 12px}
+#stage:not(:fullscreen):not(.pfs) #pcs{flex:3;width:auto;min-width:0}
+#stage:not(:fullscreen):not(.pfs) #pcvr{flex:2;min-width:0}
 }
 </style>
 </body></html>
