@@ -229,6 +229,9 @@ const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d');
 const S={media:[],clips:[],texts:[],voices:[],music:null,t:0,play:false,sel:null,zoom:60,id:1,tab:'media',curId:null,last:0,multi:[],mm:0};
 const ASP={'9:16':[720,1280],'4:5':[720,900],'1:1':[720,720],'16:9':[1280,720]};
 const LBL={'9:16':'TikTok · Reels · Shorts','4:5':'Instagram post','1:1':'Square','16:9':'YouTube'};
+/* line icons for show / hide on the timeline */
+const eyeSvg=d=>`<svg class="eyei" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const EYE=eyeSvg('<path d="M2.5 12Q6.5 5.5 12 5.5T21.5 12Q17.5 18.5 12 18.5T2.5 12Z"/><circle cx="12" cy="12" r="3"/>'),EYEOFF=eyeSvg('<path d="M2.5 12Q6.5 5.5 12 5.5T21.5 12Q17.5 18.5 12 18.5T2.5 12Z"/><circle cx="12" cy="12" r="3"/><path d="M4 3.5L20 20.5"/>');
 const DEF={b:100,c:100,s:100,bl:0,g:0,se:0,h:0};
 const FX={Original:{},Vivid:{c:115,s:145},'B&W':{g:100,c:110},Vintage:{se:60,c:90,b:105,h:-10},Cool:{h:-20,s:110,b:105},Warm:{h:15,se:25,s:115},Fade:{c:80,b:110,s:80},Dramatic:{c:145,b:90,s:110},Dream:{bl:2,b:112,s:125}};
 const TP={'Plain text':{},Title:{size:96,anim:'pop',y:30},Caption:{size:52,bgOn:1,y:80},Subtitle:{size:44,bold:0,y:88,stroke:1},Neon:{size:80,color:'#00ffd5',stroke:1,anim:'fade'},Impact:{size:110,font:'Impact',stroke:1,color:'#ffe600',y:20}};
@@ -314,7 +317,7 @@ $('#ins').addEventListener('click',e=>{const bi=e.target.id;if(bi=='rot-l'||bi==
 function renderTL(){const z=S.zoom,T=Math.max(Math.max(total(),10)+6,($('#sc').clientWidth||0)/z+1),sel=(k,id)=>isM(k,id)?' sel':'';
 $('#in').style.width=T*z+'px';const ST=[.001,.002,.005,.01,.02,.05,.1,.2,.5,1,2,5,10,30,60,120,300,600,1800,3600,7200,21600,86400,604800],st=ST.find(s=>s*z>=70)||604800,lab=t=>{const m=Math.floor(t/60),s=t-m*60;return m+':'+(st<1?s.toFixed(st<.01?3:st<.1?2:1).padStart(st<.01?6:st<.1?5:4,'0'):String(Math.round(s)).padStart(2,'0'))};RZ={T,st,lab};rulDraw();
 $('#rT').innerHTML=S.texts.filter(x=>!x.tl&&!x.ly).map(x=>`<div class="blk txt${sel('text',x.id)}" data-k="text" data-id="${x.id}" style="left:${x.start*z}px;width:${x.dur*z}px"><i class="h l"></i>${esc(x.txt)}<i class="h"></i></div>`).join('');
-$('#rV').innerHTML=S.clips.map(c=>`<div class="blk vid${sel('clip',c.id)}" data-k="clip" data-id="${c.id}" style="left:${c.start*z}px;width:${c.dur*z}px${th(M(c.mid))}"><i class="h l"></i>${vwf(c)}<span class="lbl">${esc(M(c.mid).name)}${c.sp!=1?' ×'+c.sp:''}${c.mute?' 🔇':''}${c.hide?' 🙈':''}</span><i class="h"></i></div>`).join('');
+$('#rV').innerHTML=S.clips.map(c=>`<div class="blk vid${sel('clip',c.id)}" data-k="clip" data-id="${c.id}" style="left:${c.start*z}px;width:${c.dur*z}px${th(M(c.mid))}"><i class="h l"></i>${vwf(c)}<span class="lbl">${esc(M(c.mid).name)}${c.sp!=1?' ×'+c.sp:''}${c.mute?' 🔇':''}${c.hide?' '+EYEOFF:''}</span><i class="h"></i></div>`).join('');
 $('#rA').innerHTML=S.voices.map(v=>`<div class="blk mus${sel('voice',v.id)}" data-k="voice" data-id="${v.id}" style="left:${v.start*z}px;width:${M(v.mid).dur*z}px;background:#d98a00">${wf(M(v.mid))}<span class="lbl">🎙 ${esc(M(v.mid).name)}</span></div>`).join('');$('#rM').innerHTML=S.music?`<div class="blk mus${sel('music',0)}" data-k="music" data-id="0" style="left:0;width:${Math.min(M(S.music.mid).dur,Math.max(total(),1))*z}px">${wf(M(S.music.mid),Math.min(1,Math.max(total(),1)/M(S.music.mid).dur))}<span class="lbl">🎵 ${esc(M(S.music.mid).name)}</span></div>`:''}
 function drag(e,fn,end){e.preventDefault();const sx=e.clientX,mv=ev=>fn(ev.clientX-sx,ev),up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);end&&end();hist()};addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)}
 $('#in').onpointerdown=e=>{if(S.exporting)return;const b=e.target.closest('.blk'),box=$('#in');
@@ -363,8 +366,8 @@ function dupAud(){const a=getSel(),n={...a,id:S.id++,start:a.start+adur(a)};S.vo
 function splitText(){const x=getSel(),r=S.t-x.start;if(r<=.1||r>=x.dur-.1)return toast('Move the playhead inside the selected text to split it');const n={...x,id:S.id++,start:S.t,dur:x.dur-r,anim:'none'};x.dur=r;S.texts.push(n);pick('text',n.id)}
 function detach(){const c=getSel();if(!c||S.sel.k!='clip')return;const m=M(c.mid);if(m.type!='video')return;const n={id:S.id++,name:m.name+' (audio)',url:m.url,type:'audio',file:m.file,dur:m.dur,ref:m.id},e=new Audio(m.url);e.preload='auto';e.onloadedmetadata=()=>{n.el=e;route(n);ALL[n.id]=n;S.media.push(n);peaks(n);const a={id:S.id++,mid:n.id,start:c.start,in:c.in,out:c.out,vol:c.vol,sp:c.sp,fi:0,fo:0,mute:0,tr:'v'};S.voices.push(a);c.vol=0;pick('voice',a.id);renderPane();toast('Audio detached to the Voice track')}}
 $('#ins').addEventListener('click',e=>{const id=e.target.id;if(id=='dt')return detach();if(!id||id.slice(0,2)!='a-')return;if(id=='a-sp')split();else if(id=='a-du')dup();else if(id=='a-ms'){const nt=(INS.o.ly||INS.o.tr=='m')?'v':'m';(S.multi.length>1?selObjs('voice'):[INS.o]).forEach(x=>{x.tr=nt;x.ly=0});hist();renderIns();renderTL()}else if(id=='a-de')del()});
-const TG={Th:['👁','🙈'],Vh:['👁','🙈'],Vm:['🔊','🔇'],Am:['🔊','🔇'],Mm:['🔊','🔇']};
-function trkUI(){document.querySelectorAll('[data-tg]').forEach(b=>{const k=b.dataset.tg;b.textContent=TG[k][S.trk[k]?1:0];b.classList.toggle('off',!!S.trk[k])});$('#rT').style.opacity=S.trk.Th?0.4:1;$('#rV').style.opacity=S.trk.Vh?0.4:1;$('#rA').style.opacity=S.trk.Am?0.5:1;$('#rM').style.opacity=S.trk.Mm?0.5:1}
+const TG={Th:[EYE,EYEOFF],Vh:[EYE,EYEOFF],Vm:['🔊','🔇'],Am:['🔊','🔇'],Mm:['🔊','🔇']};
+function trkUI(){document.querySelectorAll('[data-tg]').forEach(b=>{const k=b.dataset.tg;b.innerHTML=TG[k][S.trk[k]?1:0];b.classList.toggle('off',!!S.trk[k])});$('#rT').style.opacity=S.trk.Th?0.4:1;$('#rV').style.opacity=S.trk.Vh?0.4:1;$('#rA').style.opacity=S.trk.Am?0.5:1;$('#rM').style.opacity=S.trk.Mm?0.5:1}
 document.querySelector('.lb').onclick=e=>{const b=e.target.closest('[data-tg]');if(!b)return;const k=b.dataset.tg;S.trk[k]=S.trk[k]?0:1;trkUI();save()};
 const ZMIN=.001,ZMAX=20000;let RZ=null,RQ=0;
 function rulDraw(){if(!RZ)return;const sc=$('#sc'),z=S.zoom,{T,st,lab}=RZ,a=Math.max(0,Math.floor(sc.scrollLeft/z/st)-2),b=Math.ceil((sc.scrollLeft+(sc.clientWidth||1000))/z/st)+2;let r='';for(let k=a;k*st<T&&k<=b;k++)r+=`<span style="left:${k*st*z}px">${lab(k*st)}</span>`;$('#rul').innerHTML=r}
@@ -421,10 +424,10 @@ h+=`<div class="row o${S.al==l?' al':''}" data-ly="${l}" style="height:${rh}px;$
 if(q.t=='t')return`<div class="blk txt${isM('text',o.id)?' sel':''}" data-k="text" data-id="${o.id}" style="left:${o.start*z}px;width:${o.dur*z}px${pos}"><i class="h l"></i>${esc(o.txt)}<i class="h"></i></div>`;
 const m=M(o.mid);
 if(q.t=='a')return`<div class="blk mus${isM('voice',o.id)?' sel':''}" data-k="voice" data-id="${o.id}" style="left:${o.start*z}px;width:${q.d*z}px${pos}"><i class="h l"></i>${wf(m,o.in/m.dur,Math.min(o.out,m.dur)/m.dur,'a',(o.mute||S.lm[l])?.12:Math.max(.15,o.vol))}<span class="lbl">🎵 ${esc(m.name)}${o.sp!=1?' ×'+o.sp:''}${o.mute?' 🔇':''}</span><i class="h"></i></div>`;
-return`<div class="blk ovb${isM('ov',o.id)?' sel':''}" data-k="ov" data-id="${o.id}" style="left:${o.start*z}px;width:${q.d*z}px${th(m)}${pos}"><i class="h l"></i>${m.type=='video'?wf(m,Math.max(0,o.in)/m.dur,Math.min(o.out,m.dur)/m.dur,'v',(o.mute||S.lm[l])?.12:Math.max(.15,o.vol)):''}<span class="lbl">${esc(m.name)}${o.sp!=1?' ×'+o.sp:''}${o.mute?' 🔇':''}${o.hide?' 🙈':''}</span><i class="h"></i></div>`}).join('')+'</div>'}
+return`<div class="blk ovb${isM('ov',o.id)?' sel':''}" data-k="ov" data-id="${o.id}" style="left:${o.start*z}px;width:${q.d*z}px${th(m)}${pos}"><i class="h l"></i>${m.type=='video'?wf(m,Math.max(0,o.in)/m.dur,Math.min(o.out,m.dur)/m.dur,'v',(o.mute||S.lm[l])?.12:Math.max(.15,o.vol)):''}<span class="lbl">${esc(m.name)}${o.sp!=1?' ×'+o.sp:''}${o.mute?' 🔇':''}${o.hide?' '+EYEOFF:''}</span><i class="h"></i></div>`}).join('')+'</div>'}
 $('#rO').innerHTML=h;
 const lb=document.querySelector('.lb'),vl=lb.querySelector('.lv');lb.querySelectorAll('.lo').forEach(x=>x.remove());
-for(let l=S.nl;l>=1;l--){const d=document.createElement('div');d.className='lo'+(S.al==l?' al':'');d.dataset.l=l;d.style.height=RH[l]+'px';d.title='Click to select this layer: media, audio and text you add will go into it';d.innerHTML=`Layer ${l}<span class="tc"><b data-lh="${l}" class="${S.lh[l]?'off':''}" title="Hide / show this layer">${S.lh[l]?'🙈':'👁'}</b><b data-lm="${l}" class="${S.lm[l]?'off':''}" title="Mute / unmute this layer">${S.lm[l]?'🔇':'🔊'}</b><b data-lx="${l}" title="Remove this layer and everything on it">✕</b></span>`;lb.insertBefore(d,vl)}}
+for(let l=S.nl;l>=1;l--){const d=document.createElement('div');d.className='lo'+(S.al==l?' al':'');d.dataset.l=l;d.style.height=RH[l]+'px';d.title='Click to select this layer: media, audio and text you add will go into it';d.innerHTML=`Layer ${l}<span class="tc"><b data-lh="${l}" class="${S.lh[l]?'off':''}" title="Hide / show this layer">${S.lh[l]?EYEOFF:EYE}</b><b data-lm="${l}" class="${S.lm[l]?'off':''}" title="Mute / unmute this layer">${S.lm[l]?'🔇':'🔊'}</b><b data-lx="${l}" title="Remove this layer and everything on it">✕</b></span>`;lb.insertBefore(d,vl)}}
 {const _r2=renderTL;renderTL=function(){_r2();ovRows()}}
 function ovEl(o,m){if(m.type=='image')return m.el;let r=OE[o.id];if(!r){const e=document.createElement('video');e.preload='auto';e.playsInline=true;e.src=m.url;r=OE[o.id]={e,node:null}}
 if(!r.node){try{AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();r.node=AC.createMediaElementSource(r.e);r.node.connect(DEST);r.node.connect(monOut())}catch(x){r.node=1}}
@@ -514,7 +517,7 @@ S.nt=S.nt||0;S.th={};
 function tRows(){const z=S.zoom;S.nt=Math.max(S.nt||0,...S.texts.map(x=>x.tl||0));let h='';
 for(let l=S.nt;l>=1;l--){h+=`<div class="row" data-tl="${l}" style="${S.th[l]?'opacity:.4':''}">`+S.texts.filter(x=>x.tl==l).map(x=>`<div class="blk txt${isM('text',x.id)?' sel':''}" data-k="text" data-id="${x.id}" style="left:${x.start*z}px;width:${x.dur*z}px"><i class="h l"></i>${esc(x.txt)}<i class="h"></i></div>`).join('')+'</div>'}
 $('#rTx').innerHTML=h;const lb=document.querySelector('.lb'),tl=lb.querySelector('.ltx');lb.querySelectorAll('.lt').forEach(x=>x.remove());
-for(let l=S.nt;l>=1;l--){const d=document.createElement('div');d.className='lt';d.innerHTML=`Text ${l+1}<span class="tc"><b data-th="${l}" class="${S.th[l]?'off':''}" title="Hide / show this text layer">${S.th[l]?'🙈':'👁'}</b><b data-tx="${l}" title="Remove this text layer and its texts">✕</b></span>`;lb.insertBefore(d,tl)}}
+for(let l=S.nt;l>=1;l--){const d=document.createElement('div');d.className='lt';d.innerHTML=`Text ${l+1}<span class="tc"><b data-th="${l}" class="${S.th[l]?'off':''}" title="Hide / show this text layer">${S.th[l]?EYEOFF:EYE}</b><b data-tx="${l}" title="Remove this text layer and its texts">✕</b></span>`;lb.insertBefore(d,tl)}}
 {const _r4=renderTL;renderTL=function(){_r4();tRows()}}
 /* keep the label column exactly aligned with the track rows */
 function syncLb(){const lb=document.querySelector('.lb'),sc=$('#sc');if(!lb||!sc)return;
@@ -1963,5 +1966,9 @@ show();fit();
 #stage:not(:fullscreen):not(.pfs) #pcs{flex:3;width:auto;min-width:0}
 #stage:not(:fullscreen):not(.pfs) #pcvr{flex:2;min-width:0}
 }
+</style>
+<style>
+.eyei{width:17px;height:17px;display:inline-block;vertical-align:middle;pointer-events:none}
+.blk .lbl .eyei{width:13px;height:13px;vertical-align:-2px}
 </style>
 </body></html>
