@@ -399,7 +399,7 @@ function entr(o,d){const r={s:1,x:0,y:0,a:1},ia=o.ia||'None';if(ia=='None')retur
 if(ia=='Fade')r.a=e;else if(ia=='Pop'){r.s=.4+.6*e;r.a=Math.min(1,p*3)}else if(ia=='Slide left')r.x=-q*W*.7;else if(ia=='Slide right')r.x=q*W*.7;else if(ia=='Slide up')r.y=-q*H*.7;else if(ia=='Slide down')r.y=q*H*.7;return r}
 const CA=['Original','1:1','4:3','3:4','16:9','9:16'];
 function ovIns(o,f){const m=M(o.mid),v=m.type=='video';if(!o.ca)o.ca='Original';if(o.cz==null)o.cz=100;if(o.cpx==null)o.cpx=0;if(o.cpy==null)o.cpy=0;if(o.sh==null)o.sh=0;if(o.zs==null)o.zs=30;if(!o.za)o.za='None';if(!o.ia)o.ia='None';
-return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Entrance animation','ia','select',IA)+f('Motion animation','za','select',ZA)+f('Motion strength','zs','range','min="5" max="100"')+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')+f('Shadow','sh','range','min="0" max="100"')
+return'<h4>Layer clip</h4>'+f('Layer','ly','number','min="1" step="1"')+f('Start (s)','start','number','min="0" step=".1"')+f('Size','sc','range','min="5" max="400"')+f('Position X','x','range','min="-50" max="150"')+f('Position Y','y','range','min="-50" max="150"')+f('Rotate','rot','range','min="-180" max="180"')+'<div class="grid" style="margin-bottom:6px"><button id="rot-l" title="Rotate 90° left">⟲ 90°</button><button id="rot-r" title="Rotate 90° right">⟳ 90°</button></div>'+f('Opacity','op','range','min="0" max="100"')+f('Flip horizontally','flip','checkbox')+f('Fade in/out','fade','checkbox')+f('Hide clip (not shown or exported)','hide','checkbox')+f('Entrance animation','ia','select',IA)+f('Zoom / motion animation','za','select',[...ZA,ZW])+(o.za==ZW?zwPanel(o,(()=>{const q=ovCrop(o,m);return q.bw/q.bh})()):f('Motion strength','zs','range','min="5" max="100"'))+f('Rounded corners','rd','range','min="0" max="100"')+f('Border width','bw','range','min="0" max="24"')+f('Border colour','bc','color')+f('Shadow','sh','range','min="0" max="100"')
 +'<h4>Camera frame</h4><div class="grid" style="margin-bottom:6px"><button data-cs="circle">⚪ Circle</button><button data-cs="round">▢ Rounded</button><button data-cs="square">⬜ Square</button><button data-cs="wide">▭ Wide</button></div>'+f('Frame shape','ca','select',CA)+f('Zoom into picture','cz','range','min="100" max="400"')+f('Pan left / right','cpx','range','min="-100" max="100"')+f('Pan up / down','cpy','range','min="-100" max="100"')+(o.camId&&S.ovs.filter(q=>q.camId==o.camId).length>1?'<button id="cam-all" style="width:100%;margin-bottom:6px">Apply this style to all camera parts</button>':'')
 +(v?f('Volume','vol','range','min="0" max="1" step=".05"')+f('Mute clip sound','mute','checkbox')+f('Speed','sp','range','min=".1" max="8" step=".05"'):f('Duration (s)','out','number','min=".5" step=".5"'))
 +'<div class="grid" style="margin-top:8px"><button id="ov-ct">Center</button><button id="ov-fu">Fill screen</button></div>'+ckPanel(o,f)+'<h4>Colour</h4>'+f('Brightness','b','range','min="0" max="200"')+f('Contrast','c','range','min="0" max="200"')+f('Saturation','s','range','min="0" max="300"')+f('Hue','h','range','min="-180" max="180"')+f('Blur','bl','range','min="0" max="20"')+f('Grayscale','g','range','min="0" max="100"')+f('Sepia','se','range','min="0" max="100"')+'<button id="rs">Reset colour</button><h4>Actions</h4><div class="grid"><button id="a-sp">✂ Split</button><button id="a-du">⧉ Duplicate</button><button id="a-de">🗑 Delete</button></div>'}
@@ -439,10 +439,10 @@ function drawOvs(){const act=new Set(),dr=[],LT=S.texts.filter(x=>x.ly).sort((a,
 S.ovs.filter(o=>S.t>=o.start&&S.t<o.start+odur(o)).sort((a,b)=>a.ly-b.ly).forEach(o=>{while(ti<LT.length&&LT[ti].ly<=o.ly)drawText(LT[ti++]);const m=M(o.mid);if(!m||(m.type!='image'&&!m.el))return;const e=ovEl(o,m);if(!e)return;act.add(o.id);const hid=S.lh[o.ly]||o.hide,d=odur(o);
 if(m.type=='video'){const want=o.in+(S.t-o.start)*o.sp;e.playbackRate=o.sp;e.volume=Math.max(0,Math.min(1,(o.mute||S.lm[o.ly]||S.trk.Vm)?0:o.vol));
 if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
-const AN=anim({start:o.start,dur:d,za:o.za||'None',zs:o.zs||30}),EN=entr(o,d),cr=ovCrop(o,m),k=Math.min(W/cr.bw,H/cr.bh)*o.sc/100*AN[0]*EN.s,w=cr.bw*k,h=cr.bh*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
+const AN=anim({start:o.start,dur:d,za:o.za==ZW?'None':(o.za||'None'),zs:o.zs||30}),EN=entr(o,d),cr=ovCrop(o,m),zq=o.za==ZW?zwP(o,o.start,d):null,k=Math.min(W/cr.bw,H/cr.bh)*o.sc/100*AN[0]*EN.s,w=cr.bw*k,h=cr.bh*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
 if(!hid){ctx.save();ctx.globalAlpha=fa*o.op/100;ctx.translate(cx,cy);ctx.rotate(rad);if(o.flip)ctx.scale(-1,1);const r=Math.min(w,h)/2*(o.rd||0)/100;
 if(o.sh>0){ctx.save();ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=Math.min(60,o.sh*W/500);ctx.shadowOffsetY=Math.min(24,o.sh*W/900);ctx.fillStyle='#000';ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.fill();ctx.restore()}
-ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=(o.b==100&&o.c==100&&o.s==100&&!o.bl&&!o.g&&!o.se&&!o.h)?'none':fl(o);{const sr=ckSrc(o,e,m),rk=(sr.videoWidth||sr.naturalWidth||sr.width||m.w)/m.w;ctx.drawImage(sr,cr.sx*rk,cr.sy*rk,cr.sw*rk,cr.sh*rk,-w/2,-h/2,w,h)}if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
+ctx.save();ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.clip();ctx.filter=(o.b==100&&o.c==100&&o.s==100&&!o.bl&&!o.g&&!o.se&&!o.h)?'none':fl(o);{const sr=ckSrc(o,e,m),rk=(sr.videoWidth||sr.naturalWidth||sr.width||m.w)/m.w;let qx=cr.sx,qy=cr.sy,qw=cr.sw,qh=cr.sh;if(zq){qw=cr.sw*zq.f;qh=cr.sh*zq.f;qx=cr.sx+(zq.cx/100-zq.f/2)*cr.sw;qy=cr.sy+(zq.cy/100-zq.f/2)*cr.sh}ctx.drawImage(sr,qx*rk,qy*rk,qw*rk,qh*rk,-w/2,-h/2,w,h)}if(o.bw){ctx.filter='none';ctx.lineWidth=o.bw*2;ctx.strokeStyle=o.bc;ctx.stroke()}ctx.restore();ctx.restore()}
 const lx=o.flip?-w/2:w/2,pts=[[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]].map(p=>[cx+p[0]*cs-p[1]*sn,cy+p[0]*sn+p[1]*cs]),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
 o._b=[Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys),cx+lx*cs-(h/2)*sn,cy+lx*sn+(h/2)*cs];dr.push({o,w,h,cx,cy,rad,lx})});
 while(ti<LT.length)drawText(LT[ti++]);ctx.filter='none';ctx.globalAlpha=1;
@@ -575,7 +575,7 @@ else if(e.key=='ArrowLeft'){S.t=Math.max(0,S.t-1/30);S.curId=null}else if(e.key=
 
 /* ---------- playback & rendering ---------- */
 function play(){if(total()<=0)return toast('Add something to the timeline first');if(S.t>=total()-.05)S.t=0;AC&&AC.resume();S.play=true;S.last=performance.now();$('#pp').textContent='⏸'}
-function pause(){if(REC)recStop();S.play=false;S.stopAt=null;$('#pp').textContent='▶';S.media.forEach(m=>m.type!='image'&&m.el.pause());if(S.rec){const r=S.rec;S.rec=null;setTimeout(()=>r.stop(),300)}}
+function pause(){if(REC)recStop();S.play=false;S.stopAt=null;$('#pp').textContent='▶';S.media.forEach(m=>m.type!='image'&&m.el.pause());if(S.rec){const r=S.rec;S.rec=null;setTimeout(()=>{r._t1=performance.now();try{r.requestData()}catch(e){}try{r.stop()}catch(e){}},300)}}
 const fl=c=>`brightness(${c.b}%) contrast(${c.c}%) saturate(${c.s}%) blur(${c.bl*cv.width/W}px) grayscale(${c.g}%) sepia(${c.se}%) hue-rotate(${c.h}deg)`;
 function blit(e,m,fm,z,rot,flip,ox=0,oy=0){const sw=Math.abs(Math.round(rot/90))%2==1&&Math.abs(rot%90)<.01,k=(sw?fm(W/m.h,H/m.w):fm(W/m.w,H/m.h))*z,w=m.w*k,h=m.h*k;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.rotate(rot*Math.PI/180);if(flip)ctx.scale(-1,1);ctx.drawImage(e,-w/2,-h/2,w,h);ctx.restore()}
 function anim(c){const p=Math.min(1,Math.max(0,(S.t-c.start)/c.dur)),s=c.zs/100;let z=1,x=0,y=0;
@@ -641,7 +641,7 @@ const QF={Low:.06,Medium:.12,High:.2,Best:.3};
 const vbps=o=>{const[w,h]=dims(+o.res);return o.q=='Custom'?Math.max(.2,o.mbps||0)*1e6:w*h*o.fps*QF[o.q]};
 const sz=b=>b>=1e6?(b/1e6).toFixed(1)+' MB':Math.max(1,Math.round(b/1e3))+' KB';
 const fname=(o,ext)=>((o.name||'').trim().replace(/[\\/:*?"<>|]+/g,'_')||'clipforge')+'.'+ext;
-const dlBlob=(b,n)=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000)};
+const dlBlob=(b,n)=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),600000)};
 const opts=(a,c)=>a.map(([v,l])=>`<option value="${v}"${v==c?' selected':''}>${l}</option>`).join('');
 function xdRender(){const o=S.xo,F=XF.find(f=>f.id==o.f),vid=F.k=='v';
 const btn=f=>`<button data-f="${f.id}" class="${f.id==o.f?'on':''}" ${f.ok?'':'disabled title="Not supported by this browser"'}><b>${f.n}</b><br><small>${f.d}</small></button>`;
@@ -670,14 +670,40 @@ $('#xd').addEventListener('keydown',e=>{if(e.key!='Escape')e.stopPropagation()})
 addEventListener('keydown',e=>{if(e.key=='Escape'&&!$('#xd').hidden)xdClose()});
 $('#xgo').onclick=()=>{const o={...S.xo},F=XF.find(f=>f.id==o.f);if(!F||!F.ok)return;xdClose();F.k=='v'?startVideoExport(o,F):startAudioExport(o)};
 $('#ex').onclick=()=>{if(S.exporting||S.aexp)return;if(total()<=0)return toast('Add something to the timeline first');xdOpen()};
+
+/* ---------- Mobile fix: MediaRecorder files have no duration -> patch it into the header ---------- */
+const _ebId=(b,p)=>{let l=1,m=0x80;while(l<=4&&!(b[p]&m)){l++;m>>=1}if(l>4)return null;let v=0;for(let i=0;i<l;i++)v=v*256+b[p+i];return{v,l}};
+const _ebSz=(b,p)=>{let l=1,m=0x80;while(l<=8&&!(b[p]&m)){l++;m>>=1}if(l>8)return null;let v=b[p]&(m-1),u=v==m-1;for(let i=1;i<l;i++){v=v*256+b[p+i];if(b[p+i]!=255)u=false}return{v,l,u}};
+const _ebEnc=(n,len)=>{if(!len){len=1;while(n>=Math.pow(2,7*len)-1)len++}const o=new Uint8Array(len);let v=n;for(let i=len-1;i>=0;i--){o[i]=v%256;v=Math.floor(v/256)}o[0]|=1<<(8-len);return o};
+async function fixWebmDuration(blob,ms){const h=new Uint8Array(await blob.slice(0,65536).arrayBuffer());let p=0;const a=_ebId(h,0);if(!a||a.v!=0x1A45DFA3)return blob;const as=_ebSz(h,a.l);p=a.l+as.l+as.v;
+const sg=_ebId(h,p);if(!sg||sg.v!=0x18538067)return blob;const ss=_ebSz(h,p+sg.l),szPos=p+sg.l,dataStart=szPos+ss.l;let q=dataStart,info=null;
+while(q<h.length-12){const i2=_ebId(h,q);if(!i2)break;const s2=_ebSz(h,q+i2.l);if(!s2)break;const ds=q+i2.l+s2.l;if(i2.v==0x1549A966){info={st:q,idl:i2.l,ds,len:s2.v};break}if(s2.u||ds+s2.v>h.length)break;q=ds+s2.v}
+if(!info||info.ds+info.len>h.length)return blob;
+const kids=[];let scale=1e6,c=info.ds;while(c<info.ds+info.len){const x=_ebId(h,c),y=_ebSz(h,c+x.l),e=c+x.l+y.l+y.v;if(x.v==0x2AD7B1){let v=0;for(let i=c+x.l+y.l;i<e;i++)v=v*256+h[i];scale=v||1e6}
+if(x.v==0x4489){const dv0=new DataView(h.buffer,c+x.l+y.l,y.v);const d=y.v==8?dv0.getFloat64(0):y.v==4?dv0.getFloat32(0):0;if(d>0)return blob}else kids.push(h.slice(c,e));c=e}
+const dv=new DataView(new ArrayBuffer(11));dv.setUint8(0,0x44);dv.setUint8(1,0x89);dv.setUint8(2,0x88);dv.setFloat64(3,ms*1e6/scale);kids.push(new Uint8Array(dv.buffer));
+let bl=0;kids.forEach(k=>bl+=k.length);const body=new Uint8Array(bl);let o=0;kids.forEach(k=>{body.set(k,o);o+=k.length});
+const nsz=_ebEnc(bl),idb=h.slice(info.st,info.st+info.idl),oldTot=info.idl+(info.ds-info.st-info.idl)+info.len,newTot=idb.length+nsz.length+bl,delta=newTot-oldTot;
+let segSz=h.slice(szPos,dataStart);if(!ss.u){const nv=ss.v+delta;if(nv>=Math.pow(2,7*ss.l)-1)return blob;segSz=_ebEnc(nv,ss.l)}
+return new Blob([h.slice(0,szPos),segSz,h.slice(dataStart,info.st),idb,nsz,body,blob.slice(info.ds+info.len)],{type:blob.type})}
+async function fixMp4Duration(blob,ms){const N=262144,h=new Uint8Array(await blob.slice(0,N).arrayBuffer()),dv=new DataView(h.buffer);
+const find=(t,f)=>{const a=t.charCodeAt(0),b=t.charCodeAt(1),c=t.charCodeAt(2),d=t.charCodeAt(3);for(let i=f||4;i<h.length-4;i++)if(h[i]==a&&h[i+1]==b&&h[i+2]==c&&h[i+3]==d)return i;return -1};
+const rd=(o,v)=>v?dv.getUint32(o)*4294967296+dv.getUint32(o+4):dv.getUint32(o),wr=(o,v,n)=>{if(v){dv.setUint32(o,Math.floor(n/4294967296));dv.setUint32(o+4,n>>>0)}else dv.setUint32(o,Math.min(n,4294967295))};
+const mv=find('mvhd');if(mv<0)return blob;let p=mv+4,ver=h[p],ts=rd(p+(ver?20:12),0)||1000,ch=false;
+if(rd(p+(ver?24:16),ver)==0){wr(p+(ver?24:16),ver,Math.round(ms/1000*ts));ch=true}
+for(let i=find('tkhd');i>=0;i=find('tkhd',i+4)){const q=i+4,v=h[q],o=q+(v?28:20);if(o+8<h.length&&rd(o,v)==0){wr(o,v,Math.round(ms/1000*ts));ch=true}}
+for(let i=find('mdhd');i>=0;i=find('mdhd',i+4)){const q=i+4,v=h[q],t2=dv.getUint32(q+(v?20:12))||ts,o=q+(v?24:16);if(o+8<h.length&&rd(o,v)==0){wr(o,v,Math.round(ms/1000*t2));ch=true}}
+const me=find('mehd');if(me>=0){const q=me+4,v=h[q];if(rd(q+4,v)==0){wr(q+4,v,Math.round(ms/1000*ts));ch=true}}
+return ch?new Blob([h,blob.slice(N)],{type:blob.type}):blob}
+async function fixDuration(blob,ms){const t=(blob.type||'').toLowerCase();if(t.includes('webm'))return fixWebmDuration(blob,ms);if(t.includes('mp4'))return fixMp4Duration(blob,ms);return blob}
 function startVideoExport(o,F){pause();S.t=0;S.curId=null;const[ew,eh]=dims(+o.res),fps=+o.fps,ec=document.createElement('canvas');ec.width=ew;ec.height=eh;S.ecv=ec;S.ecx=ec.getContext('2d');S.ecx.imageSmoothingQuality='high';
 const cs=ec.captureStream(fps);
 if(o.aud){AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();AC.resume();S.media.forEach(route);DEST.stream.getAudioTracks().forEach(t=>cs.addTrack(t))}
 const ch=[];let r;try{r=new MediaRecorder(cs,{mimeType:F.mime,videoBitsPerSecond:Math.round(vbps(o)),audioBitsPerSecond:o.ab*1000})}catch(e){S.ecv=null;return toast('Could not start the encoder for this format')}
-r.ondataavailable=e=>e.data.size&&ch.push(e.data);
-r.onstop=()=>{cvSize(W*PK,H*PK);dlBlob(new Blob(ch,{type:F.mime.split(';')[0]}),fname(o,F.ext));S.exporting=0;S.ecv=null;S.ecx=null;xoHide();$('#ex').textContent='⬇ Export';toast('Export finished')};
+r.ondataavailable=e=>e.data&&e.data.size&&ch.push(e.data);r.onerror=()=>toast('Encoder error — try a lower resolution or frame rate');
+r.onstop=async()=>{cvSize(W*PK,H*PK);let blob=new Blob(ch,{type:F.mime.split(';')[0]});const ms=Math.max(100,(r._t1||performance.now())-(r._t0||performance.now()));try{blob=await fixDuration(blob,ms)}catch(e){console.warn('duration fix failed',e)}dlBlob(blob,fname(o,F.ext));S.exporting=0;S.ecv=null;S.ecx=null;xoHide();$('#ex').textContent='⬇ Export';toast('Export finished · '+fmt(ms/1000))};
 cvSize(ew,eh);draw();
-S.ecx.drawImage(cv,0,0,ew,eh);S.rec=r;S.exporting=1;r.start();play();xoShow('v')}
+S.ecx.drawImage(cv,0,0,ew,eh);S.rec=r;S.exporting=1;r._t0=performance.now();r.start(1000);play();xoShow('v')}
 async function mixAudio(onp){const SR=44100,dur=Math.max(.2,total());AC=AC||new AudioContext();
 const cV=S.clips.filter(c=>M(c.mid)&&M(c.mid).type=='video'),oV=S.ovs.filter(o=>M(o.mid)&&M(o.mid).type=='video'),vo=S.voices.filter(a=>M(a.mid)),ids=[...new Set([...cV.map(c=>c.mid),...oV.map(o=>o.mid),...vo.map(a=>a.mid)])],bufs={};let n=0;
 for(const id of ids){onp('Decoding audio '+(++n)+'/'+ids.length+'…');try{bufs[id]=await AC.decodeAudioData(await M(id).file.arrayBuffer())}catch(e){bufs[id]=null}}
@@ -954,16 +980,18 @@ S.ready=1;save();if(ms.length||S.texts.length)toast('Project restored')
 /* ---------- Filmora-style Zoom window: Start box -> End box ---------- */
 const ZW='Start → End window',zc=(v,f)=>Math.min(100-f*50,Math.max(f*50,v));
 function cw(c){if(c.sf==null)Object.assign(c,{sf:100,sx:50,sy:50,ef:50,ex:50,ey:50,ez:1});return c}
+function zwP(c,st,du){cw(c);const p=Math.min(1,Math.max(0,(S.t-st)/Math.max(.01,du))),e=c.ez?p*p*(3-2*p):p,L=(a,b)=>a+(b-a)*e,f=Math.max(.1,L(c.sf,c.ef)/100);return{f,cx:zc(L(c.sx,c.ex),f),cy:zc(L(c.sy,c.ey),f)}}
+const ovLive=o=>{const r=OE[o.id];return !!(r&&r.e&&S.t>=o.start&&S.t<o.start+odur(o)&&r.e.readyState>=2)};
 function zwAt(c){cw(c);const p=Math.min(1,Math.max(0,(S.t-c.start)/Math.max(.01,c.dur))),e=c.ez?p*p*(3-2*p):p,L=(a,b)=>a+(b-a)*e,f=Math.max(.1,L(c.sf,c.ef)/100),cx=zc(L(c.sx,c.ex),f),cy=zc(L(c.sy,c.ey),f),z=1/f,dx=cx*W/100-W/2,dy=cy*H/100-H/2;return[z,(c.flip?1:-1)*dx*z,-dy*z]}
-function zwPanel(o){cw(o);const a=S.zwa?1:0;return`<h4>Zoom window</h4><p style="color:var(--mu);margin:0 0 6px">Drag the <b style="color:#22c55e">Start</b> and <b style="color:#ff3b5c">End</b> boxes on the frame. The clip zooms from Start to End. Drag a box's corner square to resize it.</p><canvas id="zwc" width="480" height="${Math.round(480*H/W)}" style="display:block;margin:0 auto;width:min(100%,${Math.round(300*W/H)}px);box-shadow:none;border:1px solid var(--bd);cursor:move"></canvas><div class="grid" style="margin:6px 0"><button id="zw-s" class="${a?'':'on'}">● Start</button><button id="zw-e" class="${a?'on':''}">● End</button></div><div class="grid" style="margin-bottom:6px"><button id="zw-in">🔍 Zoom in</button><button id="zw-out">🔎 Zoom out</button><button id="zw-sw">⇄ Swap</button><button id="zw-pv">▶ Preview</button></div><label class="f"><input type="checkbox" data-k="ez" ${o.ez?'checked':''}> Smooth easing</label>`}
+function zwPanel(o,asp){cw(o);const a=S.zwa?1:0;asp=asp||W/H;return`<h4>Zoom window</h4><p style="color:var(--mu);margin:0 0 6px">Drag the <b style="color:#22c55e">Start</b> and <b style="color:#ff3b5c">End</b> boxes on the frame. The picture zooms from Start to End. Drag a box's corner square to resize it.</p><canvas id="zwc" width="480" height="${Math.round(480/asp)}" style="display:block;margin:0 auto;width:min(100%,${Math.round(300*asp)}px);box-shadow:none;border:1px solid var(--bd);cursor:move"></canvas><div class="grid" style="margin:6px 0"><button id="zw-s" class="${a?'':'on'}">● Start</button><button id="zw-e" class="${a?'on':''}">● End</button></div><div class="grid" style="margin-bottom:6px"><button id="zw-in">🔍 Zoom in</button><button id="zw-out">🔎 Zoom out</button><button id="zw-sw">⇄ Swap</button><button id="zw-pv">▶ Preview</button></div><label class="f"><input type="checkbox" data-k="ez" ${o.ez?'checked':''}> Smooth easing</label>`}
 const zwImg={};
-function zwDraw(){const el=$('#zwc');if(!el||S.exporting)return;const c=getSel();if(!c||!S.sel||S.sel.k!='clip'||c.za!=ZW)return;cw(c);const m=M(c.mid);if(!m)return;const g=el.getContext('2d'),w=el.width,h=el.height;g.fillStyle='#000';g.fillRect(0,0,w,h);
-let src=null;if(m.type=='image')src=m.el;else if(active(S.t)===c&&m.el&&m.el.readyState>=2)src=m.el;else if(m.th){let i=zwImg[m.id];if(!i||i.u!=m.th){i=zwImg[m.id]=new Image();i.u=m.th;i.src=m.th}if(i.complete&&i.naturalWidth)src=i}
-if(src){const k=(c.fit=='cover'?Math.max:Math.min)(w/m.w,h/m.h)*c.zoom,dw=m.w*k,dh=m.h*k;g.save();g.filter=fl(c);g.drawImage(src,(w-dw)/2,(h-dh)/2,dw,dh);g.restore()}
+function zwDraw(){const el=$('#zwc');if(!el||S.exporting)return;const c=getSel();if(!c||!S.sel||(S.sel.k!='clip'&&S.sel.k!='ov')||c.za!=ZW)return;const isOv=S.sel.k=='ov';cw(c);const m=M(c.mid);if(!m)return;const g=el.getContext('2d'),w=el.width,h=el.height;g.fillStyle='#000';g.fillRect(0,0,w,h);
+let src=null;if(m.type=='image')src=m.el;else if(isOv?ovLive(c):(active(S.t)===c&&m.el&&m.el.readyState>=2))src=isOv?OE[c.id].e:m.el;else if(m.th){let i=zwImg[m.id];if(!i||i.u!=m.th){i=zwImg[m.id]=new Image();i.u=m.th;i.src=m.th}if(i.complete&&i.naturalWidth)src=i}
+if(src&&isOv){const cr=ovCrop(c,m),rk=(src.videoWidth||src.naturalWidth||src.width||m.w)/m.w;g.save();g.filter=fl(c);g.drawImage(src,cr.sx*rk,cr.sy*rk,cr.sw*rk,cr.sh*rk,0,0,w,h);g.restore()}else if(src){const k=(c.fit=='cover'?Math.max:Math.min)(w/m.w,h/m.h)*c.zoom,dw=m.w*k,dh=m.h*k;g.save();g.filter=fl(c);g.drawImage(src,(w-dw)/2,(h-dh)/2,dw,dh);g.restore()}
 const a=S.zwa?1:0,R=i=>{const f=c[i?'ef':'sf']/100;return{f,cx:zc(c[i?'ex':'sx'],f)/100*w,cy:zc(c[i?'ey':'sy'],f)/100*h,rw:f*w,rh:f*h}},A=R(0),B=R(1);
 g.save();g.strokeStyle='#fff';g.globalAlpha=.7;g.lineWidth=2;g.setLineDash([4,5]);g.beginPath();g.moveTo(A.cx,A.cy);g.lineTo(B.cx,B.cy);g.stroke();g.restore();
 [1-a,a].forEach(i=>{const r=R(i),col=i?'#ff3b5c':'#22c55e',on=i==a;g.save();g.strokeStyle=col;g.fillStyle=col;g.lineWidth=on?4:2.5;g.setLineDash(on?[]:[10,6]);g.strokeRect(r.cx-r.rw/2,r.cy-r.rh/2,r.rw,r.rh);g.font='bold 24px system-ui';g.textBaseline='top';g.fillText(i?'End':'Start',r.cx-r.rw/2+8,r.cy-r.rh/2+6);if(on)g.fillRect(r.cx+r.rw/2-10,r.cy+r.rh/2-10,20,20);g.restore()})}
-$('#ins').addEventListener('pointerdown',e=>{if(e.target.id!='zwc')return;const c=getSel();if(!c||!S.sel||S.sel.k!='clip'||c.za!=ZW)return;e.preventDefault();cw(c);const el=e.target,r=el.getBoundingClientRect(),P=ev=>[(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100],K=i=>i?['ex','ey','ef']:['sx','sy','sf'],G=i=>{const k=K(i),f=c[k[2]]/100;return{k,f,cx:zc(c[k[0]],f),cy:zc(c[k[1]],f)}};
+$('#ins').addEventListener('pointerdown',e=>{if(e.target.id!='zwc')return;const c=getSel();if(!c||!S.sel||(S.sel.k!='clip'&&S.sel.k!='ov')||c.za!=ZW)return;e.preventDefault();cw(c);const el=e.target,r=el.getBoundingClientRect(),P=ev=>[(ev.clientX-r.left)/r.width*100,(ev.clientY-r.top)/r.height*100],K=i=>i?['ex','ey','ef']:['sx','sy','sf'],G=i=>{const k=K(i),f=c[k[2]]/100;return{k,f,cx:zc(c[k[0]],f),cy:zc(c[k[1]],f)}};
 const hitH=(g,px,py)=>Math.hypot((px-(g.cx+g.f*50))/100*r.width,(py-(g.cy+g.f*50))/100*r.height)<20,hitR=(g,px,py)=>Math.abs(px-g.cx)<=g.f*50&&Math.abs(py-g.cy)<=g.f*50;
 const[px,py]=P(e);let i=S.zwa?1:0,g=G(i),mode='';
 if(hitH(g,px,py))mode='rs';else if(hitR(g,px,py))mode='mv';else{const g2=G(1-i);if(hitH(g2,px,py)){i=1-i;g=g2;mode='rs'}else if(hitR(g2,px,py)){i=1-i;g=g2;mode='mv'}else mode='mv'}
@@ -972,17 +1000,17 @@ try{el.setPointerCapture(e.pointerId)}catch(x){}
 const mv=ev=>{const[qx,qy]=P(ev),k=g.k;if(mode=='rs'){const f=Math.min(1,Math.max(.1,((qx-g.cx)+(qy-g.cy))/100));c[k[2]]=Math.round(f*100)}else{const f=c[k[2]]/100;c[k[0]]=Math.round(zc(qx-ox,f));c[k[1]]=Math.round(zc(qy-oy,f))}};
 const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.removeEventListener('pointercancel',up);hist();renderIns()};
 el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);mv(e)});
-$('#ins').addEventListener('click',e=>{const id=e.target.id;if(!id||id.slice(0,3)!='zw-')return;const c=getSel();if(!c||!S.sel||S.sel.k!='clip')return;cw(c);
+$('#ins').addEventListener('click',e=>{const id=e.target.id;if(!id||id.slice(0,3)!='zw-')return;const c=getSel();if(!c||!S.sel||(S.sel.k!='clip'&&S.sel.k!='ov'))return;cw(c);
 if(id=='zw-s')S.zwa=0;else if(id=='zw-e')S.zwa=1;
 else if(id=='zw-in'||id=='zw-out'){const a=id=='zw-in'?[100,50]:[50,100];Object.assign(c,{sx:50,sy:50,ex:50,ey:50,sf:a[0],ef:a[1]})}
 else if(id=='zw-sw'){Object.assign(c,{sx:c.ex,sy:c.ey,sf:c.ef,ex:c.sx,ey:c.sy,ef:c.sf})}
-else if(id=='zw-pv'){S.t=c.start;S.curId=null;play();S.stopAt=c.start+c.dur;return}
+else if(id=='zw-pv'){const dd=S.sel.k=='ov'?odur(c):c.dur;S.t=c.start;S.curId=null;play();S.stopAt=c.start+dd;return}
 hist();renderIns()});
-$('#ins').addEventListener('input',e=>{if(e.target.dataset.k=='za'&&S.sel&&S.sel.k=='clip')renderIns()});
+$('#ins').addEventListener('input',e=>{if(e.target.dataset.k=='za'&&S.sel&&(S.sel.k=='clip'||S.sel.k=='ov'))renderIns()});
 
 /* ---------- Copy / Paste items, and Copy / Paste settings ---------- */
 const SK={clip:['ck','ckc','cks','ckb','ckd','fit','zoom','rot','flip','fade','za','zs','vol','mute','b','c','s','h','bl','g','se','sf','sx','sy','ef','ex','ey','ez'],
-ov:['x','y','sc','rot','op','flip','fade','rd','bw','bc','ia','za','zs','vol','mute','b','c','s','h','bl','g','se'],
+ov:['x','y','sc','rot','op','flip','fade','rd','bw','bc','ia','za','zs','vol','mute','b','c','s','h','bl','g','se','sf','sx','sy','ef','ex','ey','ez'],
 text:['font','size','color','bold','stroke','bgOn','bgc','anim','x','y','rot'],voice:['vol','mute','fi','fo']};
 const KN={clip:'clip',ov:'layer clip',text:'text',voice:'audio'};
 const deep=o=>JSON.parse(JSON.stringify(o,(k,v)=>k=='_b'?undefined:v));
@@ -999,7 +1027,7 @@ layout();S.curId=null;selSet(keys);toast(items.length+' item'+(items.length>1?'s
 function copySt(){const o=getSel();if(!o||!S.sel||!SK[S.sel.k])return toast('Select a clip, text or audio on the timeline first');const k=S.sel.k,v={};SK[k].forEach(q=>{if(o[q]!==undefined)v[q]=o[q]});S.cs={k,v};updCb();toast('Settings copied from the '+KN[k]+' · select other items and press Paste settings')}
 function pasteSt(){const cs=S.cs;if(!cs)return toast('No settings copied yet · select an item and press Copy settings');let n=0,diff=0;
 ['clip','ov','text','voice'].forEach(k=>{const T=selObjs(k);if(!T.length)return;if(k!=cs.k&&!(['clip','ov'].includes(k)&&['clip','ov'].includes(cs.k))){diff++;return}
-const keys=Object.keys(cs.v).filter(q=>SK[k].includes(q));T.forEach(t=>{if(k=='clip'&&keys.includes('sf'))cw(t);keys.forEach(q=>{if(q=='za'&&cs.v[q]==ZW&&k!='clip')return;t[q]=cs.v[q]});n++})});
+const keys=Object.keys(cs.v).filter(q=>SK[k].includes(q));T.forEach(t=>{if((k=='clip'||k=='ov')&&keys.includes('sf'))cw(t);keys.forEach(q=>{t[q]=cs.v[q]});n++})});
 if(!n)return toast(diff?'Settings can only be pasted onto the same kind of item (clips and layer clips can share them)':'Select the items to paste the settings onto');
 layout();renderIns();renderTL();hist();toast('Settings pasted to '+n+' item'+(n>1?'s':''))}
 $('#cp').onclick=copyCb;$('#pa').onclick=pasteCb;$('#cs').onclick=copySt;$('#ps').onclick=pasteSt;updCb();
