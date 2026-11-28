@@ -227,7 +227,7 @@ select option,select optgroup{background:var(--p);color:var(--tx)}
 <div id="sc"><div id="in"><div id="rul"></div><div id="rTx"></div><div class="row" id="rT"></div><div id="rO"></div><div class="row v" id="rV"></div><div class="row a" id="rA"></div><div class="row a" id="rM"></div><div id="rX"></div><div id="sn"></div><div id="ph"></div></div></div></div>
 </section>
 <nav id="mb"><button data-sh="L">＋ Add</button><button data-sh="ins">✎ Edit</button></nav>
-<div id="recui" hidden><span class="rdot"></span><b id="rtm">0:00.0</b><canvas id="rwv" width="300" height="48"></canvas><button id="rpz" class="rpz" hidden onclick="srPause()">⏸ Pause</button><button class="pr" id="rstop">■ Stop</button></div><div id="cd" hidden></div><div id="od" hidden><div class="xb" role="dialog" aria-label="Online media"><div class="xh"><span>🌐 Online media · free photos, videos &amp; music</span><button id="odx" title="Close">✕</button></div><div class="xm"><div class="xl" id="odl"></div><div class="xr" id="odr"></div></div><div class="xf"><span id="ods" style="flex:1;min-width:180px;color:var(--mu)">Always check an item's license before you publish.</span><button id="odc">Close</button></div></div></div><div id="xd" hidden><div class="xb" role="dialog" aria-label="Export"><div class="xh"><span>Export</span><button id="xc" title="Close">✕</button></div><div class="xm"><div class="xl" id="xl"></div><div class="xr" id="xr"></div></div><div class="xf"><span id="xs"></span><button id="xx">Cancel</button><button class="pr" id="xgo">⬇ Export</button></div></div></div><div id="xo" hidden role="alertdialog" aria-label="Exporting"><div class="xob"><h3 id="xoh">Exporting your video…</h3><p class="xw" id="xow">⚠ Do not close, refresh or leave this tab until the export finishes. Keep it open and in front.</p><canvas id="xop" width="360" height="640"></canvas><div id="xpc">0%</div><div class="xbar"><i id="xpb"></i></div><div id="xpt"></div></div></div><input type="file" id="fi" accept="video/*,image/*,audio/*" multiple hidden>
+<div id="recui" hidden><span class="rdot"></span><b id="rtm">0:00.0</b><canvas id="rwv" width="300" height="48"></canvas><button id="rpz" class="rpz" hidden onclick="srPause()">⏸ Pause</button><button class="pr" id="rstop">■ Stop</button></div><div id="cd" hidden></div><div id="od" hidden><div class="xb" role="dialog" aria-label="Online media"><div class="xh"><span>🌐 Online media · free photos, videos &amp; music</span><button id="odx" title="Close">✕</button></div><div class="xm"><div class="xl" id="odl"></div><div class="xr" id="odr"></div></div><div class="xf"><span id="ods" style="flex:1;min-width:180px;color:var(--mu)">Always check an item's license before you publish.</span><button id="odc">Close</button></div></div></div><div id="xd" hidden><div class="xb" role="dialog" aria-label="Export"><div class="xh"><span>Export</span><button id="xc" title="Close">✕</button></div><div class="xm"><div class="xl" id="xl"></div><div class="xr" id="xr"></div></div><div class="xf"><span id="xs"></span><button id="xx">Cancel</button><button class="pr" id="xgo">⬇ Export</button></div></div></div><div id="xo" hidden role="alertdialog" aria-label="Exporting"><div class="xob"><h3 id="xoh">Exporting your video…</h3><p class="xw" id="xow">⚠ Do not close, refresh or leave this tab until the export finishes. Keep it open and in front.</p><canvas id="xop" width="360" height="640"></canvas><div id="xpc">0%</div><div class="xbar"><i id="xpb"></i></div><div id="xpt"></div><button id="xoc" hidden style="margin-top:10px">✕ Cancel export</button></div></div><input type="file" id="fi" accept="video/*,image/*,audio/*" multiple hidden>
 <script>
 const $=s=>document.querySelector(s),cv=$('#cv'),ctx=cv.getContext('2d');
 const S={media:[],clips:[],texts:[],voices:[],music:null,t:0,play:false,sel:null,zoom:60,id:1,tab:'media',curId:null,last:0,multi:[],mm:0};
@@ -578,7 +578,7 @@ if(e.code=='Space'){e.preventDefault();S.play?pause():play()}else if(e.key=='s')
 else if(e.key=='ArrowLeft'){S.t=Math.max(0,S.t-1/30);S.curId=null}else if(e.key=='ArrowRight'){S.t=Math.min(total(),S.t+1/30);S.curId=null}});
 
 /* ---------- playback & rendering ---------- */
-function play(){if(total()<=0)return toast('Add something to the timeline first');if(S.t>=total()-.05)S.t=0;AC&&AC.resume();S.play=true;S.last=performance.now();$('#pp').textContent='⏸'}
+function play(){if(S.wc&&S.wc.off)return;if(total()<=0)return toast('Add something to the timeline first');if(S.t>=total()-.05)S.t=0;AC&&AC.resume();S.play=true;S.last=performance.now();$('#pp').textContent='⏸'}
 function pause(){if(REC)recStop();S.play=false;S.stopAt=null;$('#pp').textContent='▶';S.media.forEach(m=>m.type!='image'&&m.el.pause());if(S.rec){const r=S.rec;S.rec=null;setTimeout(()=>{r._t1=performance.now();try{r.requestData()}catch(e){}try{r.stop()}catch(e){}},300)}}
 const fl=c=>`brightness(${c.b}%) contrast(${c.c}%) saturate(${c.s}%) blur(${c.bl*cv.width/W}px) grayscale(${c.g}%) sepia(${c.se}%) hue-rotate(${c.h}deg)`;
 function blit(e,m,fm,z,rot,flip,ox=0,oy=0){const sw=Math.abs(Math.round(rot/90))%2==1&&Math.abs(rot%90)<.01,k=(sw?fm(W/m.h,H/m.w):fm(W/m.w,H/m.h))*z,w=m.w*k,h=m.h*k;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.rotate(rot*Math.PI/180);if(flip)ctx.scale(-1,1);ctx.drawImage(e,-w/2,-h/2,w,h);ctx.restore()}
@@ -595,7 +595,7 @@ if(c.fit=='blur'&&!(c.ck&&!S.ckPick)){ctx.filter=`blur(${28*cv.width/W}px) brigh
 let[az,ax,ay]=anim(c);if(c.za==ZW){const q=zwAt(c);az=q[0];ax=q[1];ay=q[2]}ctx.filter=fl(c);blit(ckSrc(c,e,m),m,c.fit=='cover'?Math.max:Math.min,c.zoom*az,c.rot,c.flip,ax,ay);ctx.filter='none';ctx.globalAlpha=1}
 else if(total()==0){ctx.fillStyle='#777';ctx.font=`${W/22}px system-ui`;ctx.textAlign='center';ctx.fillText('Import media, then click it to add',W/2,H/2)}
 drawOvs();const mu=null;if(mu){const m=M(mu.mid),e=m.el;e.volume=mu.vol;if(S.play&&S.t<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-S.t)>.3)e.currentTime=S.t}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-Math.min(S.t,m.dur))>.1)e.currentTime=Math.min(S.t,m.dur)}}
-const on=new Set();S.voices.forEach(a=>{const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||(a.ly?S.lm[a.ly]:(a.tr=='m'?S.trk.Mm:(a.tr&&a.tr!='v')?S.xm[a.tr]:S.trk.Am)))?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
+const on=new Set();S.voices.forEach(a=>{if(S.wc&&S.wc.off)return;const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||(a.ly?S.lm[a.ly]:(a.tr=='m'?S.trk.Mm:(a.tr&&a.tr!='v')?S.xm[a.tr]:S.trk.Am)))?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
 S.voices.forEach(a=>{if(!on.has(a.mid)){const e=M(a.mid).el;if(!e.paused)e.pause()}});
 [].forEach(v=>{const m=M(v.mid),e=m.el,r=S.t-v.start,cl=Math.min(Math.max(r,0),m.dur);e.volume=v.vol;if(S.play&&r>=0&&r<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-r)>.3)e.currentTime=r}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-cl)>.1)e.currentTime=cl}});
 [...S.texts].filter(x=>!x.ly).sort((a,b)=>(!!b.mask-!!a.mask)||(a.tl||0)-(b.tl||0)).forEach(drawText)}
@@ -608,7 +608,7 @@ ctx.fillStyle=x.color;ctx.fillText(l,0,y)});ctx.restore();
 x._b=[px-mw/2-14,py-L.length*lh/2,px+mw/2+14,py+L.length*lh/2];{const r=(x.rot||0)*Math.PI/180;if(r){const hw=mw/2+14,hh=L.length*lh/2,c=Math.abs(Math.cos(r)),sn=Math.abs(Math.sin(r)),bw=hw*c+hh*sn,bh=hw*sn+hh*c;x._b=[px-bw,py-bh,px+bw,py+bh]}}
 if(isM('text',x.id)&&!S.exporting){ctx.strokeStyle='#6d4aff';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.strokeRect(x._b[0],x._b[1],x._b[2]-x._b[0],x._b[3]-x._b[1]);ctx.setLineDash([])}}
 function frame(){requestAnimationFrame(frame);const now=performance.now();
-if(S.play){S.t+=(now-S.last)/1000;if(S.t>=total()){S.t=total();pause()}else if(S.stopAt!=null&&S.t>=S.stopAt){S.t=S.stopAt;pause()}}S.last=now;recTick();if(!(SR&&SR.mr&&!S.play&&!S.exporting)){draw();zwDraw()}if(S.exporting&&S.ecx)S.ecx.drawImage(cv,0,0,S.ecv.width,S.ecv.height);if(S.exporting&&S.wc)wcTick();
+if(S.play){S.t+=(now-S.last)/1000;if(S.t>=total()){S.t=total();pause()}else if(S.stopAt!=null&&S.t>=S.stopAt){S.t=S.stopAt;pause()}}S.last=now;recTick();if(!(SR&&SR.mr&&!S.play&&!S.exporting)&&!(S.wc&&S.wc.off)){draw();zwDraw()}if(S.exporting&&S.ecx&&!(S.wc&&S.wc.off))S.ecx.drawImage(cv,0,0,S.ecv.width,S.ecv.height);if(S.exporting&&S.wc)wcTick();
 $('#tm').textContent=fmt(S.t)+' / '+fmt(total());const ph=$('#ph'),x=S.t*S.zoom;ph.style.left=x+'px';
 const sc=$('#sc');if((S.play||REC)&&x>sc.scrollLeft+sc.clientWidth-30)sc.scrollLeft=x-40;
 if(REC&&REC.t0&&$('#rc'))$('#rc').textContent='■ Stop recording · '+((performance.now()-REC.t0)/1000).toFixed(1)+'s';if(S.exporting){$('#ex').textContent='Exporting '+Math.round(S.t/Math.max(total(),.01)*100)+'%';xoTick()}}
@@ -629,7 +629,7 @@ $('#xoh').textContent=kind=='v'?'Exporting your video…':'Exporting your audio�
 $('#xo').hidden=false;xoUpd(0,kind=='v'?'Recording in real time · '+fmt(total())+' long':'Preparing…');xoWake()}
 function xoUpd(p,t){const q=Math.max(0,Math.min(100,Math.round(p)));$('#xpc').textContent=q+'%';$('#xpb').style.width=q+'%';if(t!=null)$('#xpt').textContent=t;document.title='Exporting '+q+'% – ClipForge'}
 function xoText(t){if(XO.on)$('#xpt').textContent=t}
-function xoHide(){XO.on=0;$('#xo').hidden=true;document.title='ClipForge – Social Video Editor';try{XO.wl&&XO.wl.release()}catch(e){}XO.wl=null}
+function xoHide(){XO.on=0;const _c=$('#xoc');if(_c)_c.hidden=true;$('#xo').hidden=true;document.title='ClipForge – Social Video Editor';try{XO.wl&&XO.wl.release()}catch(e){}XO.wl=null}
 function xoTick(){if(!XO.on||XO.kind!='v'||!S.exporting)return;const p=S.t/Math.max(total(),.01)*100;xoUpd(p,fmt(S.t)+' / '+fmt(total()));const c=$('#xop');if(S.ecv)c.getContext('2d').drawImage(S.ecv,0,0,c.width,c.height)}
 document.addEventListener('visibilitychange',()=>{if(!XO.on)return;if(document.hidden){XO.hid=1;document.title='⚠ Exporting – come back to this tab'}else{xoWake();if(XO.hid&&XO.kind=='v'){const w=$('#xow');w.className='xw bad';w.textContent='⚠ This tab was in the background. Browsers pause video rendering then, so part of the export may be frozen. Keep this tab in front, or re-export if the result looks wrong.'}}});
 /* ---------- Export dialog (Filmora-style): formats, resolution, fps, quality, audio, MP3 ---------- */
@@ -658,7 +658,7 @@ if(vid){h+=`<div class="xrw"><label>Resolution</label><select data-x="res">${opt
 ${o.q=='Custom'?`<div class="xrw"><label>Video bitrate</label><input type="number" data-x="mbps" min=".2" max="60" step=".5" value="${o.mbps}"><small>Mbps</small></div>`:`<div class="xrw"><label>Video bitrate</label><span class="xv">≈ ${(vbps(o)/1e6).toFixed(1)} Mbps</span></div>`}
 <div class="xrw"><label>Audio</label><label class="xck"><input type="checkbox" data-x="aud" ${o.aud?'checked':''}> Include audio</label></div>
 <div class="xrw"><label>Audio bitrate</label><select data-x="ab">${opts(abl.map(v=>[v,v+' kbps']),o.ab)}</select></div>
-<p class="xn">Video is recorded in real time while the project plays, so it takes as long as your video. Keep this tab open and in front until it finishes.</p>`}
+<p class="xn">Video is rendered frame by frame so it plays back perfectly smooth. On a phone this can take longer than the video itself. Keep this tab open and in front until it finishes.</p>`}
 else if(o.f=='mp3')h+=`<div class="xrw"><label>Bitrate</label><select data-x="ab">${opts(abl.map(v=>[v,v+' kbps'+(v==192?' · recommended':'')]),o.ab)}</select></div><div class="xrw"><label>Sample rate</label><span class="xv">44.1 kHz · stereo</span></div><p class="xn">Mixes every audio track, voice-over and video sound on the timeline into one MP3. Mutes, volume, speed and fades are applied. It renders faster than real time.</p>`;
 else h+=`<div class="xrw"><label>Format</label><span class="xv">16-bit PCM · 44.1 kHz · stereo</span></div><p class="xn">Uncompressed, lossless mix of all audio on the timeline. Files are large.</p>`;
 $('#xr').innerHTML=h;xdSum()}
@@ -714,7 +714,7 @@ const wcOk=(F,o)=>!!(!S.noWc&&window.VideoEncoder&&window.VideoFrame&&(F.id=='mp
 async function wcResample(b,sr){if(b.sampleRate==sr)return b;const oc=new OfflineAudioContext(2,Math.ceil(b.duration*sr),sr),s=oc.createBufferSource();s.buffer=b;s.connect(oc.destination);s.start();return oc.startRendering()}
 function wcFeed(w,upTo){if(!w.ae)return;const SR=w.sr,tot=w.ab.length,to=Math.min(tot,Number.isFinite(upTo)?Math.floor(upTo*SR):tot),n=to-w.ai;if(n<=0||(n<SR/20&&to<tot))return;
 const d=new Float32Array(n*2);d.set(w.L.subarray(w.ai,to),0);d.set(w.R.subarray(w.ai,to),n);const a=new AudioData({format:'f32-planar',sampleRate:SR,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(w.ai/SR*1e6),data:d});w.ae.encode(a);a.close();w.ai=to}
-function wcTick(){const w=S.wc;if(!w||w.fin||w.err)return;try{wcFeed(w,Math.min(S.t,w.dur));const gap=1/w.fps;
+function wcTick(){const w=S.wc;if(!w||w.fin||w.err||w.off)return;try{wcFeed(w,Math.min(S.t,w.dur));const gap=1/w.fps;
 if(w.last<0||(S.t>w.last&&S.t-w.last>=gap-1e-4)){if(w.ve.encodeQueueSize>8)return;const f=new VideoFrame(cv,{timestamp:Math.round(S.t*1e6),duration:Math.round(gap*1e6)});w.ve.encode(f,{keyFrame:w.n%Math.max(1,Math.round(w.fps*2))==0});f.close();w.last=S.t;w.n++}}catch(e){w.err=e;console.warn(e)}}
 async function startWcExport(o,F){const mp4=F.id=='mp4',fps=+o.fps;pause();S.t=0;S.curId=null;S.aexp=1;xoShow('a');
 const bail=()=>{S.aexp=0;xoHide();$('#ex').textContent='⬇ Export';return false};
@@ -736,14 +736,35 @@ if(ac){w.ae=new AudioEncoder({output:(c,m)=>mux.addAudioChunk(c,m),error:onErr})
 S.wc=w;S.aexp=0;xoHide();
 const rec={_t0:performance.now(),requestData(){},stop:async()=>{w.fin=1;let ok=0;try{
 if(w.err)throw w.err;
+if(w.cancel){try{w.ve.close();w.ae&&w.ae.close()}catch(e){}toast('Export cancelled');return}
 if(w.last<w.dur-1e-3){const f=new VideoFrame(cv,{timestamp:Math.round(w.dur*1e6),duration:Math.round(1e6/fps)});w.ve.encode(f,{keyFrame:false});f.close()}
 if(w.ae){wcFeed(w,Infinity);await w.ae.flush()}
 await w.ve.flush();try{w.ve.close();w.ae&&w.ae.close()}catch(e){}
 mux.finalize();const blob=new Blob([target.buffer],{type:mp4?'video/mp4':'video/webm'});dlBlob(blob,fname(o,F.ext));ok=1;toast('Export finished · '+fmt(w.dur))}
 catch(e){console.warn(e);S.noWc=1;toast('Export failed ('+((e&&e.message)||e)+'). Please try again — a compatible mode will be used.')}
 finally{cvSize(W*PK,H*PK);S.exporting=0;S.ecv=null;S.ecx=null;S.wc=null;xoHide();$('#ex').textContent='⬇ Export'}}};
-cvSize(ew,eh);draw();S.ecx.drawImage(cv,0,0,ew,eh);S.rec=rec;S.exporting=1;play();xoShow('v');return true}
+cvSize(ew,eh);w.off=1;S.exporting=1;xoShow('v');const cb=$('#xoc');cb.hidden=false;cb.onclick=()=>{w.cancel=1;cb.textContent='Cancelling…'};cb.textContent='✕ Cancel export';$('#xow').textContent='⚠ Rendering every frame for perfectly smooth video — this can take longer than the video itself on a phone. Keep this tab open and in front.';wcRun(w,fps,rec);return true}
 catch(e){console.warn(e);S.noWc=1;S.ecv=null;S.ecx=null;S.wc=null;cvSize(W*PK,H*PK);return bail()}}
+
+/* frame-by-frame renderer: seek -> draw -> encode, so no frame is ever dropped, whatever the phone's speed */
+function wcVideos(t){const L=[],c=active(t);if(c){const m=M(c.mid);if(m&&m.type=='video'&&m.el)L.push({e:m.el,want:c.in+(t-c.start)*c.sp})}
+S.ovs.forEach(o=>{if(t>=o.start&&t<o.start+odur(o)){const m=M(o.mid);if(m&&m.type=='video'){const e=ovEl(o,m);if(e)L.push({e,want:o.in+(t-o.start)*o.sp})}}});return L}
+const wcWait=(e,ev,ms)=>new Promise(res=>{let d=0;const f=()=>{if(d)return;d=1;e.removeEventListener(ev,f);clearTimeout(to);res()},to=setTimeout(f,ms);e.addEventListener(ev,f)});
+async function wcSeek(e,want,fps){if(!isFinite(want))return;if(e.readyState<2){await wcWait(e,'loadeddata',4000)}
+if(isFinite(e.duration)&&e.duration>0)want=Math.min(Math.max(0,want),Math.max(0,e.duration-.01));else want=Math.max(0,want);
+if(!e.paused)e.pause();
+if(!e.seeking&&e.readyState>=2&&Math.abs(e.currentTime-want)<Math.min(.5/fps,.025))return;
+const p=wcWait(e,'seeked',2500);e.currentTime=want;await p;if(e.readyState<2)await wcWait(e,'canplay',1500);await new Promise(r=>setTimeout(r,0))}
+async function wcRun(w,fps,rec){try{const N=Math.max(1,Math.round(w.dur*fps)),T=Math.max(.001,total()-.001);
+for(let i=0;i<N&&!w.cancel&&!w.err;i++){const t=Math.min(i/fps,T);S.t=t;const c=active(t);S.curId=c?c.id:null;
+for(const v of wcVideos(t))await wcSeek(v.e,v.want,fps);
+draw();wcFeed(w,t);
+let g=0;while(w.ve.encodeQueueSize>3&&!w.err&&g++<4000)await new Promise(r=>setTimeout(r,5));
+const f=new VideoFrame(cv,{timestamp:Math.round(i*1e6/fps),duration:Math.round(1e6/fps)});w.ve.encode(f,{keyFrame:i%Math.max(1,Math.round(fps*2))==0});f.close();w.n++;
+if(i%3==0){if(S.ecx)S.ecx.drawImage(cv,0,0,S.ecv.width,S.ecv.height);await new Promise(r=>setTimeout(r,0))}}
+w.last=w.dur;if(!w.cancel&&!w.err){S.t=total();xoUpd(100,'Finishing file…')}}
+catch(e){w.err=e;console.warn(e)}
+await rec.stop()}
 function startVideoExport(o,F){if(wcOk(F,o)){startWcExport(o,F).then(ok=>{if(ok===false)startVideoExportMR(o,F)}).catch(e=>{console.warn(e);S.aexp=0;S.noWc=1;xoHide();startVideoExportMR(o,F)});return}startVideoExportMR(o,F)}
 async function mixAudio(onp){const SR=44100,dur=Math.max(.2,total());AC=AC||new AudioContext();
 const cV=S.clips.filter(c=>M(c.mid)&&M(c.mid).type=='video'),oV=S.ovs.filter(o=>M(o.mid)&&M(o.mid).type=='video'),vo=S.voices.filter(a=>M(a.mid)),ids=[...new Set([...cV.map(c=>c.mid),...oV.map(o=>o.mid),...vo.map(a=>a.mid)])],bufs={};let n=0;
