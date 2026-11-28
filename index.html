@@ -442,7 +442,7 @@ function ovCrop(o,m){const A=CAR[o.ca];let bw=m.w,bh=m.h;if(A){if(m.w/m.h>A)bw=m
 function drawOvs(){const act=new Set(),dr=[],LT=S.texts.filter(x=>x.ly).sort((a,b)=>a.ly-b.ly);let ti=0;
 S.ovs.filter(o=>S.t>=o.start&&S.t<o.start+odur(o)).sort((a,b)=>a.ly-b.ly).forEach(o=>{while(ti<LT.length&&LT[ti].ly<=o.ly)drawText(LT[ti++]);const m=M(o.mid);if(!m||(m.type!='image'&&!m.el))return;const e=ovEl(o,m);if(!e)return;act.add(o.id);const hid=S.lh[o.ly]||o.hide,d=odur(o);
 if(m.type=='video'){const want=o.in+(S.t-o.start)*o.sp;e.playbackRate=o.sp;e.volume=Math.max(0,Math.min(1,(o.mute||S.lm[o.ly]||S.trk.Vm)?0:o.vol));
-if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
+if(S.play){if(S.hold){if(!e.paused)e.pause()}else{if(e.paused&&!(S.rt&&e.ended))e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>(S.rt?.8:.3))e.currentTime=want}}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
 const AN=anim({start:o.start,dur:d,za:o.za==ZW?'None':(o.za||'None'),zs:o.zs||30}),EN=entr(o,d),cr=ovCrop(o,m),zq=o.za==ZW?zwP(o,o.start,d):null,k=Math.min(W/cr.bw,H/cr.bh)*o.sc/100*AN[0]*EN.s,w=cr.bw*k,h=cr.bh*k,cx=o.x*W/100+AN[1]+EN.x,cy=o.y*H/100+AN[2]+EN.y,rad=o.rot*Math.PI/180,cs=Math.cos(rad),sn=Math.sin(rad),fa=(o.fade?Math.max(0,Math.min(1,(S.t-o.start)/.5,(o.start+d-S.t)/.5)):1)*EN.a;
 if(!hid){ctx.save();ctx.globalAlpha=fa*o.op/100;ctx.translate(cx,cy);ctx.rotate(rad);if(o.flip)ctx.scale(-1,1);const r=Math.min(w,h)/2*(o.rd||0)/100;
 if(o.sh>0){ctx.save();ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=Math.min(60,o.sh*W/500);ctx.shadowOffsetY=Math.min(24,o.sh*W/900);ctx.fillStyle='#000';ctx.beginPath();rrect(-w/2,-h/2,w,h,r);ctx.fill();ctx.restore()}
@@ -580,7 +580,7 @@ else if(e.key=='ArrowLeft'){S.t=Math.max(0,S.t-1/30);S.curId=null}else if(e.key=
 /* ---------- playback & rendering ---------- */
 function play(){if(S.wc&&S.wc.off)return;if(total()<=0)return toast('Add something to the timeline first');if(S.t>=total()-.05)S.t=0;AC&&AC.resume();S.play=true;S.last=performance.now();$('#pp').textContent='⏸'}
 function pause(){if(REC)recStop();S.play=false;S.stopAt=null;$('#pp').textContent='▶';S.media.forEach(m=>m.type!='image'&&m.el.pause());if(S.rec){const r=S.rec;S.rec=null;setTimeout(()=>{r._t1=performance.now();try{r.requestData()}catch(e){}try{r.stop()}catch(e){}},300)}}
-const fl=c=>`brightness(${c.b}%) contrast(${c.c}%) saturate(${c.s}%) blur(${c.bl*cv.width/W}px) grayscale(${c.g}%) sepia(${c.se}%) hue-rotate(${c.h}deg)`;
+const fl=c=>(c.b==100&&c.c==100&&c.s==100&&!c.bl&&!c.g&&!c.se&&!c.h)?'none':`brightness(${c.b}%) contrast(${c.c}%) saturate(${c.s}%) blur(${c.bl*cv.width/W}px) grayscale(${c.g}%) sepia(${c.se}%) hue-rotate(${c.h}deg)`;
 function blit(e,m,fm,z,rot,flip,ox=0,oy=0){const sw=Math.abs(Math.round(rot/90))%2==1&&Math.abs(rot%90)<.01,k=(sw?fm(W/m.h,H/m.w):fm(W/m.w,H/m.h))*z,w=m.w*k,h=m.h*k;ctx.save();ctx.translate(W/2+ox,H/2+oy);ctx.rotate(rot*Math.PI/180);if(flip)ctx.scale(-1,1);ctx.drawImage(e,-w/2,-h/2,w,h);ctx.restore()}
 function anim(c){const p=Math.min(1,Math.max(0,(S.t-c.start)/c.dur)),s=c.zs/100;let z=1,x=0,y=0;
 if(c.za=='Zoom in')z=1+s*p;else if(c.za=='Zoom out')z=1+s*(1-p);else if(c.za=='Pan left'){z=1+s;x=(.5-p)*s*W}else if(c.za=='Pan right'){z=1+s;x=(p-.5)*s*W}else if(c.za=='Pulse')z=1+s*.25*(1+Math.sin(S.t*6));else if(c.za=='Shake'){z=1+s*.15;x=Math.sin(S.t*50)*s*W*.04;y=Math.cos(S.t*43)*s*H*.03}
@@ -588,14 +588,14 @@ return[z,x,y]}
 function draw(){ctx.globalAlpha=1;ctx.filter='none';ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
 const c=active(S.t);S.media.forEach(m=>{if(m.type=='video'&&(!c||c.mid!=m.id)&&!m.el.paused)m.el.pause()});
 if(c){const m=M(c.mid),e=m.el;
-if(m.type=='video'){const want=c.in+(S.t-c.start)*c.sp;if(c.id!=S.curId){S.curId=c.id;e.currentTime=want}e.playbackRate=c.sp;e.volume=(S.trk.Vm||c.mute)?0:c.vol;
-if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
+if(m.type=='video'){const want=c.in+(S.t-c.start)*c.sp;if(c.id!=S.curId){S.curId=c.id;if(!(S.rt&&Math.abs(e.currentTime-want)<.15))e.currentTime=want}e.playbackRate=c.sp;e.volume=(S.trk.Vm||c.mute)?0:c.vol;
+if(S.play){if(S.hold==2){if(!e.paused)e.pause()}else{if(e.paused&&!(S.rt&&e.ended))e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>(S.rt?1.5:.3))e.currentTime=want}}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.03)e.currentTime=want}}
 const a=c.fade?Math.max(0,Math.min(1,(S.t-c.start)/.5,(c.start+c.dur-S.t)/.5)):1;ctx.globalAlpha=(S.trk.Vh||c.hide)?0:a;
-if(c.fit=='blur'&&!(c.ck&&!S.ckPick)){ctx.filter=`blur(${28*cv.width/W}px) brightness(.7)`;blit(e,m,Math.max,1.2,0,0)}
+if(c.fit=='blur'&&!(c.ck&&!S.ckPick)){if(S.rt)rtBlur(e,m);else{ctx.filter=`blur(${28*cv.width/W}px) brightness(.7)`;blit(e,m,Math.max,1.2,0,0)}}
 let[az,ax,ay]=anim(c);if(c.za==ZW){const q=zwAt(c);az=q[0];ax=q[1];ay=q[2]}ctx.filter=fl(c);blit(ckSrc(c,e,m),m,c.fit=='cover'?Math.max:Math.min,c.zoom*az,c.rot,c.flip,ax,ay);ctx.filter='none';ctx.globalAlpha=1}
 else if(total()==0){ctx.fillStyle='#777';ctx.font=`${W/22}px system-ui`;ctx.textAlign='center';ctx.fillText('Import media, then click it to add',W/2,H/2)}
 drawOvs();const mu=null;if(mu){const m=M(mu.mid),e=m.el;e.volume=mu.vol;if(S.play&&S.t<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-S.t)>.3)e.currentTime=S.t}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-Math.min(S.t,m.dur))>.1)e.currentTime=Math.min(S.t,m.dur)}}
-const on=new Set();S.voices.forEach(a=>{if(S.wc&&S.wc.off)return;const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||(a.ly?S.lm[a.ly]:(a.tr=='m'?S.trk.Mm:(a.tr&&a.tr!='v')?S.xm[a.tr]:S.trk.Am)))?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>.3)e.currentTime=want}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
+const on=new Set();S.voices.forEach(a=>{if(S.wc&&S.wc.off)return;const d=adur(a),r=S.t-a.start;if(r>=0&&r<d){on.add(a.mid);const e=M(a.mid).el,want=a.in+r*a.sp,g=Math.min(1,a.fi>0?r/a.fi:1,a.fo>0?(d-r)/a.fo:1);e.volume=(a.mute||(a.ly?S.lm[a.ly]:(a.tr=='m'?S.trk.Mm:(a.tr&&a.tr!='v')?S.xm[a.tr]:S.trk.Am)))?0:Math.max(0,Math.min(1,a.vol*g));e.playbackRate=a.sp;if(S.play){if(S.hold){if(!e.paused)e.pause()}else{if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-want)>(S.rt?.8:.3))e.currentTime=want}}else{if(!e.paused)e.pause();if(Math.abs(e.currentTime-want)>.1)e.currentTime=want}}});
 S.voices.forEach(a=>{if(!on.has(a.mid)){const e=M(a.mid).el;if(!e.paused)e.pause()}});
 [].forEach(v=>{const m=M(v.mid),e=m.el,r=S.t-v.start,cl=Math.min(Math.max(r,0),m.dur);e.volume=v.vol;if(S.play&&r>=0&&r<m.dur){if(e.paused)e.play().catch(()=>{});if(Math.abs(e.currentTime-r)>.3)e.currentTime=r}else{if(!e.paused)e.pause();if(!S.play&&Math.abs(e.currentTime-cl)>.1)e.currentTime=cl}});
 [...S.texts].filter(x=>!x.ly).sort((a,b)=>(!!b.mask-!!a.mask)||(a.tl||0)-(b.tl||0)).forEach(drawText)}
@@ -624,7 +624,7 @@ const xoBusy=()=>!!(S.exporting||S.aexp);
 addEventListener('beforeunload',e=>{if(xoBusy()){e.preventDefault();e.returnValue='An export is still running. If you leave now it will be lost.';return e.returnValue}});
 async function xoWake(){try{if(navigator.wakeLock&&!XO.wl){XO.wl=await navigator.wakeLock.request('screen');XO.wl.addEventListener('release',()=>{XO.wl=null})}}catch(e){}}
 function xoShow(kind){XO.on=1;XO.hid=document.hidden?1:0;XO.kind=kind;const c=$('#xop');
-if(kind=='v'&&S.ecv){const k=Math.min(1,420/Math.max(S.ecv.width,S.ecv.height));c.width=Math.max(2,Math.round(S.ecv.width*k));c.height=Math.max(2,Math.round(S.ecv.height*k));c.style.display='block'}else c.style.display='none';
+const src=S.ecv||(S.rt?cv:null);if(kind=='v'&&src){const k=Math.min(1,420/Math.max(src.width,src.height));c.width=Math.max(2,Math.round(src.width*k));c.height=Math.max(2,Math.round(src.height*k));c.style.display='block'}else c.style.display='none';
 $('#xoh').textContent=kind=='v'?'Exporting your video…':'Exporting your audio…';$('#xow').className='xw';$('#xow').textContent='⚠ Do not close, refresh or leave this tab until the export finishes. Keep it open and in front.';
 $('#xo').hidden=false;xoUpd(0,kind=='v'?'Recording in real time · '+fmt(total())+' long':'Preparing…');xoWake()}
 function xoUpd(p,t){const q=Math.max(0,Math.min(100,Math.round(p)));$('#xpc').textContent=q+'%';$('#xpb').style.width=q+'%';if(t!=null)$('#xpt').textContent=t;document.title='Exporting '+q+'% – ClipForge'}
@@ -1276,7 +1276,7 @@ function ckSrc(o,e,m){
  const w0=m.w||e.videoWidth||e.naturalWidth||e.width,h0=m.h||e.videoHeight||e.naturalHeight||e.height;
  if(!w0||!h0)return e;
  if(m.type=='video'&&e.readyState<2)return CKC[o.id]?CKC[o.id].c:e;
- const cap=S.exporting?1920:640,k=Math.min(1,cap/Math.max(w0,h0)),w=Math.max(2,Math.round(w0*k)),h=Math.max(2,Math.round(h0*k));
+ const cap=S.rt?640:S.exporting?1920:640,k=Math.min(1,cap/Math.max(w0,h0)),w=Math.max(2,Math.round(w0*k)),h=Math.max(2,Math.round(h0*k));
  let q=CKC[o.id];
  if(!q){const c=document.createElement('canvas');q=CKC[o.id]={c,x:c.getContext('2d',{willReadFrequently:true}),sig:''}}
  const sig=[o.ckc,o.cks,o.ckb,o.ckd,w,h,m.id].join('|');
@@ -2069,4 +2069,70 @@ show();fit();
 #pc #pcvr #pcvn{min-width:0;font-size:11px}
 #pc #pcvr #pcvi{width:36px;height:30px;min-height:0;min-width:0;padding:0}
 </style>
+<script>
+/* ---------- Mobile export: record the normal playback in real time (export time = video length) ---------- */
+const isPhone=()=>/Android|iPhone|iPad|iPod|Mobi/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&matchMedia('(pointer:coarse)').matches);
+let RTB=null;
+function rtBlur(e,m){if(!RTB){RTB=document.createElement('canvas')}const w=48,h=Math.max(2,Math.round(48*H/W));if(RTB.width!=w||RTB.height!=h){RTB.width=w;RTB.height=h}
+const g=RTB.getContext('2d'),k=Math.max(w/m.w,h/m.h)*1.2;g.drawImage(e,(w-m.w*k)/2,(h-m.h*k)/2,m.w*k,m.h*k);ctx.drawImage(RTB,0,0,W,H);ctx.save();ctx.globalAlpha*=.3;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.restore()}
+const rtVideos=t=>wcVideos(t);
+/* get the next clips ready ahead of time so cuts do not freeze */
+function rtPreload(t){const busy=new Set(rtVideos(t).map(v=>v.e));
+const next=(o,e,inn)=>{if(o.start>t&&o.start-t<1.5&&!busy.has(e)){busy.add(e);if(e.paused&&!e.seeking&&Math.abs(e.currentTime-inn)>.05)e.currentTime=inn}};
+[...S.clips].sort((a,b)=>a.start-b.start).forEach(c=>{const m=M(c.mid);if(m&&m.type=='video')next(c,m.el,c.in)});
+S.ovs.forEach(o=>{const m=M(o.mid);if(m&&m.type=='video'&&o.start>t&&o.start-t<1.5){const e=ovEl(o,m);if(e)next(o,e,o.in)}})}
+/* one step of the recording clock. The timeline follows the main video, and recording pauses while a video is loading */
+function rtStep(now){const R=S.rt,r=R.r,T=total(),dt=Math.min(.25,Math.max(0,(now-R.last)/1000));R.last=now;
+if(document.hidden)return;
+const c=active(S.t),m=c&&M(c.mid),main=m&&m.type=='video'?m.el:null;let wait=0,next=S.t+dt;
+for(const v of rtVideos(S.t)){const e=v.e,end=isFinite(e.duration)&&v.want>=e.duration-.15;if(!end&&(e.seeking||e.readyState<2))wait=e===main?1:2}
+if(main){const e=main,end=c.start+c.dur,srcEnd=e.ended||(isFinite(e.duration)&&e.currentTime>=e.duration-.08);
+if(S.curId!=c.id)next=S.t;
+else if(!srcEnd){const vt=c.start+(e.currentTime-c.in)/c.sp,moved=e.currentTime!==R.ct;R.ct=e.currentTime;
+if(moved&&!e.seeking){R.still=0;next=Math.min(end,Math.max(S.t,vt))}else{R.still+=dt;next=S.t;if(R.still>.25)wait=wait||1}
+if(end-next<.02)next=end}}
+if(wait){R.held+=dt;if(R.held>5){wait=0;next=S.t+dt}}else R.held=0;
+S.hold=wait;
+if(wait){next=S.t;if(r.state=='recording'&&R.held>.08)r.pause()}
+else if(r.state=='paused')r.resume();
+S.t=Math.min(T,next);
+if(S.t>=T-.001){S.t=T-.001;S.hold=0;draw();S.t=T;pause();return}
+if(now-R.drawn>=1000/R.fps-4){R.drawn=now;draw()}
+rtPreload(S.t)}
+const _frame=frame;
+frame=function(){if(!S.rt||!S.rt.on)return _frame();requestAnimationFrame(frame);const now=performance.now();
+if(S.play)rtStep(now);
+if(now-S.rt?.ui<200||!S.rt)return;S.rt.ui=now;const p=Math.round(S.t/Math.max(total(),.01)*100);$('#ex').textContent='Exporting '+p+'%';$('#tm').textContent=fmt(S.t)+' / '+fmt(total());
+xoUpd(p,(S.hold?'Loading video… ':'')+fmt(S.t)+' / '+fmt(total()));const c=$('#xop');c.getContext('2d').drawImage(cv,0,0,c.width,c.height)};
+async function startMobileExport(o,F){if(!F.mime)return toast('This format is not supported by this browser');pause();S.t=0;S.curId=null;
+const[ew,eh]=dims(+o.res),fps=Math.min(30,+o.fps||30);let stream,r,ac=[];
+const restore=()=>{S.rt=null;S.hold=0;S.exporting=0;S.aexp=0;S.rec=null;stream&&stream.getVideoTracks().forEach(t=>t.stop());cvSize(W*PK,H*PK);xoHide();$('#ex').textContent='⬇ Export';S.curId=null};
+/* must run inside the tap, otherwise phones block the sound */
+if(o.aud){AC=AC||new AudioContext();DEST=DEST||AC.createMediaStreamDestination();AC.resume();S.media.forEach(route)}
+const R=S.rt={on:0,fps,r:null,last:0,drawn:0,ui:0,ct:-1,still:0,held:0,ms:0,since:0};
+S.exporting=1;
+const els=new Set();S.media.forEach(m=>{if(m.type!='image')els.add(m.el)});S.ovs.forEach(q=>{const m=M(q.mid);if(m&&m.type=='video'){const e=ovEl(q,m);e&&els.add(e)}});
+els.forEach(e=>{const p=e.play();p&&p.catch(()=>{});e.pause()});
+try{cvSize(ew,eh);xoShow('v');xoText('Loading videos…');
+for(const v of rtVideos(0))await wcSeek(v.e,v.want,fps);
+if(S.rt!==R)return;
+S.curId=(active(0)||{}).id??null;draw();
+stream=cv.captureStream(fps);if(o.aud)DEST.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+r=new MediaRecorder(stream,{mimeType:F.mime,videoBitsPerSecond:Math.round(Math.min(12e6,vbps({...o,fps}))),audioBitsPerSecond:o.ab*1000})}
+catch(e){console.warn(e);restore();return toast('Could not start the recorder — try another format or a lower resolution')}
+const ch=[],stopClock=()=>{if(R.since){R.ms+=performance.now()-R.since;R.since=0}};
+const _p=r.pause.bind(r),_u=r.resume.bind(r);r.pause=()=>{stopClock();_p()};r.resume=()=>{R.since=performance.now();_u()};
+const _s=r.stop.bind(r);r.stop=()=>{stopClock();if(r.state!='inactive')_s()};
+r.ondataavailable=e=>e.data&&e.data.size&&ch.push(e.data);r.onerror=()=>toast('Encoder error — try a lower resolution');
+r.onstop=async()=>{const ms=Math.max(100,R.ms),cancel=R.cancel;restore();if(cancel)return toast('Export cancelled');
+if(!ch.length)return toast('Export failed — nothing was recorded. Try another format.');
+let blob=new Blob(ch,{type:F.mime.split(';')[0]});try{blob=await fixDuration(blob,ms)}catch(e){console.warn('duration fix failed',e)}dlBlob(blob,fname(o,F.ext));toast('Export finished · '+fmt(ms/1000))};
+R.r=r;R.on=1;S.rec=r;R.last=performance.now();R.since=R.last;r.start(1000);play();
+const cb=$('#xoc');cb.hidden=false;cb.textContent='✕ Cancel export';cb.onclick=()=>{R.cancel=1;pause()}}
+/* leaving the tab: pause the recording instead of saving a frozen picture */
+document.addEventListener('visibilitychange',()=>{const R=S.rt;if(!R||!R.on||!document.hidden||R.r.state!='recording')return;R.r.pause();S.hold=2;S.media.forEach(m=>m.type!='image'&&m.el.pause());Object.values(OE).forEach(q=>q.e.pause())});
+const _startVideoExport=startVideoExport;
+startVideoExport=function(o,F){if(isPhone()&&F.mime&&window.MediaRecorder&&cv.captureStream)return startMobileExport(o,F);_startVideoExport(o,F)};
+if(isPhone()){S.xo.res=720;const _x=xdRender;xdRender=function(){_x();const n=$('#xr .xn');if(n&&XF.find(f=>f.id==S.xo.f).k=='v')n.textContent='Phone mode: the video is recorded while it plays, so export takes about as long as the video. 720p is the smoothest. Keep this tab open and in front.'}}
+</script>
 </body></html>
